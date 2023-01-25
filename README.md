@@ -5,7 +5,7 @@
 Sundsvalls kommun
 
 ## Beskrivning
-Customer är en tjänst som presenterar antalet tjänster/produkter som en kund för tillfället nyttjar.
+InstalledBase är en tjänst som presenterar antalet tjänster/produkter som en kund för tillfället nyttjar.
 
 ## Tekniska detaljer
 
