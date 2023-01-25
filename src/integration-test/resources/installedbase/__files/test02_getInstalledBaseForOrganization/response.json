@@ -1,0 +1,45 @@
+{
+	"installedBaseCustomers": [
+		{
+			"customerNumber": "38308",
+			"partyId": "c62239a0-c17f-4927-b62a-f82f781b4336",
+			"items": [
+				{
+					"type": "Avfallsvåg",
+					"facilityId": "38308",
+					"placementId": 498,
+					"facilityCommitmentStartDate": "2010-01-01",
+					"facilityCommitmentEndDate": "2015-07-05",
+					"address": {
+						"careOf": "Privat företag AB",
+						"street": "",
+						"propertyDesignation": "",
+						"postalCode": "",
+						"city": ""
+					},
+					"metaData": [
+					]
+				},
+				{
+					"type": "Elhandel",
+					"facilityId": "9412001019",
+					"placementId": 1886,
+					"facilityCommitmentStartDate": "2005-06-15",
+					"address": {
+						"careOf": "Privat företag AB",
+						"street": "Vikingavägen 66",
+						"propertyDesignation": "Ankeborg 1:21"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sollentuna",
+							"type": "location",
+							"displayName": "Nätområde"
+						}
+					]
+				}
+			]
+		}
+	]
+}

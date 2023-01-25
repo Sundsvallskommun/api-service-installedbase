@@ -1,0 +1,27 @@
+version: "3"
+services:
+  ms-installedbase-sandbox:
+    container_name: ms-installedbase-sandbox
+    image: 'ms-installedbase:sandbox'
+    links:
+      - 'ms-installedbase-wiremock-sandbox:wiremock'
+    restart: always
+    build:
+      context: ../../..
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - '9071:8080'
+    environment:
+      SPRING_PROFILES_ACTIVE: 'sandbox'
+    depends_on:
+      - ms-installedbase-wiremock-sandbox
+
+  ms-installedbase-wiremock-sandbox:
+    container_name: ms-installedbase-wiremock-sandbox
+    image: wiremock/wiremock
+    command: [--global-response-templating]
+    restart: always
+    expose:
+      - '8080'
+    volumes:
+      - $PWD/src/test/resources/wiremock:/home/wiremock

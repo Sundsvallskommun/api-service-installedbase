@@ -1,0 +1,80 @@
+{
+	"installedBaseCustomers": [
+		{
+			"customerNumber": "672086",
+			"partyId": "413aebb2-bccf-4447-b25e-d2b5f1d47c38",
+			"items": [
+				{
+					"type": "El",
+					"facilityId": "735999109151605013",
+					"placementId": 9415,
+					"facilityCommitmentStartDate": "2018-04-18",
+					"address": {
+						"careOf": "Mr Anderson",
+						"street": "Storgatan 66",
+						"propertyDesignation": "Ankeborg 1:22",
+						"postalCode": "853 58",
+						"city": "SUNDSVALL"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "9022",
+							"type": "kW",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "fusesize",
+							"value": "13",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						}
+					]
+				}
+			]
+		},
+		{
+			"customerNumber": "60166",
+			"partyId": "de8237fe-560f-4fad-931c-35f87ad23dba",
+			"items": [
+				{
+					"type": "El",
+					"facilityId": "735999109171810886",
+					"placementId": 35052,
+					"facilityCommitmentStartDate": "2003-02-01",
+					"address": {
+						"careOf": "Company AB",
+						"street": "Måsvägen 41",
+						"propertyDesignation": "Ankeborg 1:23"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "1522",
+							"type": "kW",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "fusesize",
+							"value": "10",
+							"type": "A",
+							"displayName": "Säkringsstorlek"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall tätort",
+							"type": "location",
+							"displayName": "Nätområde"
+						}
+					]
+				}
+			]
+		}
+	]
+}

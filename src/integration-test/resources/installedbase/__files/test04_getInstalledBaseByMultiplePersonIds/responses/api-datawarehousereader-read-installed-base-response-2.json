@@ -1,0 +1,42 @@
+{
+	"installedBase": [
+		{
+			"company": "Sundsvall Elnät",
+			"customerNumber": "60166",
+			"type": "El",
+			"facilityId": "735999109171810886",
+			"placementId": 35052,
+			"careOf": "Company AB",
+			"street": "Måsvägen 41",
+			"propertyDesignation": "Ankeborg 1:23",
+			"dateFrom": "2003-02-01",
+			"metaData": [
+				{
+					"key": "annualusage",
+					"value": "1522",
+					"type": "kW",
+					"displayName": "Beräknad årlig förbrukning"
+				},
+				{
+					"key": "fusesize",
+					"value": "10",
+					"type": "A",
+					"displayName": "Säkringsstorlek"
+				},
+				{
+					"key": "netarea",
+					"value": "Sundsvall tätort",
+					"type": "location",
+					"displayName": "Nätområde"
+				}
+			]
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 1,
+		"totalRecords": 1,
+		"totalPages": 1
+	}
+}

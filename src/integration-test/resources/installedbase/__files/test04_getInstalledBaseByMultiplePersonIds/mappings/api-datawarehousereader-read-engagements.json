@@ -1,0 +1,19 @@
+{
+	"name": "api-datawarehousereader-read-engagements",
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"method": "GET",
+		"url": "/datawarehousereaderMock/customer/engagements?organizationNumber=5565027223&partyId=de8237fe-560f-4fad-931c-35f87ad23dba&partyId=413aebb2-bccf-4447-b25e-d2b5f1d47c38"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test04_getInstalledBaseByMultiplePersonIds/responses/api-datawarehousereader-read-engagements-response.json"
+	}
+}
