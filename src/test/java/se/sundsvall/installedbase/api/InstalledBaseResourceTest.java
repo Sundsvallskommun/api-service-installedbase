@@ -1,7 +1,9 @@
 package se.sundsvall.installedbase.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class InstalledBaseResourceTest {
 
@@ -32,26 +34,27 @@ class InstalledBaseResourceTest {
 	@Test
 	void getinstalledBase() {
 
-		// Parameters
+		// Arrange
 		final var partyId = List.of(UUID.randomUUID().toString());
 		final var organizationNumber = "5566112233";
 		final var customerNumber = "12345";
 
-		// Mock
-		final var response = InstalledBaseResponse.create().withInstalledBaseCustomers(List.of(InstalledBaseCustomer.create().withCustomerNumber(customerNumber)));
-		when(serviceMock.getInstalledBase(organizationNumber, partyId)).thenReturn(response);
+		final var expectedResponse = InstalledBaseResponse.create().withInstalledBaseCustomers(List.of(InstalledBaseCustomer.create().withCustomerNumber(customerNumber)));
+		when(serviceMock.getInstalledBase(organizationNumber, partyId)).thenReturn(expectedResponse);
 
-		// Call
-		webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
+		// Act
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
 			.queryParam("partyId", partyId)
 			.build(organizationNumber))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
 			.expectBody(InstalledBaseResponse.class)
-			.isEqualTo(response);
+			.returnResult()
+			.getResponseBody();
 
-		// Verify call to mock
+		// Assert
+		assertThat(response).isEqualTo(expectedResponse);
 		verify(serviceMock).getInstalledBase(organizationNumber, partyId);
 	}
 }

@@ -6,8 +6,6 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,8 +34,6 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 @Tag(name = "Installed base", description = "Installed base operations")
 public class InstalledBaseResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(InstalledBaseResource.class);
-
 	@Autowired
 	private InstalledBaseService service;
 
@@ -49,9 +45,8 @@ public class InstalledBaseResource {
 	@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<InstalledBaseResponse> getInstalledBase(
-		@Parameter(name = "organizationNumber", description = "Organization number", required = true, example = "5565112233") @ValidOrganizationNumber @PathVariable(name = "organizationNumber") String organizationNumber,
-		@Parameter(name = "partyId", description = "Party-ID", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @RequestParam(value = "partyId", required = true) List<@ValidUuid String> partyIds) {
-		LOG.debug("Received getInstalledBase request: organizationNumber='{}', partyId='{}'", organizationNumber, partyIds);
+		@Parameter(name = "organizationNumber", description = "Organization number", required = true, example = "5565112233") @ValidOrganizationNumber @PathVariable(name = "organizationNumber") final String organizationNumber,
+		@Parameter(name = "partyId", description = "Party-ID", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @RequestParam(value = "partyId", required = true) final List<@ValidUuid String> partyIds) {
 
 		return ok(service.getInstalledBase(organizationNumber, partyIds));
 	}
