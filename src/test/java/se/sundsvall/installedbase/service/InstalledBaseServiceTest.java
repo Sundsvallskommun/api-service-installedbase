@@ -1,23 +1,22 @@
 package se.sundsvall.installedbase.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
+import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
+import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.MetaData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
-import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
-import generated.se.sundsvall.datawarehousereader.MetaData;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledBaseServiceTest {
@@ -51,6 +50,7 @@ class InstalledBaseServiceTest {
 		final var organizationNumber = "5512345678";
 		final var customerNumber = "customerNumber";
 		final var organizationName = "organizationName";
+		final var limit = 1000;
 
 		// Mock
 		when(metaDataMock.getCount()).thenReturn(1);
@@ -61,7 +61,7 @@ class InstalledBaseServiceTest {
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber);
 		when(customerEngagementMock.getOrganizationName()).thenReturn(organizationName);
 
-		when(clientMock.getInstalledBase(customerNumber, organizationName)).thenReturn(installedBaseResponseMock);
+		when(clientMock.getInstalledBase(customerNumber, organizationName, limit)).thenReturn(installedBaseResponseMock);
 		when(installedBaseResponseMock.getInstalledBase()).thenReturn(List.of(installedBaseItemMock));
 
 		// Call
@@ -69,7 +69,7 @@ class InstalledBaseServiceTest {
 
 		// Verifications and assertions
 		verify(clientMock).getCustomerEngagement("5512345678", partyId);
-		verify(clientMock).getInstalledBase(customerNumber, organizationName);
+		verify(clientMock).getInstalledBase(customerNumber, organizationName, limit);
 
 		assertThat(response)
 			.hasFieldOrProperty("installedBaseCustomers")
