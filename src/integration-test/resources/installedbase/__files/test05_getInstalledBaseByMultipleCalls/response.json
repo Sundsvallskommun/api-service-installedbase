@@ -1,0 +1,63 @@
+{
+	"installedBaseCustomers": [
+		{
+			"customerNumber": "691071",
+			"partyId": "3b7a5955-f481-42bd-a2b3-6ef8bd76b105",
+			"items": [
+				{
+					"type": "Fjärrkyla",
+					"facilityId": "735999226000059909",
+					"placementId": -24225,
+					"facilityCommitmentStartDate": "2001-01-01",
+					"facilityCommitmentEndDate": "2020-12-31",
+					"address": {
+						"propertyDesignation": "Ankeborg 1:20",
+						"careOf": "Pettson Findus",
+						"street": "Hammerdal Flugeby",
+						"postalCode": "50199",
+						"city": "Vetlanda"
+					},
+					"metaData": [
+						{
+							"key": "annualusage",
+							"value": "0",
+							"type": "kW",
+							"displayName": "Beräknad årlig förbrukning"
+						},
+						{
+							"key": "debiteffect",
+							"value": "",
+							"type": "kW",
+							"displayName": "Abonnerad effekt"
+						},
+						{
+							"key": "netarea",
+							"value": "Sundsvall",
+							"type": "location",
+							"displayName": "Nätområde"
+						}
+					]
+				},
+				{
+					"type": "Elhandel",
+					"facilityId": "9412001019",
+					"placementId": 1886,
+					"facilityCommitmentStartDate": "2005-06-15",
+					"address": {
+						"propertyDesignation": "Ankeborg 1:21",
+						"careOf": "Privat företag AB",
+						"street": "Vikingavägen 66"
+					},
+					"metaData": [
+						{
+							"key": "netarea",
+							"value": "Sollentuna",
+							"type": "location",
+							"displayName": "Nätområde"
+						}
+					]
+				}
+			]
+		}
+	]
+}

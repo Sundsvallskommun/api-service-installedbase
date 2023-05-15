@@ -1,0 +1,45 @@
+{
+	"installedBase": [
+		{
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "691071",
+			"type": "Fjärrkyla",
+			"facilityId": "735999226000059909",
+			"placementId": -24225,
+			"careOf": "Pettson Findus",
+			"street": "Hammerdal Flugeby",
+			"propertyDesignation": "Ankeborg 1:20",
+			"postCode": "50199",
+			"city": "Vetlanda",
+			"dateFrom": "2001-01-01",
+			"dateTo": "2020-12-31",
+			"metaData": [
+				{
+					"key": "annualusage",
+					"value": "0",
+					"type": "kW",
+					"displayName": "Beräknad årlig förbrukning"
+				},
+				{
+					"key": "debiteffect",
+					"value": "",
+					"type": "kW",
+					"displayName": "Abonnerad effekt"
+				},
+				{
+					"key": "netarea",
+					"value": "Sundsvall",
+					"type": "location",
+					"displayName": "Nätområde"
+				}
+			]
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 1000,
+		"count": 1,
+		"totalRecords": 1,
+		"totalPages": 2
+	}
+}

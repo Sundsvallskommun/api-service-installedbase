@@ -39,6 +39,9 @@ class InstalledBaseServiceTest {
 	@Mock
 	private generated.se.sundsvall.datawarehousereader.InstalledBaseItem installedBaseItemMock;
 
+	@Mock
+	private generated.se.sundsvall.datawarehousereader.MetaData installedBaseMetaDataMock;
+
 	@InjectMocks
 	private InstalledBaseService service;
 
@@ -50,7 +53,8 @@ class InstalledBaseServiceTest {
 		final var organizationNumber = "5512345678";
 		final var customerNumber = "customerNumber";
 		final var organizationName = "organizationName";
-		final var limit = 2000;
+		final var page = 1;
+		final var limit = 1000;
 
 		// Mock
 		when(metaDataMock.getCount()).thenReturn(1);
@@ -61,15 +65,17 @@ class InstalledBaseServiceTest {
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber);
 		when(customerEngagementMock.getOrganizationName()).thenReturn(organizationName);
 
-		when(clientMock.getInstalledBase(customerNumber, organizationName, limit)).thenReturn(installedBaseResponseMock);
+		when(clientMock.getInstalledBase(customerNumber, organizationName, page, limit)).thenReturn(installedBaseResponseMock);
 		when(installedBaseResponseMock.getInstalledBase()).thenReturn(List.of(installedBaseItemMock));
+		when(installedBaseResponseMock.getMeta()).thenReturn(installedBaseMetaDataMock);
+		when(installedBaseMetaDataMock.getTotalPages()).thenReturn(1);
 
 		// Call
 		final var response = service.getInstalledBase(organizationNumber, partyId);
 
 		// Verifications and assertions
 		verify(clientMock).getCustomerEngagement("5512345678", partyId);
-		verify(clientMock).getInstalledBase(customerNumber, organizationName, limit);
+		verify(clientMock).getInstalledBase(customerNumber, organizationName, page, limit);
 
 		assertThat(response)
 			.hasFieldOrProperty("installedBaseCustomers")
