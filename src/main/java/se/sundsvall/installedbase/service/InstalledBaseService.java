@@ -14,7 +14,7 @@ import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toIn
 @Service
 public class InstalledBaseService {
 
-	private static final int PAGE_LIMIT = 1000;
+	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT  = 2000;
 
 	@Autowired
 	private DataWarehouseReaderClient dataWarehouseReaderClient;
@@ -23,7 +23,7 @@ public class InstalledBaseService {
 		final var customerEngagements = toCustomerEngagements(dataWarehouseReaderClient.getCustomerEngagement(organizationNumber, partyIds));
 
 		return toInstalledBaseResponse(customerEngagements.stream()
-			.map(engagement -> toInstalledBaseCustomer(engagement, dataWarehouseReaderClient.getInstalledBase(engagement.getCustomerNumber(), engagement.getOrganizationName(), PAGE_LIMIT)))
+			.map(engagement -> toInstalledBaseCustomer(engagement, dataWarehouseReaderClient.getInstalledBase(engagement.getCustomerNumber(), engagement.getOrganizationName(), DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT )))
 			.toList());
 	}
 }
