@@ -22,7 +22,7 @@
 	],
 	"_meta": {
 		"page": 1,
-		"limit": 1000,
+		"limit": 100,
 		"count": 1,
 		"totalRecords": 1,
 		"totalPages": 2

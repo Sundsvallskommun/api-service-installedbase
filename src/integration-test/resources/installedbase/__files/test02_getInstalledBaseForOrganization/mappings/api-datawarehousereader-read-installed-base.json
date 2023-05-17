@@ -19,7 +19,7 @@
 				"equalTo": "1"
 			},
 			"limit": {
-				"equalTo": "1000"
+				"equalTo": "100"
 			}
 		}
 	},

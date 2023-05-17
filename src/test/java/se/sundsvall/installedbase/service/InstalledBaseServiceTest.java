@@ -54,7 +54,7 @@ class InstalledBaseServiceTest {
 		final var customerNumber = "customerNumber";
 		final var organizationName = "organizationName";
 		final var page = 1;
-		final var limit = 1000;
+		final var limit = 100;
 
 		// Mock
 		when(metaDataMock.getCount()).thenReturn(1);
