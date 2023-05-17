@@ -14,6 +14,12 @@
 			},
 			"company": {
 				"equalTo": "Sundsvall Elnät"
+			},
+			"page": {
+				"equalTo": "1"
+			},
+			"limit": {
+				"equalTo": "100"
 			}
 		}
 	},

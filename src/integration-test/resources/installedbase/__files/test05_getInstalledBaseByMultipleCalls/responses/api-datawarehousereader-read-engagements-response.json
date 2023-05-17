@@ -1,0 +1,18 @@
+{
+	"customerEngagements": [
+		{
+			"partyId": "3b7a5955-f481-42bd-a2b3-6ef8bd76b105",
+			"customerType": "Private",
+			"customerNumber": "691071",
+			"organizationNumber": "556478-6647",
+			"organizationName": "Sundsvall Energi AB"
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 1,
+		"totalRecords": 1,
+		"totalPages": 1
+	}
+}
