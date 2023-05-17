@@ -1,5 +1,5 @@
 {
-	"name": "api-datawarehousereader-read-installed-base",
+	"name": "api-datawarehousereader-read-installed-base2",
 	"request": {
 		"headers": {
 			"Authorization": {
@@ -16,7 +16,7 @@
 				"equalTo": "Sundsvall Energi AB"
 			},
 			"page": {
-				"equalTo": "1"
+				"equalTo": "2"
 			},
 			"limit": {
 				"equalTo": "1000"
@@ -28,6 +28,6 @@
 			"Content-Type": "application/json"
 		},
 		"status": 200,
-		"bodyFileName": "test01_getInstalledBaseForPerson/responses/api-datawarehousereader-read-installed-base-response.json"
+		"bodyFileName": "test05_getInstalledBaseByMultipleCalls/responses/api-datawarehousereader-read-installed-base-response2.json"
 	}
 }

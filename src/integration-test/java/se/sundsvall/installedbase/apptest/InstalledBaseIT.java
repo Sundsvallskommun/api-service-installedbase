@@ -1,14 +1,13 @@
 package se.sundsvall.installedbase.apptest;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
-
 import org.junit.jupiter.api.Test;
-
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.installedbase.Application;
+
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Read installed base tests
@@ -52,6 +51,16 @@ class InstalledBaseIT extends AbstractAppTest {
 	void test04_getInstalledBaseByMultiplePersonIds() throws Exception {
 		setupCall()
 			.withServicePath("/installedbase/5565027223?partyId=de8237fe-560f-4fad-931c-35f87ad23dba&partyId=413aebb2-bccf-4447-b25e-d2b5f1d47c38")
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test05_getInstalledBaseByMultipleCalls() throws Exception {
+		setupCall()
+			.withServicePath("/installedbase/5564786647?partyId=3b7a5955-f481-42bd-a2b3-6ef8bd76b105")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)

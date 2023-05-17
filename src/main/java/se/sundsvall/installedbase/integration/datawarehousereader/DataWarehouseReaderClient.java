@@ -25,5 +25,6 @@ public interface DataWarehouseReaderClient {
 	InstalledBaseResponse getInstalledBase(
 		@RequestParam(value = "customerNumber") String customerNumber,
 		@RequestParam(value = "company") String company,
+		@RequestParam(value = "page") int page,
 		@RequestParam(value = "limit") int limit);
 }
