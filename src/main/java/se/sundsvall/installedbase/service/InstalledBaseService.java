@@ -15,7 +15,7 @@ import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toIn
 @Service
 public class InstalledBaseService {
 
-	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT  = 1000;
+	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT  = 100;
 	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE = 1;
 
 	@Autowired
