@@ -5,7 +5,7 @@
 Sundsvalls kommun
 
 ## Beskrivning
-InstalledBase är en tjänst som presenterar data för aktuella engagemang som kunden har.
+InstalledBase är en tjänst som presenterar antalet tjänster/produkter som en kund för tillfället nyttjar.
 
 ## Tekniska detaljer
 
