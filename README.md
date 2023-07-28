@@ -4,53 +4,15 @@
 
 Sundsvalls kommun
 
-## Beskrivning
-InstalledBase är en tjänst som presenterar antalet tjänster/produkter som en kund för tillfället nyttjar.
+## Status
 
-## Tekniska detaljer
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-installedbase&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Sundsvallskommun_api-service-installedbase)
 
-### Integrationer
-Tjänsten integrerar mot:
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-installedbase&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Sundsvallskommun_api-service-installedbase)
 
-* Mikrotjänst DataWarehouseReader
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-installedbase&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Sundsvallskommun_api-service-installedbase)
 
-### Starta tjänsten
-
-|Konfigurationsnyckel|Beskrivning|
-|---|---|
-|`add.key`|Add description|
-
-
-### Paketera och starta tjänsten
-Applikationen kan paketeras genom:
-
-```
-./mvnw package
-```
-Kommandot skapar filen `api-service-installedbase-<version>.jar` i katalogen `target`. Tjänsten kan nu köras genom kommandot `java -jar target/api-service-installedbase-<version>.jar`.
-
-### Bygga och starta med Docker
-Exekvera följande kommando för att bygga en Docker-image:
-
-```
-docker build -f src/main/docker/Dockerfile -t api.sundsvall.se/ms-installedbase:latest .
-```
-
-Exekvera följande kommando för att starta samma Docker-image i en container:
-
-```
-docker run -i --rm -p8080:8080 api.sundsvall.se/ms-installedbase
-
-```
-
-#### Kör applikationen lokalt
-
-Exekvera följande kommando för att bygga och starta en container i sandbox mode:  
-
-```
-docker-compose -f src/main/docker/docker-compose-sandbox.yaml build && docker-compose -f src/main/docker/docker-compose-sandbox.yaml up
-```
-
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_api-service-installedbase&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Sundsvallskommun_api-service-installedbase)
 
 ## 
 Copyright (c) 2021 Sundsvalls kommun
