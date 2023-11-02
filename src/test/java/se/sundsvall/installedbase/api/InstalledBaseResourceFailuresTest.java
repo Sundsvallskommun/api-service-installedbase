@@ -142,8 +142,9 @@ class InstalledBaseResourceFailuresTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
 			Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; \
-			Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.Parameter @org.springframework.web.bind.annotation.RequestParam java.time.LocalDate] \
-			for value [invalid-date-format]""");
+			Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.Parameter \
+			@org.springframework.web.bind.annotation.RequestParam \
+			java.time.LocalDate] for value [invalid-date-format]""");
 
 		verifyNoInteractions(serviceMock);
 	}

@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,7 +29,7 @@ public interface DataWarehouseReaderClient {
 	InstalledBaseResponse getInstalledBase(
 		@RequestParam(value = "customerNumber") String customerNumber,
 		@RequestParam(value = "company") String company,
-		@RequestParam(value = "lastModifiedDateFrom") LocalDate modifiedFrom,
+		@RequestParam(value = "lastModifiedDateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate modifiedFrom,
 		@RequestParam(value = "page") int page,
 		@RequestParam(value = "limit") int limit);
 }
