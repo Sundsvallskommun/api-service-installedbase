@@ -42,22 +42,26 @@ class InstalledBaseItemTest {
 		final var metaData = List.of(InstalledBaseItemMetaData.create());
 		final var placementId = 12345;
 		final var type = "type";
-		final var facilityCommitmentStartDate = LocalDate.now();
+		final var facilityCommitmentStartDate = LocalDate.now().minusMonths(1);
 		final var facilityCommitmentEndDate = LocalDate.now().plusYears(1);
+		final var lastModifiedDate = LocalDate.now().minusDays(7);
 
 		final var installedBaseItem = InstalledBaseItem.create()
 			.withAddress(address)
 			.withFacilityCommitmentEndDate(facilityCommitmentEndDate)
 			.withFacilityCommitmentStartDate(facilityCommitmentStartDate)
 			.withFacilityId(facilityId)
+			.withLastModifiedDate(lastModifiedDate)
 			.withMetaData(metaData)
 			.withPlacementId(placementId)
 			.withType(type);
 
+		assertThat(installedBaseItem).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(installedBaseItem.getAddress()).isEqualTo(address);
 		assertThat(installedBaseItem.getFacilityCommitmentEndDate()).isEqualTo(facilityCommitmentEndDate);
 		assertThat(installedBaseItem.getFacilityCommitmentStartDate()).isEqualTo(facilityCommitmentStartDate);
 		assertThat(installedBaseItem.getFacilityId()).isEqualTo(facilityId);
+		assertThat(installedBaseItem.getLastModifiedDate()).isEqualTo(lastModifiedDate);
 		assertThat(installedBaseItem.getMetaData()).isEqualTo(metaData);
 		assertThat(installedBaseItem.getPlacementId()).isEqualTo(placementId);
 		assertThat(installedBaseItem.getType()).isEqualTo(type);

@@ -38,6 +38,7 @@ class InstalledBaseItemAddressTest {
 			.withStreet(street)
 			.withPropertyDesignation(propertyDesignation);
 
+		assertThat(installedBaseItemAddress).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(installedBaseItemAddress.getCareOf()).isEqualTo(careOf);
 		assertThat(installedBaseItemAddress.getCity()).isEqualTo(city);
 		assertThat(installedBaseItemAddress.getPostalCode()).isEqualTo(postalCode);

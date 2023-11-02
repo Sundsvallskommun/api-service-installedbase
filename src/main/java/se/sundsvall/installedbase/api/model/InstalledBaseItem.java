@@ -27,6 +27,9 @@ public class InstalledBaseItem {
 	@Schema(description = "Facility commitment end date", example = "2020-09-30", accessMode = READ_ONLY)
 	private LocalDate facilityCommitmentEndDate;
 
+	@Schema(description = "Last date for modification of item (or null if no modification has been done)", example = "2020-06-01", accessMode = READ_ONLY)
+	private LocalDate lastModifiedDate;
+
 	@Schema(implementation = InstalledBaseItemAddress.class, accessMode = READ_ONLY)
 	private InstalledBaseItemAddress address;
 
@@ -102,6 +105,19 @@ public class InstalledBaseItem {
 		return this;
 	}
 
+	public LocalDate getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(LocalDate lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public InstalledBaseItem withLastModifiedDate(LocalDate lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+		return this;
+	}
+
 	public List<InstalledBaseItemMetaData> getMetaData() {
 		return metaData;
 	}
@@ -130,7 +146,7 @@ public class InstalledBaseItem {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, facilityCommitmentEndDate, facilityCommitmentStartDate, facilityId, metaData, placementId, type);
+		return Objects.hash(address, facilityCommitmentEndDate, facilityCommitmentStartDate, facilityId, lastModifiedDate, metaData, placementId, type);
 	}
 
 	@Override
@@ -138,22 +154,19 @@ public class InstalledBaseItem {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof InstalledBaseItem)) {
 			return false;
 		}
 		InstalledBaseItem other = (InstalledBaseItem) obj;
 		return Objects.equals(address, other.address) && Objects.equals(facilityCommitmentEndDate, other.facilityCommitmentEndDate) && Objects.equals(facilityCommitmentStartDate, other.facilityCommitmentStartDate) && Objects.equals(facilityId,
-			other.facilityId) && Objects.equals(metaData, other.metaData) && placementId == other.placementId && Objects.equals(type, other.type);
+			other.facilityId) && Objects.equals(lastModifiedDate, other.lastModifiedDate) && Objects.equals(metaData, other.metaData) && placementId == other.placementId && Objects.equals(type, other.type);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("InstalledBaseItem [type=").append(type).append(", facilityId=").append(facilityId).append(", placementId=").append(placementId).append(", facilityCommitmentStartDate=").append(facilityCommitmentStartDate).append(
-			", facilityCommitmentEndDate=").append(facilityCommitmentEndDate).append(", address=").append(address).append(", metaData=").append(metaData).append("]");
+			", facilityCommitmentEndDate=").append(facilityCommitmentEndDate).append(", lastModifiedDate=").append(lastModifiedDate).append(", address=").append(address).append(", metaData=").append(metaData).append("]");
 		return builder.toString();
 	}
 }

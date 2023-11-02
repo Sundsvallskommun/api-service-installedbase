@@ -32,6 +32,7 @@ class InstalledBaseResponseTest {
 		final var installedBaseResponse = InstalledBaseResponse.create()
 			.withInstalledBaseCustomers(installedBaseCustomers);
 
+		assertThat(installedBaseResponse).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(installedBaseResponse.getInstalledBaseCustomers()).isEqualTo(installedBaseCustomers);
 	}
 

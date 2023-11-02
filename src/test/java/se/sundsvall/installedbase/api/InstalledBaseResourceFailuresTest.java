@@ -57,11 +57,8 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseMissingPartyId() {
 
-		// Arrange
-		final var organizationNumber = "5566112233";
-
 		// Act
-		final var response = webTestClient.get().uri("/installedbase/{organizationNumber}", organizationNumber)
+		final var response = webTestClient.get().uri("/installedbase/{organizationNumber}", "5566112233")
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -80,14 +77,10 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseInvalidPartyId() {
 
-		// Arrange
-		final var partyId = List.of("invalid-party-id");
-		final var organizationNumber = "5566112233";
-
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
-			.queryParam("partyId", partyId)
-			.build(organizationNumber))
+			.queryParam("partyId", List.of("invalid-party-id"))
+			.build("5566112233"))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -108,14 +101,10 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseInvalidOrganizationNumber() {
 
-		// Arrange
-		final var partyId = List.of(UUID.randomUUID());
-		final var organizationNumber = "invalid-organization-number";
-
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
-			.queryParam("partyId", partyId)
-			.build(organizationNumber))
+			.queryParam("partyId", List.of(UUID.randomUUID()))
+			.build("invalid-organization-number"))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -129,6 +118,32 @@ class InstalledBaseResourceFailuresTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getInstalledBase.organizationNumber", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+
+		verifyNoInteractions(serviceMock);
+	}
+
+	@Test
+	void getinstalledBaseInvalidModifiedFromDate() {
+
+		// Act
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
+			.queryParam("partyId", List.of(UUID.randomUUID()))
+			.queryParam("modifiedFrom", "invalid-date-format")
+			.build("5566112233"))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(Problem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response.getTitle()).isEqualTo("Bad Request");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getDetail()).isEqualTo("""
+			Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; \
+			Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.Parameter @org.springframework.web.bind.annotation.RequestParam java.time.LocalDate] \
+			for value [invalid-date-format]""");
 
 		verifyNoInteractions(serviceMock);
 	}
