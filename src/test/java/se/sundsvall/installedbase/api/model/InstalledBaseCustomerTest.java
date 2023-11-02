@@ -36,6 +36,7 @@ class InstalledBaseCustomerTest {
 			.withItems(items)
 			.withPartyId(partyId);
 
+		assertThat(installedBaseCustomer).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(installedBaseCustomer.getCustomerNumber()).isEqualTo(customerNumber);
 		assertThat(installedBaseCustomer.getItems()).isEqualTo(items);
 		assertThat(installedBaseCustomer.getPartyId()).isEqualTo(partyId);

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ class InstalledBaseResourceTest {
 	private WebTestClient webTestClient;
 
 	@Test
-	void getinstalledBase() {
+	void getinstalledBaseWithoutModifiedFrom() {
 
 		// Arrange
 		final var partyId = List.of(UUID.randomUUID().toString());
@@ -40,7 +41,7 @@ class InstalledBaseResourceTest {
 		final var customerNumber = "12345";
 
 		final var expectedResponse = InstalledBaseResponse.create().withInstalledBaseCustomers(List.of(InstalledBaseCustomer.create().withCustomerNumber(customerNumber)));
-		when(serviceMock.getInstalledBase(organizationNumber, partyId)).thenReturn(expectedResponse);
+		when(serviceMock.getInstalledBase(organizationNumber, partyId, null)).thenReturn(expectedResponse);
 
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
@@ -55,6 +56,35 @@ class InstalledBaseResourceTest {
 
 		// Assert
 		assertThat(response).isEqualTo(expectedResponse);
-		verify(serviceMock).getInstalledBase(organizationNumber, partyId);
+		verify(serviceMock).getInstalledBase(organizationNumber, partyId, null);
+	}
+
+	@Test
+	void getinstalledBaseWithModifiedFrom() {
+
+		// Arrange
+		final var partyId = List.of(UUID.randomUUID().toString());
+		final var organizationNumber = "5566112233";
+		final var customerNumber = "12345";
+		final var modifiedFrom = LocalDate.now();
+
+		final var expectedResponse = InstalledBaseResponse.create().withInstalledBaseCustomers(List.of(InstalledBaseCustomer.create().withCustomerNumber(customerNumber)));
+		when(serviceMock.getInstalledBase(organizationNumber, partyId, modifiedFrom)).thenReturn(expectedResponse);
+
+		// Act
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
+			.queryParam("partyId", partyId)
+			.queryParam("modifiedFrom", modifiedFrom)
+			.build(organizationNumber))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(InstalledBaseResponse.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response).isEqualTo(expectedResponse);
+		verify(serviceMock).getInstalledBase(organizationNumber, partyId, modifiedFrom);
 	}
 }

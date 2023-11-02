@@ -1,0 +1,91 @@
+{
+	"installedBase": [
+		{
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "123456",
+			"type": "Elhandel",
+			"facilityId": "735999109122811214",
+			"placementId": -36920,
+			"careOf": "Fastighetsförmedling AB",
+			"street": "Gatan 27",
+			"dateFrom": "2013-01-12",
+			"dateLastModified": "2017-12-07",
+			"metaData": [
+				{
+					"key": "netarea",
+					"value": "Sundsvall tätort",
+					"type": "location",
+					"displayName": "Nätområde"
+				}
+			]
+		},
+		{
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "123456",
+			"type": "Elhandel",
+			"facilityId": "735999109140702235",
+			"placementId": -36827,
+			"careOf": "Fastighetsförmedling AB",
+			"street": "Gatan 4 B 4170153",
+			"dateFrom": "2005-10-13",
+			"dateLastModified": "2017-12-07",
+			"metaData": [
+				{
+					"key": "netarea",
+					"value": "Sundsvall tätort",
+					"type": "location",
+					"displayName": "Nätområde"
+				}
+			]
+		},
+		{
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "123456",
+			"type": "Elhandel",
+			"facilityId": "735999109141108111",
+			"placementId": -36437,
+			"careOf": "Fastighetsförmedling AB",
+			"street": "Gatan 32",
+			"postCode": "85356",
+			"city": "Sundsvall",
+			"dateFrom": "2004-04-14",
+			"dateLastModified": "2017-12-08",
+			"metaData": [
+				{
+					"key": "netarea",
+					"value": "Sundsvall tätort",
+					"type": "location",
+					"displayName": "Nätområde"
+				}
+			]
+		},
+		{
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "123456",
+			"type": "Elhandel",
+			"facilityId": "735999109141106155",
+			"placementId": -36019,
+			"careOf": "Fastighetsförmedling AB",
+			"street": "Vägen 6",
+			"postCode": "85353",
+			"city": "Sundsvall",
+			"dateFrom": "2001-07-11",
+			"dateLastModified": "2017-12-08",
+			"metaData": [
+				{
+					"key": "netarea",
+					"value": "Sundsvall tätort",
+					"type": "location",
+					"displayName": "Nätområde"
+				}
+			]
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 4,
+		"totalRecords": 4,
+		"totalPages": 1
+	}
+}
