@@ -53,6 +53,7 @@ public class InstalledBaseMapper {
 			.withFacilityCommitmentEndDate(installedBaseItem.getDateTo())
 			.withFacilityCommitmentStartDate(installedBaseItem.getDateFrom())
 			.withFacilityId(installedBaseItem.getFacilityId())
+			.withLastModifiedDate(installedBaseItem.getDateLastModified())
 			.withMetaData(toMetaData(installedBaseItem.getMetaData()))
 			.withPlacementId(installedBaseItem.getPlacementId())
 			.withType(installedBaseItem.getType());

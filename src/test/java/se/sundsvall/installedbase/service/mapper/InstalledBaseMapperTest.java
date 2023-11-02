@@ -19,7 +19,7 @@ import generated.se.sundsvall.datawarehousereader.CustomerType;
 import generated.se.sundsvall.datawarehousereader.InstalledBaseItem;
 import generated.se.sundsvall.datawarehousereader.InstalledBaseItemMetaData;
 import generated.se.sundsvall.datawarehousereader.InstalledBaseResponse;
-import generated.se.sundsvall.datawarehousereader.MetaData;
+import generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData;
 import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseItemAddress;
 
@@ -71,11 +71,12 @@ class InstalledBaseMapperTest {
 				se.sundsvall.installedbase.api.model.InstalledBaseItem::getPlacementId,
 				se.sundsvall.installedbase.api.model.InstalledBaseItem::getType,
 				se.sundsvall.installedbase.api.model.InstalledBaseItem::getFacilityCommitmentEndDate,
-				se.sundsvall.installedbase.api.model.InstalledBaseItem::getFacilityCommitmentStartDate)
+				se.sundsvall.installedbase.api.model.InstalledBaseItem::getFacilityCommitmentStartDate,
+				se.sundsvall.installedbase.api.model.InstalledBaseItem::getLastModifiedDate)
 			.containsExactlyInAnyOrder(
-				tuple("facilityId0", 0, "type0", now().plusDays(0), now().minusDays(0)),
-				tuple("facilityId1", 1, "type1", now().plusDays(1), now().minusDays(1)),
-				tuple("facilityId2", 2, "type2", now().plusDays(2), now().minusDays(2)));
+				tuple("facilityId0", 0, "type0", now().plusDays(0), now().minusDays(0), now()),
+				tuple("facilityId1", 1, "type1", now().plusDays(1), now().minusDays(1), now()),
+				tuple("facilityId2", 2, "type2", now().plusDays(2), now().minusDays(2), now()));
 
 		assertThat(installedBaseCustomer.getItems())
 			.extracting("address", InstalledBaseItemAddress.class)
@@ -118,7 +119,7 @@ class InstalledBaseMapperTest {
 
 	private CustomerEngagementResponse createDataWarehouseReaderCustomerEngagementResponse(int count) {
 		return new CustomerEngagementResponse()
-			.meta(new MetaData().count(count))
+			.meta(new PagingAndSortingMetaData().count(count))
 			.customerEngagements(createDataWarehouseReaderCustomerEngagements(count));
 	}
 
@@ -137,7 +138,7 @@ class InstalledBaseMapperTest {
 
 	private InstalledBaseResponse createDataWarehouseReaderInstalledBaseResponse(int count) {
 		return new InstalledBaseResponse()
-			.meta(new MetaData().count(count))
+			.meta(new PagingAndSortingMetaData().count(count))
 			.installedBase(createDataWarehouseReaderInstalledBase(count));
 	}
 
@@ -152,6 +153,7 @@ class InstalledBaseMapperTest {
 				.customerNumber("1110")
 				.dateFrom(now().minusDays(i))
 				.dateTo(now().plusDays(i))
+				.dateLastModified(now())
 				.facilityId("facilityId" + i)
 				.placementId(i)
 				.postCode("postCode" + i)

@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,9 @@ public class InstalledBaseResource {
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	public ResponseEntity<InstalledBaseResponse> getInstalledBase(
 		@Parameter(name = "organizationNumber", description = "Organization number", required = true, example = "5565112233") @ValidOrganizationNumber @PathVariable(name = "organizationNumber") final String organizationNumber,
-		@Parameter(name = "partyId", description = "Party-ID", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @RequestParam(value = "partyId", required = true) final List<@ValidUuid String> partyIds) {
+		@Parameter(name = "partyId", description = "Party-ID", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @RequestParam(value = "partyId") final List<@ValidUuid String> partyIds,
+		@Parameter(name = "modifiedFrom", description = "Optional date for filtering on installed bases modified at provided date or later", example = "2023-06-01") @RequestParam(name = "modifiedFrom", required = false) final LocalDate modifiedFrom) {
 
-		return ok(service.getInstalledBase(organizationNumber, partyIds));
+		return ok(service.getInstalledBase(organizationNumber, partyIds, modifiedFrom));
 	}
 }
