@@ -7,7 +7,6 @@ import static org.springframework.http.ResponseEntity.ok;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +34,11 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 @Tag(name = "Installed base", description = "Installed base operations")
 public class InstalledBaseResource {
 
-	@Autowired
-	private InstalledBaseService service;
+	private final InstalledBaseService service;
+
+	public InstalledBaseResource(InstalledBaseService service) {
+		this.service = service;
+	}
 
 	@GetMapping(path = "/{organizationNumber}", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
 	@Operation(summary = "Get installed base at company matching organization number for customer matching provided party-ID")

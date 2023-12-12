@@ -8,7 +8,6 @@ import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toIn
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
@@ -17,11 +16,14 @@ import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseR
 @Service
 public class InstalledBaseService {
 
-	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT  = 100;
+	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT = 100;
 	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE = 1;
 
-	@Autowired
-	private DataWarehouseReaderClient dataWarehouseReaderClient;
+	private final DataWarehouseReaderClient dataWarehouseReaderClient;
+
+	public InstalledBaseService(DataWarehouseReaderClient dataWarehouseReaderClient) {
+		this.dataWarehouseReaderClient = dataWarehouseReaderClient;
+	}
 
 	public InstalledBaseResponse getInstalledBase(String organizationNumber, List<String> partyIds, LocalDate modifiedFrom) {
 		final var customerEngagements = toCustomerEngagements(dataWarehouseReaderClient.getCustomerEngagement(organizationNumber, partyIds));
@@ -33,11 +35,11 @@ public class InstalledBaseService {
 	}
 
 	private generated.se.sundsvall.datawarehousereader.InstalledBaseResponse getInstalledBase(String customerNumber, String company, LocalDate modifiedFrom, int page, int limit) {
-		var installedBaseResponse = dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, page, limit);
+		final var installedBaseResponse = dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, page, limit);
 
 		var currentPage = page;
 
-		if (allNotNull(installedBaseResponse, installedBaseResponse.getMeta(), installedBaseResponse.getMeta().getTotalPages()) && installedBaseResponse.getMeta().getTotalPages() > currentPage) {
+		if (allNotNull(installedBaseResponse, installedBaseResponse.getMeta(), installedBaseResponse.getMeta().getTotalPages()) && (installedBaseResponse.getMeta().getTotalPages() > currentPage)) {
 			while (installedBaseResponse.getMeta().getTotalPages() > currentPage) {
 				installedBaseResponse.getInstalledBase().addAll(dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, ++currentPage, limit).getInstalledBase());
 			}
