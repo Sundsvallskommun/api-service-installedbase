@@ -1,0 +1,16 @@
+integration:
+  datawarehousereader:
+    connectTimeout: 5
+    readTimeout: 20
+    url: http://datawarehousereader.url
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          datawarehousereader:
+            token-uri: http://token.url
+        registration:
+          datawarehousereader:
+            client-id: the-client-id
+            client-secret: the-client-secret
