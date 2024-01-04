@@ -55,7 +55,7 @@
 						<configuration>
 							<inputSpec>src/main/resources/integrations/api-datawarehousereader.yaml</inputSpec>
 							<output>${generated-sources-path}</output>
-							<generatorName>jaxrs-spec</generatorName>
+							<generatorName>spring</generatorName>
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<configOptions>
