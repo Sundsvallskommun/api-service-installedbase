@@ -31,5 +31,6 @@ public interface DataWarehouseReaderClient {
 		@RequestParam(value = "company") String company,
 		@RequestParam(value = "lastModifiedDateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate modifiedFrom,
 		@RequestParam(value = "page") int page,
-		@RequestParam(value = "limit") int limit);
+		@RequestParam(value = "limit") int limit,
+		@RequestParam(value = "sortBy") String sortBy);
 }

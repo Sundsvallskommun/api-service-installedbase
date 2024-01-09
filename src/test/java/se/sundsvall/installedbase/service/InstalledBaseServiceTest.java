@@ -3,6 +3,7 @@ package se.sundsvall.installedbase.service;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,6 +64,7 @@ class InstalledBaseServiceTest {
 		final var modifiedFrom = ofNullable(modifiedFromDate).map(LocalDate::parse).orElse(null);
 		final var page = 1;
 		final var limit = 100;
+		final var sortBy = "facilityId";
 
 		// Mock
 		when(customerEngagementMetaDataMock.getCount()).thenReturn(1);
@@ -73,7 +75,7 @@ class InstalledBaseServiceTest {
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber);
 		when(customerEngagementMock.getOrganizationName()).thenReturn(organizationName);
 
-		when(clientMock.getInstalledBase(customerNumber, organizationName, modifiedFrom, page, limit)).thenReturn(installedBaseResponseMock);
+		when(clientMock.getInstalledBase(any(), any(), any(), anyInt(), anyInt(), any())).thenReturn(installedBaseResponseMock);
 		when(installedBaseResponseMock.getInstalledBase()).thenReturn(List.of(installedBaseItemMock));
 		when(installedBaseResponseMock.getMeta()).thenReturn(installedBaseMetaDataMock);
 		when(installedBaseMetaDataMock.getTotalPages()).thenReturn(1);
@@ -83,7 +85,7 @@ class InstalledBaseServiceTest {
 
 		// Verifications and assertions
 		verify(clientMock).getCustomerEngagement("5512345678", partyId);
-		verify(clientMock).getInstalledBase(customerNumber, organizationName, modifiedFrom, page, limit);
+		verify(clientMock).getInstalledBase(customerNumber, organizationName, modifiedFrom, page, limit, sortBy);
 
 		assertThat(response)
 			.hasFieldOrProperty("installedBaseCustomers")

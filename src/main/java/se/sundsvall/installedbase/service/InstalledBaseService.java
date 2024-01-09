@@ -16,8 +16,9 @@ import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseR
 @Service
 public class InstalledBaseService {
 
-	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT = 100;
-	private static final int DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE = 1;
+	private static final int DATAWAREHOUSEREADER_PAGE_LIMIT = 100;
+	private static final int DATAWAREHOUSEREADER_PAGE = 1;
+	private static final String DATAWAREHOUSEREADER_SORTBY_PROPERTY = "facilityId";
 
 	private final DataWarehouseReaderClient dataWarehouseReaderClient;
 
@@ -30,18 +31,19 @@ public class InstalledBaseService {
 
 		return toInstalledBaseResponse(customerEngagements.stream()
 			.map(engagement -> toInstalledBaseCustomer(engagement, getInstalledBase(engagement.getCustomerNumber(), engagement.getOrganizationName(), modifiedFrom,
-				DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE, DATAWAREHOUSEREADER_INSTALLEDBASE_PAGE_LIMIT)))
+				DATAWAREHOUSEREADER_PAGE, DATAWAREHOUSEREADER_PAGE_LIMIT)))
 			.toList());
 	}
 
 	private generated.se.sundsvall.datawarehousereader.InstalledBaseResponse getInstalledBase(String customerNumber, String company, LocalDate modifiedFrom, int page, int limit) {
-		final var installedBaseResponse = dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, page, limit);
+		final var installedBaseResponse = dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, page, limit, DATAWAREHOUSEREADER_SORTBY_PROPERTY);
 
 		var currentPage = page;
 
 		if (allNotNull(installedBaseResponse, installedBaseResponse.getMeta(), installedBaseResponse.getMeta().getTotalPages()) && (installedBaseResponse.getMeta().getTotalPages() > currentPage)) {
 			while (installedBaseResponse.getMeta().getTotalPages() > currentPage) {
-				installedBaseResponse.getInstalledBase().addAll(dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, ++currentPage, limit).getInstalledBase());
+				installedBaseResponse.getInstalledBase().addAll(
+					dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, ++currentPage, limit, DATAWAREHOUSEREADER_SORTBY_PROPERTY).getInstalledBase());
 			}
 		}
 		return installedBaseResponse;
