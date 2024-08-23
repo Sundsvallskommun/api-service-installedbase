@@ -1,12 +1,12 @@
 package se.sundsvall.installedbase.api;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.NOT_FOUND;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +28,8 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 @ActiveProfiles("junit")
 class InstalledBaseResourceFailuresTest {
 
+	private static final String PATH = "/{municipalityId}/installedbase/{organizationNumber}";
+
 	@MockBean
 	private InstalledBaseService serviceMock;
 
@@ -35,21 +37,30 @@ class InstalledBaseResourceFailuresTest {
 	private WebTestClient webTestClient;
 
 	@Test
-	void getinstalledBaseNoParameters() {
+	void getinstalledBaseInvalidMunicipalityId() {
+
+		// Arrange
+		final var municipalityId = "invalid";
+		final var organizationNumber = "5566112233";
+		final var partyId = randomUUID().toString();
 
 		// Act
-		final var response = webTestClient.get().uri("/installedbase")
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(PATH)
+			.queryParam("partyId", List.of(partyId))
+			.build(municipalityId, organizationNumber))
 			.exchange()
-			.expectStatus().isNotFound()
+			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-			.expectBody(Problem.class)
+			.expectBody(ConstraintViolationProblem.class)
 			.returnResult()
 			.getResponseBody();
 
 		// Assert
-		assertThat(response.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-		assertThat(response.getStatus()).isEqualTo(NOT_FOUND);
-		assertThat(response.getDetail()).isEqualTo("No endpoint GET /installedbase.");
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getInstalledBase.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(serviceMock);
 	}
@@ -57,8 +68,13 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseMissingPartyId() {
 
+		// Arrange
+		final var municipalityId = "2281";
+		final var organizationNumber = "5566112233";
+
 		// Act
-		final var response = webTestClient.get().uri("/installedbase/{organizationNumber}", "5566112233")
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(PATH)
+			.build(municipalityId, organizationNumber))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -77,10 +93,14 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseInvalidPartyId() {
 
+		// Arrange
+		final var municipalityId = "2281";
+		final var organizationNumber = "5566112233";
+
 		// Act
-		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(PATH)
 			.queryParam("partyId", List.of("invalid-party-id"))
-			.build("5566112233"))
+			.build(municipalityId, organizationNumber))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -101,10 +121,14 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseInvalidOrganizationNumber() {
 
+		// Arrange
+		final var municipalityId = "2281";
+		final var organizationNumber = "invalid";
+
 		// Act
-		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(PATH)
 			.queryParam("partyId", List.of(UUID.randomUUID()))
-			.build("invalid-organization-number"))
+			.build(municipalityId, organizationNumber))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -125,11 +149,15 @@ class InstalledBaseResourceFailuresTest {
 	@Test
 	void getinstalledBaseInvalidModifiedFromDate() {
 
+		// Arrange
+		final var municipalityId = "2281";
+		final var organizationNumber = "5566112233";
+
 		// Act
-		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path("/installedbase/{organizationNumber}")
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(PATH)
 			.queryParam("partyId", List.of(UUID.randomUUID()))
 			.queryParam("modifiedFrom", "invalid-date-format")
-			.build("5566112233"))
+			.build(municipalityId, organizationNumber))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)

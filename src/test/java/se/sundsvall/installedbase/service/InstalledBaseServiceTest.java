@@ -2,6 +2,7 @@ package se.sundsvall.installedbase.service;
 
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -56,7 +57,8 @@ class InstalledBaseServiceTest {
 	@NullSource
 	void test(String modifiedFromDate) {
 
-		// Setup
+		// Arrange
+		final var municipalityId = "municipalityId";
 		final var partyId = List.of("partyId");
 		final var organizationNumber = "5512345678";
 		final var customerNumber = "customerNumber";
@@ -69,26 +71,26 @@ class InstalledBaseServiceTest {
 		// Mock
 		when(customerEngagementMetaDataMock.getCount()).thenReturn(1);
 
-		when(clientMock.getCustomerEngagement(any(), any())).thenReturn(customerEngagementResponseMock);
+		when(clientMock.getCustomerEngagement(any(), any(), any())).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getMeta()).thenReturn(customerEngagementMetaDataMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock));
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber);
 		when(customerEngagementMock.getOrganizationName()).thenReturn(organizationName);
 
-		when(clientMock.getInstalledBase(any(), any(), any(), anyInt(), anyInt(), any())).thenReturn(installedBaseResponseMock);
+		when(clientMock.getInstalledBase(any(), any(), any(), any(), anyInt(), anyInt(), any())).thenReturn(installedBaseResponseMock);
 		when(installedBaseResponseMock.getInstalledBase()).thenReturn(List.of(installedBaseItemMock));
 		when(installedBaseResponseMock.getMeta()).thenReturn(installedBaseMetaDataMock);
 		when(installedBaseMetaDataMock.getTotalPages()).thenReturn(1);
 
 		// Call
-		final var response = service.getInstalledBase(organizationNumber, partyId, modifiedFrom);
+		final var response = service.getInstalledBase(municipalityId, organizationNumber, partyId, modifiedFrom);
 
 		// Verifications and assertions
-		verify(clientMock).getCustomerEngagement("5512345678", partyId);
-		verify(clientMock).getInstalledBase(customerNumber, organizationName, modifiedFrom, page, limit, sortBy);
+		verify(clientMock).getCustomerEngagement(municipalityId, "5512345678", partyId);
+		verify(clientMock).getInstalledBase(municipalityId, customerNumber, organizationName, modifiedFrom, page, limit, sortBy);
 
 		assertThat(response)
 			.hasFieldOrProperty("installedBaseCustomers")
-			.extracting(InstalledBaseResponse::getInstalledBaseCustomers).asList().hasSize(1);
+			.extracting(InstalledBaseResponse::getInstalledBaseCustomers).asInstanceOf(LIST).hasSize(1);
 	}
 }

@@ -1,0 +1,436 @@
+openapi: 3.0.1
+info:
+  title: api-installedbase
+  contact: {}
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: "3.0"
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: Installed base
+  description: Installed base operations
+paths:
+  /{municipalityId}/installedbase/{organizationNumber}:
+    get:
+      tags:
+      - Installed base
+      summary: Get installed base at company matching organization number for customer
+        matching provided party-ID
+      operationId: getInstalledBase
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality id
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: organizationNumber
+        in: path
+        description: Organization number
+        required: true
+        schema:
+          type: string
+        example: 5565112233
+      - name: partyId
+        in: query
+        description: Party-ID
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+        example: 81471222-5798-11e9-ae24-57fa13b361e1
+      - name: modifiedFrom
+        in: query
+        description: Optional date for filtering on installed bases modified at provided
+          date or later
+        required: false
+        schema:
+          type: string
+          format: date
+        example: 2023-06-01
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstalledBaseResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/InstalledBaseResponse"
+  /api-docs:
+    get:
+      tags:
+      - API
+      summary: OpenAPI
+      operationId: getApiDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/yaml:
+              schema:
+                type: string
+      x-auth-type: None
+      x-throttling-tier: Unlimited
+      x-wso2-mutual-ssl: Optional
+components:
+  schemas:
+    Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    ConstraintViolationProblem:
+      type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        type:
+          type: string
+          format: uri
+        status:
+          $ref: "#/components/schemas/StatusType"
+        violations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Violation"
+        title:
+          type: string
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    ThrowableProblem:
+      type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    Violation:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    InstalledBaseCustomer:
+      type: object
+      properties:
+        customerNumber:
+          type: string
+          description: Customer number
+          readOnly: true
+          example: "10007"
+        partyId:
+          type: string
+          description: Party-ID
+          readOnly: true
+          example: cf9892ad-69d5-420f-ae98-9631dd1664fe
+        items:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstalledBaseItem"
+      description: Installed base owner model
+      readOnly: true
+    InstalledBaseItem:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type
+          readOnly: true
+          example: Fjärrvärme
+        facilityId:
+          type: string
+          description: Facility id
+          readOnly: true
+          example: "735999109270751042"
+        placementId:
+          type: integer
+          description: Placement id
+          format: int32
+          readOnly: true
+          example: 5263
+        facilityCommitmentStartDate:
+          type: string
+          description: Facility commitment start date
+          format: date
+          readOnly: true
+          example: 2020-04-01
+        facilityCommitmentEndDate:
+          type: string
+          description: Facility commitment end date
+          format: date
+          readOnly: true
+          example: 2020-09-30
+        lastModifiedDate:
+          type: string
+          description: Last date for modification of item (or null if no modification
+            has been done)
+          format: date
+          readOnly: true
+          example: 2020-06-01
+        address:
+          $ref: "#/components/schemas/InstalledBaseItemAddress"
+        metaData:
+          maxItems: 1000
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstalledBaseItemMetaData"
+      description: Installed base item model
+      readOnly: true
+    InstalledBaseItemAddress:
+      type: object
+      properties:
+        propertyDesignation:
+          type: string
+          description: Property designation
+          readOnly: true
+          example: Södermalm 1:27
+        careOf:
+          type: string
+          description: Care of address
+          readOnly: true
+          example: Agatha Malm
+        street:
+          type: string
+          description: Street
+          readOnly: true
+          example: Storgatan 9
+        postalCode:
+          type: string
+          description: Postal code
+          readOnly: true
+          example: "85230"
+        city:
+          type: string
+          description: City
+          readOnly: true
+          example: Sundsvall
+      description: Installed base item address model
+      readOnly: true
+    InstalledBaseItemMetaData:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Key
+          readOnly: true
+          example: netarea
+        value:
+          type: string
+          description: Value
+          readOnly: true
+          example: Sundsvall tätort
+        type:
+          type: string
+          description: Type
+          readOnly: true
+          example: location
+        displayName:
+          type: string
+          description: Displayname
+          readOnly: true
+          example: Nätområde
+      description: Installed base item metadata model
+      readOnly: true
+    InstalledBaseResponse:
+      type: object
+      properties:
+        installedBaseCustomers:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstalledBaseCustomer"
+      description: Installed base response model
+  securitySchemes: {}

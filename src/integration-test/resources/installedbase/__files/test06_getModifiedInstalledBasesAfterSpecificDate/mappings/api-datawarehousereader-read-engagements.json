@@ -7,7 +7,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/datawarehousereaderMock/customer/engagements",
+		"urlPath": "/datawarehousereaderMock/2281/customer/engagements",
 		"queryParameters": {
 			"partyId": {
 				"equalTo": "825754d6-c92b-49c0-a62d-97a706b08038"
