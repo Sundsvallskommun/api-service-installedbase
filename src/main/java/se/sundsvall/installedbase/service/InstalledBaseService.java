@@ -26,24 +26,24 @@ public class InstalledBaseService {
 		this.dataWarehouseReaderClient = dataWarehouseReaderClient;
 	}
 
-	public InstalledBaseResponse getInstalledBase(String organizationNumber, List<String> partyIds, LocalDate modifiedFrom) {
-		final var customerEngagements = toCustomerEngagements(dataWarehouseReaderClient.getCustomerEngagement(organizationNumber, partyIds));
+	public InstalledBaseResponse getInstalledBase(String municipalityId, String organizationNumber, List<String> partyIds, LocalDate modifiedFrom) {
+		final var customerEngagements = toCustomerEngagements(dataWarehouseReaderClient.getCustomerEngagement(municipalityId, organizationNumber, partyIds));
 
 		return toInstalledBaseResponse(customerEngagements.stream()
-			.map(engagement -> toInstalledBaseCustomer(engagement, getInstalledBase(engagement.getCustomerNumber(), engagement.getOrganizationName(), modifiedFrom,
-				DATAWAREHOUSEREADER_PAGE, DATAWAREHOUSEREADER_PAGE_LIMIT)))
+			.map(engagement -> toInstalledBaseCustomer(engagement,
+				getInstalledBase(municipalityId, engagement.getCustomerNumber(), engagement.getOrganizationName(), modifiedFrom, DATAWAREHOUSEREADER_PAGE, DATAWAREHOUSEREADER_PAGE_LIMIT)))
 			.toList());
 	}
 
-	private generated.se.sundsvall.datawarehousereader.InstalledBaseResponse getInstalledBase(String customerNumber, String company, LocalDate modifiedFrom, int page, int limit) {
-		final var installedBaseResponse = dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, page, limit, DATAWAREHOUSEREADER_SORTBY_PROPERTY);
+	private generated.se.sundsvall.datawarehousereader.InstalledBaseResponse getInstalledBase(String municipalityId, String customerNumber, String company, LocalDate modifiedFrom, int page, int limit) {
+		final var installedBaseResponse = dataWarehouseReaderClient.getInstalledBase(municipalityId, customerNumber, company, modifiedFrom, page, limit, DATAWAREHOUSEREADER_SORTBY_PROPERTY);
 
 		var currentPage = page;
 
 		if (allNotNull(installedBaseResponse, installedBaseResponse.getMeta(), installedBaseResponse.getMeta().getTotalPages()) && (installedBaseResponse.getMeta().getTotalPages() > currentPage)) {
 			while (installedBaseResponse.getMeta().getTotalPages() > currentPage) {
 				installedBaseResponse.getInstalledBase().addAll(
-					dataWarehouseReaderClient.getInstalledBase(customerNumber, company, modifiedFrom, ++currentPage, limit, DATAWAREHOUSEREADER_SORTBY_PROPERTY).getInstalledBase());
+					dataWarehouseReaderClient.getInstalledBase(municipalityId, customerNumber, company, modifiedFrom, ++currentPage, limit, DATAWAREHOUSEREADER_SORTBY_PROPERTY).getInstalledBase());
 			}
 		}
 		return installedBaseResponse;

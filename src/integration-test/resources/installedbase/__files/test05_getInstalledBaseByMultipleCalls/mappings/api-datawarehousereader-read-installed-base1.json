@@ -7,7 +7,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/datawarehousereaderMock/installedbase",
+		"urlPath": "/datawarehousereaderMock/2281/installedbase",
 		"queryParameters": {
 			"customerNumber": {
 				"equalTo": "691071"
