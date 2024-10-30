@@ -21,13 +21,17 @@ import se.sundsvall.installedbase.integration.datawarehousereader.configuration.
 @FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
 public interface DataWarehouseReaderClient {
 
-	@GetMapping(path = "/{municipalityId}/customer/engagements", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
+	@GetMapping(path = "/{municipalityId}/customer/engagements", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	CustomerEngagementResponse getCustomerEngagement(
 		@PathVariable("municipalityId") String municipalityId,
 		@RequestParam(value = "organizationNumber") String organizationNumber,
 		@RequestParam(value = "partyId") List<String> partyIds);
 
-	@GetMapping(path = "/{municipalityId}/installedbase", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
+	@GetMapping(path = "/{municipalityId}/installedbase", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	InstalledBaseResponse getInstalledBase(
 		@PathVariable("municipalityId") String municipalityId,
 		@RequestParam(value = "customerNumber") String customerNumber,

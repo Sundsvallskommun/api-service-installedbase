@@ -1,45 +1,43 @@
 {
 	"installedBase": [
 		{
-			"company": "Sundsvall Energi AB",
-			"customerNumber": "38308",
-			"type": "Avfallsvåg",
 			"facilityId": "38308",
 			"placementId": 498,
+			"city": "",
+			"customerNumber": "38308",
+			"type": "Avfallsvåg",
+			"dateFrom": "2010-01-01",
+			"metaData": [],
 			"careOf": "Privat företag AB",
 			"street": "",
-			"propertyDesignation": "",
-			"postCode": "",
-			"city": "",
-			"dateFrom": "2010-01-01",
 			"dateTo": "2015-07-05",
-			"metaData": []
+			"propertyDesignation": "",
+			"company": "Sundsvall Energi AB",
+			"postCode": ""
 		},
 		{
-			"company": "Sundsvall Energi AB",
-			"customerNumber": "38308",
-			"type": "Elhandel",
+			"metaData": [{
+				"displayName": "Nätområde",
+				"type": "location",
+				"value": "Sollentuna",
+				"key": "netarea"
+			}],
 			"facilityId": "9412001019",
 			"placementId": 1886,
 			"careOf": "Privat företag AB",
 			"street": "Vikingavägen 66",
 			"propertyDesignation": "Ankeborg 1:21",
-			"dateFrom": "2005-06-15",
-			"metaData": [
-				{
-					"key": "netarea",
-					"value": "Sollentuna",
-					"type": "location",
-					"displayName": "Nätområde"
-				}
-			]
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "38308",
+			"type": "Elhandel",
+			"dateFrom": "2005-06-15"
 		}
 	],
 	"_meta": {
-		"page": 1,
+		"totalRecords": 2,
 		"limit": 100,
 		"count": 2,
-		"totalRecords": 2,
-		"totalPages": 1
+		"totalPages": 1,
+		"page": 1
 	}
 }

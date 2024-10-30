@@ -1,5 +1,5 @@
 {
-	"title":"Not Found",
-	"status":404,
-	"detail":"No customer engagements matched the search criteria!"
+	"detail": "No customer engagements matched the search criteria!",
+	"title": "Not Found",
+	"status": 404
 }
