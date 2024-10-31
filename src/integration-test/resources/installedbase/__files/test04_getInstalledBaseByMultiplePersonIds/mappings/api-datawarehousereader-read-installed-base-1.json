@@ -1,33 +1,19 @@
 {
-	"name": "api-datawarehousereader-read-installed-base-1",
 	"request": {
-		"headers": {
-			"Authorization": {
-				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
-			}
-		},
+		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
 		"method": "GET",
-		"urlPath": "/datawarehousereaderMock/2281/installedbase",
 		"queryParameters": {
-			"customerNumber": {
-				"equalTo": "672086"
-			},
-			"company": {
-				"equalTo": "Sundsvall Elnät"
-			},
-			"page": {
-				"equalTo": "1"
-			},
-			"limit": {
-				"equalTo": "100"
-			}
-		}
+			"limit": {"equalTo": "100"},
+			"company": {"equalTo": "Sundsvall Elnät"},
+			"page": {"equalTo": "1"},
+			"customerNumber": {"equalTo": "672086"}
+		},
+		"urlPath": "/datawarehousereaderMock/2281/installedbase"
 	},
 	"response": {
-		"headers": {
-			"Content-Type": "application/json"
-		},
-		"status": 200,
-		"bodyFileName": "test04_getInstalledBaseByMultiplePersonIds/responses/api-datawarehousereader-read-installed-base-response-1.json"
-	}
+		"headers": {"Content-Type": "application/json"},
+		"bodyFileName": "test04_getInstalledBaseByMultiplePersonIds/responses/api-datawarehousereader-read-installed-base-response-1.json",
+		"status": 200
+	},
+	"name": "api-datawarehousereader-read-installed-base-1"
 }

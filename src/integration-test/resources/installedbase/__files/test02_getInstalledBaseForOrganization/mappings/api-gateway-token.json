@@ -1,14 +1,12 @@
 {
-	"name": "api-datawarehousereader-get-gateway-token",
 	"request": {
-		"urlPath": "/gatewayMock",
-		"method": "POST"
+		"method": "POST",
+		"urlPath": "/gatewayMock"
 	},
 	"response": {
-		"headers": {
-			"Content-Type": "application/json"
-		},
-		"status": 200,
-		"bodyFileName": "common/api-gateway-token-response.json"
-	}
+		"headers": {"Content-Type": "application/json"},
+		"bodyFileName": "common/api-gateway-token-response.json",
+		"status": 200
+	},
+	"name": "api-datawarehousereader-get-gateway-token"
 }
