@@ -8,9 +8,11 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
+import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData;
 import java.time.LocalDate;
 import java.util.List;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -18,10 +20,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
-import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
-import generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 

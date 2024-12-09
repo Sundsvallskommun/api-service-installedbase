@@ -4,18 +4,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static se.sundsvall.installedbase.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_ID;
 
+import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.InstalledBaseResponse;
 import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
-import generated.se.sundsvall.datawarehousereader.InstalledBaseResponse;
 import se.sundsvall.installedbase.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration;
 
 @FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)

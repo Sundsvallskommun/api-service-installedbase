@@ -3,13 +3,11 @@ package se.sundsvall.installedbase.service.mapper;
 import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.NOT_FOUND;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.zalando.problem.Problem;
-
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import java.util.Collections;
+import java.util.List;
+import org.zalando.problem.Problem;
 import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseItem;
 import se.sundsvall.installedbase.api.model.InstalledBaseItemAddress;

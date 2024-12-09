@@ -1,37 +1,39 @@
 {
-	"installedBase": [{
-		"metaData": [
-			{
-				"displayName": "Beräknad årlig förbrukning",
-				"type": "kW",
-				"value": "9022",
-				"key": "annualusage"
-			},
-			{
-				"displayName": "Säkringsstorlek",
-				"type": "A",
-				"value": "13",
-				"key": "fusesize"
-			},
-			{
-				"displayName": "Nätområde",
-				"type": "location",
-				"value": "Sundsvall tätort",
-				"key": "netarea"
-			}
-		],
-		"facilityId": "735999109151605013",
-		"placementId": 9415,
-		"careOf": "Mr Anderson",
-		"city": "SUNDSVALL",
-		"street": "Storgatan 66",
-		"propertyDesignation": "Ankeborg 1:22",
-		"company": "Sundsvall Elnät",
-		"postCode": "853 58",
-		"customerNumber": "672086",
-		"type": "El",
-		"dateFrom": "2018-04-18"
-	}],
+	"installedBase": [
+		{
+			"metaData": [
+				{
+					"displayName": "Beräknad årlig förbrukning",
+					"type": "kW",
+					"value": "9022",
+					"key": "annualusage"
+				},
+				{
+					"displayName": "Säkringsstorlek",
+					"type": "A",
+					"value": "13",
+					"key": "fusesize"
+				},
+				{
+					"displayName": "Nätområde",
+					"type": "location",
+					"value": "Sundsvall tätort",
+					"key": "netarea"
+				}
+			],
+			"facilityId": "735999109151605013",
+			"placementId": 9415,
+			"careOf": "Mr Anderson",
+			"city": "SUNDSVALL",
+			"street": "Storgatan 66",
+			"propertyDesignation": "Ankeborg 1:22",
+			"company": "Sundsvall Elnät",
+			"postCode": "853 58",
+			"customerNumber": "672086",
+			"type": "El",
+			"dateFrom": "2018-04-18"
+		}
+	],
 	"_meta": {
 		"totalRecords": 1,
 		"limit": 100,
