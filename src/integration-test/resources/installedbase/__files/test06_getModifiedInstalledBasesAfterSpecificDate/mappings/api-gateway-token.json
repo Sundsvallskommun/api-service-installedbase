@@ -4,7 +4,9 @@
 		"urlPath": "/gatewayMock"
 	},
 	"response": {
-		"headers": {"Content-Type": "application/json"},
+		"headers": {
+			"Content-Type": "application/json"
+		},
 		"bodyFileName": "common/api-gateway-token-response.json",
 		"status": 200
 	},

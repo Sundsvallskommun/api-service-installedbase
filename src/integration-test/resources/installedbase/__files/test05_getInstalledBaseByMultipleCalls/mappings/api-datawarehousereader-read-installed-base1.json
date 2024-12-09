@@ -1,17 +1,31 @@
 {
 	"request": {
-		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
 		"method": "GET",
 		"queryParameters": {
-			"limit": {"equalTo": "100"},
-			"company": {"equalTo": "Sundsvall Energi AB"},
-			"page": {"equalTo": "1"},
-			"customerNumber": {"equalTo": "691071"}
+			"limit": {
+				"equalTo": "100"
+			},
+			"company": {
+				"equalTo": "Sundsvall Energi AB"
+			},
+			"page": {
+				"equalTo": "1"
+			},
+			"customerNumber": {
+				"equalTo": "691071"
+			}
 		},
 		"urlPath": "/datawarehousereaderMock/2281/installedbase"
 	},
 	"response": {
-		"headers": {"Content-Type": "application/json"},
+		"headers": {
+			"Content-Type": "application/json"
+		},
 		"bodyFileName": "test05_getInstalledBaseByMultipleCalls/responses/api-datawarehousereader-read-installed-base-response1.json",
 		"status": 200
 	},

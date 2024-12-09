@@ -1,21 +1,25 @@
 {
-	"installedBase": [{
-		"metaData": [{
-			"displayName": "Nätområde",
-			"type": "location",
-			"value": "Sollentuna",
-			"key": "netarea"
-		}],
-		"facilityId": "9412001019",
-		"placementId": 1886,
-		"careOf": "Privat företag AB",
-		"street": "Vikingavägen 66",
-		"propertyDesignation": "Ankeborg 1:21",
-		"company": "Sundsvall Energi AB",
-		"customerNumber": "38308",
-		"type": "Elhandel",
-		"dateFrom": "2005-06-15"
-	}],
+	"installedBase": [
+		{
+			"metaData": [
+				{
+					"displayName": "Nätområde",
+					"type": "location",
+					"value": "Sollentuna",
+					"key": "netarea"
+				}
+			],
+			"facilityId": "9412001019",
+			"placementId": 1886,
+			"careOf": "Privat företag AB",
+			"street": "Vikingavägen 66",
+			"propertyDesignation": "Ankeborg 1:21",
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "38308",
+			"type": "Elhandel",
+			"dateFrom": "2005-06-15"
+		}
+	],
 	"_meta": {
 		"totalRecords": 1,
 		"limit": 100,

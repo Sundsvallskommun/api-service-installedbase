@@ -2,9 +2,8 @@ package se.sundsvall.installedbase.api.model;
 
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 
-import java.util.Objects;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 
 @Schema(description = "Installed base item metadata model")
 public class InstalledBaseItemMetaData {

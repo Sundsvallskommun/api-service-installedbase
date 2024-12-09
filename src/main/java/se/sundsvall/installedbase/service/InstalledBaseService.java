@@ -7,9 +7,7 @@ import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toIn
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 

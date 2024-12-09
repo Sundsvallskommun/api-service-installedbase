@@ -5,14 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.zalando.problem.ThrowableProblem;
-
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.CustomerType;
@@ -20,6 +12,12 @@ import generated.se.sundsvall.datawarehousereader.InstalledBaseItem;
 import generated.se.sundsvall.datawarehousereader.InstalledBaseItemMetaData;
 import generated.se.sundsvall.datawarehousereader.InstalledBaseResponse;
 import generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseItemAddress;
 

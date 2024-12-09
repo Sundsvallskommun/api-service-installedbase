@@ -16,12 +16,14 @@
 			"postCode": ""
 		},
 		{
-			"metaData": [{
-				"displayName": "Nätområde",
-				"type": "location",
-				"value": "Sollentuna",
-				"key": "netarea"
-			}],
+			"metaData": [
+				{
+					"displayName": "Nätområde",
+					"type": "location",
+					"value": "Sollentuna",
+					"key": "netarea"
+				}
+			],
 			"facilityId": "9412001019",
 			"placementId": 1886,
 			"careOf": "Privat företag AB",

@@ -1,38 +1,44 @@
-{"installedBaseCustomers": [{
-	"customerNumber": "38308",
-	"partyId": "c62239a0-c17f-4927-b62a-f82f781b4336",
-	"items": [
+{
+	"installedBaseCustomers": [
 		{
-			"metaData": [],
-			"facilityId": "38308",
-			"address": {
-				"careOf": "Privat företag AB",
-				"city": "",
-				"street": "",
-				"postalCode": "",
-				"propertyDesignation": ""
-			},
-			"placementId": 498,
-			"facilityCommitmentStartDate": "2010-01-01",
-			"facilityCommitmentEndDate": "2015-07-05",
-			"type": "Avfallsvåg"
-		},
-		{
-			"metaData": [{
-				"displayName": "Nätområde",
-				"type": "location",
-				"value": "Sollentuna",
-				"key": "netarea"
-			}],
-			"facilityId": "9412001019",
-			"address": {
-				"careOf": "Privat företag AB",
-				"street": "Vikingavägen 66",
-				"propertyDesignation": "Ankeborg 1:21"
-			},
-			"placementId": 1886,
-			"facilityCommitmentStartDate": "2005-06-15",
-			"type": "Elhandel"
+			"customerNumber": "38308",
+			"partyId": "c62239a0-c17f-4927-b62a-f82f781b4336",
+			"items": [
+				{
+					"metaData": [],
+					"facilityId": "38308",
+					"address": {
+						"careOf": "Privat företag AB",
+						"city": "",
+						"street": "",
+						"postalCode": "",
+						"propertyDesignation": ""
+					},
+					"placementId": 498,
+					"facilityCommitmentStartDate": "2010-01-01",
+					"facilityCommitmentEndDate": "2015-07-05",
+					"type": "Avfallsvåg"
+				},
+				{
+					"metaData": [
+						{
+							"displayName": "Nätområde",
+							"type": "location",
+							"value": "Sollentuna",
+							"key": "netarea"
+						}
+					],
+					"facilityId": "9412001019",
+					"address": {
+						"careOf": "Privat företag AB",
+						"street": "Vikingavägen 66",
+						"propertyDesignation": "Ankeborg 1:21"
+					},
+					"placementId": 1886,
+					"facilityCommitmentStartDate": "2005-06-15",
+					"type": "Elhandel"
+				}
+			]
 		}
 	]
-}]}
+}
