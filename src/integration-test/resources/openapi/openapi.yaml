@@ -1,59 +1,79 @@
 openapi: 3.0.1
 info:
   title: api-installedbase
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "3.0"
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:56427
+    description: Generated server url
 tags:
-- name: Installed base
-  description: Installed base operations
+  - name: Installed base
+    description: Installed base operations
 paths:
   /{municipalityId}/installedbase/{organizationNumber}:
     get:
       tags:
-      - Installed base
+        - Installed base
       summary: Get installed base at company matching organization number for customer
         matching provided party-ID
       operationId: getInstalledBase
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: organizationNumber
-        in: path
-        description: Organization number
-        required: true
-        schema:
-          type: string
-        example: 5565112233
-      - name: partyId
-        in: query
-        description: Party-ID
-        required: true
-        schema:
-          type: array
-          items:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
             type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
-      - name: modifiedFrom
-        in: query
-        description: Optional date for filtering on installed bases modified at provided
-          date or later
-        required: false
-        schema:
-          type: string
-          format: date
-        example: 2023-06-01
+          example: 2281
+        - name: organizationNumber
+          in: path
+          description: Organization number
+          required: true
+          schema:
+            type: string
+          example: 5565112233
+        - name: partyId
+          in: query
+          description: Party-ID
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: modifiedFrom
+          in: query
+          description: Optional date for filtering on installed bases modified at provided
+            date or later
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2023-06-01
       responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstalledBaseResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
         "500":
           description: Internal Server Error
           content:
@@ -66,33 +86,10 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InstalledBaseResponse"
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/InstalledBaseResponse"
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -122,9 +119,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
@@ -257,9 +254,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array
@@ -433,4 +430,4 @@ components:
           items:
             $ref: "#/components/schemas/InstalledBaseCustomer"
       description: Installed base response model
-  securitySchemes: {}
+  securitySchemes: { }
