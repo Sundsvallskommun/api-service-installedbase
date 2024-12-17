@@ -6,6 +6,7 @@ import static se.sundsvall.installedbase.integration.datawarehousereader.configu
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.InstalledBaseResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.installedbase.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration;
 
 @FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
+@CircuitBreaker(name = CLIENT_ID)
 public interface DataWarehouseReaderClient {
 
 	@GetMapping(path = "/{municipalityId}/customer/engagements", produces = {
