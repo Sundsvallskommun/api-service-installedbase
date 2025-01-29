@@ -59,7 +59,7 @@ Ensure that these services are running and properly configured before starting t
 
 ## API Documentation
 
-See `openapi.yaml` located in directory `integration-test\resources\openapi` or access the API documentation via Swagger UI:
+See `openapi.yaml` located in directory `src\integration-test\resources\openapi` or access the API documentation via Swagger UI:
 
 - **Swagger UI:** [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
 
@@ -91,21 +91,20 @@ server:
 - **External Service URLs**
 
 ```yaml
-
   integration:
     datawarehousereader:
-      url: http://datawarehousereader_service_url
+      url: <service-url>
 
   spring:
     security:
       oauth2:
         client:
           registration:
-            datawarehousereader:client-id: some-client-id
-            client-secret: some-client-secret
+            datawarehousereader:client-id: <client-id>
+            client-secret: <client-secret>
           provider:
             datawarehousereader:
-              token-uri: http://dependecy_token_url
+              token-uri: <token-url>
 ```
 
 ### Additional Notes
