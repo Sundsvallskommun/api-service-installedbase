@@ -37,13 +37,13 @@ cd api-service-installedbase
    - Using Maven:
 
    ```bash
-     mvn spring-boot:run
+   mvn spring-boot:run
    ```
 
    - Using Gradle:
 
    ```bash
-     gradle bootRun
+   gradle bootRun
    ```
 
 ## Dependencies
