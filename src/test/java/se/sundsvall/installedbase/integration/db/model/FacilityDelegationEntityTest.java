@@ -9,7 +9,7 @@ import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
-import static se.sundsvall.installedbase.integration.db.model.DelegationStatus.ACTIVE;
+import static se.sundsvall.installedbase.service.model.DelegationStatus.ACTIVE;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

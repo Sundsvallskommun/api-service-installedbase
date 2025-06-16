@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
+import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @Entity
 @Table(name = "facility_delegation",
