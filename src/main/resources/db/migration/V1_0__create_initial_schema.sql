@@ -1,31 +1,29 @@
-create table delegated_facility
+create table facility_delegation
 (
-	id                         int auto_increment primary key,
-	municipality_id            varchar(4)   null,
-	end                        datetime(6)  null,
-	start                      datetime(6)  not null,
-	business_engagement_org_id varchar(20)  null,
-	delegated_to               varchar(36)  not null,
-	owner                      varchar(36)  not null,
-	status                     varchar(256) not null,
-	constraint uk_delegated_to_owner
-		unique (delegated_to, owner)
+    municipality_id            varchar(4)  null,
+    created                    datetime(6) not null,
+    deleted                    datetime(6) null,
+    updated                    datetime(6) null,
+    business_engagement_org_id varchar(20) null,
+    delegated_to               varchar(36) not null,
+    id                         varchar(36) not null primary key,
+    owner                      varchar(36) not null,
+    status                     varchar(40) not null,
+    constraint uk_delegated_to_owner
+        unique (delegated_to, owner)
 );
 
-create index idx_delegated_to
-	on delegated_facility (delegated_to);
+create index idx_municipality_id_delegated_to
+    on facility_delegation (municipality_id, delegated_to);
 
-create index idx_municipality_id
-	on delegated_facility (municipality_id);
+create index idx_municipality_id_owner
+    on facility_delegation (municipality_id, owner);
 
-create index idx_owner
-	on delegated_facility (owner);
-
-create table delegated_facility_facilities
+create table facility_delegation_facilities
 (
-	delegated_facility_id int         not null,
-	facility              varchar(256) not null,
-	constraint fk_delegated_facility_facilities_delegated_facility_id
-		foreign key (delegated_facility_id) references delegated_facility (id)
+    facility_delegation_id varchar(36)  not null,
+    facility               varchar(256) null,
+    constraint fk_facility_delegation_facilities_facility_delegation_id
+        foreign key (facility_delegation_id) references facility_delegation (id)
 );
 

@@ -13,11 +13,12 @@ import static se.sundsvall.installedbase.integration.db.model.DelegationStatus.A
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class DelegatedFacilityEntityTest {
+class FacilityDelegationEntityTest {
 
 	@BeforeAll
 	static void setup() {
@@ -26,12 +27,12 @@ class DelegatedFacilityEntityTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(new DelegatedFacilityEntity()).hasAllNullFieldsOrProperties();
+		assertThat(new FacilityDelegationEntity()).hasAllNullFieldsOrProperties();
 	}
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(DelegatedFacilityEntity.class, allOf(
+		MatcherAssert.assertThat(FacilityDelegationEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCodeExcluding("facilities"),
@@ -41,17 +42,18 @@ class DelegatedFacilityEntityTest {
 
 	@Test
 	void testBuilderMethods() {
-		var id = 123;
+		var id = UUID.randomUUID().toString();
 		var facilites = List.of("facility1", "facility2");
 		var businessEngagementOrgId = "org123";
 		var delegatedTo = "delegatedTo123";
 		var municipalityId = "2281";
 		var owner = "owner123";
 		var status = ACTIVE;
-		var start = LocalDateTime.now();
-		var end = LocalDateTime.now().plusDays(1);
+		var created = LocalDateTime.now();
+		var deleted = LocalDateTime.now().plusDays(1);
+		var updated = LocalDateTime.now().plusMinutes(2);
 
-		var entity = new DelegatedFacilityEntity()
+		var entity = new FacilityDelegationEntity()
 			.withId(id)
 			.withFacilities(facilites)
 			.withBusinessEngagementOrgId(businessEngagementOrgId)
@@ -59,8 +61,9 @@ class DelegatedFacilityEntityTest {
 			.withMunicipalityId(municipalityId)
 			.withOwner(owner)
 			.withStatus(status)
-			.withStart(start)
-			.withEnd(end);
+			.withCreated(created)
+			.withUpdated(updated)
+			.withDeleted(deleted);
 
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getFacilities()).isEqualTo(facilites);
@@ -69,7 +72,8 @@ class DelegatedFacilityEntityTest {
 		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(entity.getOwner()).isEqualTo(owner);
 		assertThat(entity.getStatus()).isEqualTo(status);
-		assertThat(entity.getStart()).isEqualTo(start);
-		assertThat(entity.getEnd()).isEqualTo(end);
+		assertThat(entity.getCreated()).isEqualTo(created);
+		assertThat(entity.getUpdated()).isEqualTo(updated);
+		assertThat(entity.getDeleted()).isEqualTo(deleted);
 	}
 }
