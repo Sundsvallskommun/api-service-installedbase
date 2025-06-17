@@ -17,6 +17,9 @@ resilience4j:
 spring:
   application:
     name: api-installedbase
+  jpa:
+    hibernate:
+      ddl-auto: validate
   security:
     oauth2:
       client:

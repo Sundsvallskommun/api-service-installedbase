@@ -4,6 +4,13 @@ integration:
     readTimeout: 20
     url: http://localhost:${wiremock.server.port}/datawarehousereaderMock
 spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mariadb:10.6.14:///
+    username: user
+    password: password
+  flyway:
+    enabled: true
   security:
     oauth2:
       client:
