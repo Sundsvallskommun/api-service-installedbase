@@ -7,10 +7,12 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
 import static se.sundsvall.installedbase.integration.db.model.DelegationStatus.ACTIVE;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -75,5 +77,27 @@ class FacilityDelegationEntityTest {
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getUpdated()).isEqualTo(updated);
 		assertThat(entity.getDeleted()).isEqualTo(deleted);
+	}
+
+	@Test
+	void testPrePersist() {
+		var entity = new FacilityDelegationEntity();
+		entity.onCreate();
+		assertThat(entity.getCreated()).isNotNull();
+		assertThat(entity.getCreated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
+	}
+
+	@Test
+	void testPreUpdate() {
+		// Create a new entity and set the created time
+		var entity = new FacilityDelegationEntity();
+		entity.onCreate();
+
+		// Simulate an update by calling onUpdate
+		var initialCreated = entity.getCreated();
+		entity.onUpdate();
+		assertThat(entity.getUpdated()).isNotNull();
+		assertThat(entity.getUpdated()).isAfter(initialCreated);
+		assertThat(entity.getUpdated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
 	}
 }

@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ import org.hibernate.annotations.UuidGenerator;
 	uniqueConstraints = @UniqueConstraint(
 		name = "uk_delegated_to_owner",
 		columnNames = {
-			"delegated_to", "owner"
+			"delegated_to", "owner", "municipality_id"
 		}))
 public class FacilityDelegationEntity {
 
@@ -72,10 +73,13 @@ public class FacilityDelegationEntity {
 	@Column(name = "updated")
 	private LocalDateTime updated;
 
-	@PrePersist
-	private void prePersist() {
+	@PreUpdate
+	void onUpdate() {
 		updated = LocalDateTime.now();
+	}
 
+	@PrePersist
+	void onCreate() {
 		if (Objects.isNull(created)) {
 			created = LocalDateTime.now();
 		}

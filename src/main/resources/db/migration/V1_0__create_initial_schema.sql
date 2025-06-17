@@ -10,7 +10,7 @@ create table facility_delegation
     owner                      varchar(36) not null,
     status                     varchar(40) not null,
     constraint uk_delegated_to_owner
-        unique (delegated_to, owner)
+        unique (delegated_to, owner, municipality_id)
 );
 
 create index idx_municipality_id_delegated_to
