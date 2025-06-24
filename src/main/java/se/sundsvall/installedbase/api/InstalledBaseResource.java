@@ -31,11 +31,11 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 @Validated
 @RequestMapping("/{municipalityId}/installedbase")
 @Tag(name = "Installed base", description = "Installed base operations")
-public class InstalledBaseResource {
+class InstalledBaseResource {
 
 	private final InstalledBaseService service;
 
-	public InstalledBaseResource(final InstalledBaseService service) {
+	InstalledBaseResource(final InstalledBaseService service) {
 		this.service = service;
 	}
 
@@ -51,7 +51,7 @@ public class InstalledBaseResource {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
 			@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	public ResponseEntity<InstalledBaseResponse> getInstalledBase(
+	ResponseEntity<InstalledBaseResponse> getInstalledBase(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "organizationNumber", description = "Organization number", required = true, example = "5565112233") @ValidOrganizationNumber @PathVariable(name = "organizationNumber") final String organizationNumber,
 		@Parameter(name = "partyId", description = "Party-ID", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @RequestParam(value = "partyId") final List<@ValidUuid String> partyIds,

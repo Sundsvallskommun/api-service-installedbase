@@ -1,10 +1,14 @@
 package se.sundsvall.installedbase.api;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.web.util.UriComponentsBuilder.fromPath;
+import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,7 +42,7 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 })))
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-public class DelegateResource {
+class DelegateResource {
 
 	private final InstalledBaseService service;
 
@@ -52,9 +56,9 @@ public class DelegateResource {
 			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	public ResponseEntity<FacilityDelegation> getDelegationById(
+	ResponseEntity<FacilityDelegation> getDelegationById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "id", description = "Id for the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
+		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
 		return ok(service.getFacilityDelegation(municipalityId, id));
 	}
 
@@ -64,10 +68,18 @@ public class DelegateResource {
 			@ApiResponse(responseCode = "201", description = "Created", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "409", description = "Conflict", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	public ResponseEntity<Void> createDelegation(
+	ResponseEntity<Void> createDelegation(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@RequestBody @Valid FacilityDelegation facilityDelegation) {
 
-		return service.createFacilityDelegation(municipalityId, facilityDelegation);
+		var id = service.createFacilityDelegation(municipalityId, facilityDelegation);
+
+		var uri = fromPath(DELEGATES_BY_ID_PATH)
+			.buildAndExpand(municipalityId, id)
+			.toUri();
+
+		return created(uri)
+			.header(CONTENT_TYPE, ALL_VALUE)
+			.build();
 	}
 }

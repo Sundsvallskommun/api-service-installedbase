@@ -7,11 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
 
 import java.util.UUID;
@@ -45,11 +42,7 @@ class FacilityDelegationResourceTest {
 		var facilityDelegation = createFacilityDelegation();
 		facilityDelegation.setId(id);
 
-		ResponseEntity<Void> response = created(fromPath("/{municipalityId}/delegates/{id}")
-			.buildAndExpand(MUNICIPALITY_ID, id)
-			.toUri()).header(CONTENT_TYPE, ALL_VALUE).build();
-
-		when(mockService.createFacilityDelegation(anyString(), any(FacilityDelegation.class))).thenReturn(response);
+		when(mockService.createFacilityDelegation(anyString(), any(FacilityDelegation.class))).thenReturn(id);
 
 		webTestClient.post()
 			.uri("/{municipalityId}/delegates", MUNICIPALITY_ID)

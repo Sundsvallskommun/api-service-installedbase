@@ -158,7 +158,7 @@ paths:
           example: 2281
         - name: id
           in: path
-          description: Id for the delegation
+          description: Id of the delegation
           required: true
           schema:
             type: string
@@ -227,20 +227,20 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     FacilityDelegation:
       required:
         - delegatedTo
@@ -278,7 +278,7 @@ components:
           example: ACTIVE
         municipalityId:
           type: string
-          description: Municipality ID for the delegation
+          description: Municipality ID of the delegation
           readOnly: true
           example: "1234"
         created:
@@ -418,12 +418,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:

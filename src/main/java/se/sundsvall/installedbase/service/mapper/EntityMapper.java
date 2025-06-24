@@ -6,9 +6,7 @@ import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 public final class EntityMapper {
 
-	private EntityMapper() {
-		// Private constructor to prevent instantiation
-	}
+	private EntityMapper() {}
 
 	/**
 	 * Converts a FacilityDelegation to a FacilityDelegationEntity.
@@ -24,7 +22,6 @@ public final class EntityMapper {
 			.withStatus(status)
 			.withFacilities(facilityDelegation.getFacilities())
 			.withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId())
-			.withDelegatedTo(facilityDelegation.getDelegatedTo())
 			.withOwner(facilityDelegation.getOwner())
 			.withMunicipalityId(municipalityId);
 	}
@@ -43,7 +40,7 @@ public final class EntityMapper {
 			.withDelegatedTo(entity.getDelegatedTo())
 			.withMunicipalityId(entity.getMunicipalityId())
 			.withOwner(entity.getOwner())
-			.withStatus(entity.getStatus().toString())
+			.withStatus(entity.getStatus().name())
 			.withCreated(entity.getCreated())
 			.withDeleted(entity.getDeleted());
 	}

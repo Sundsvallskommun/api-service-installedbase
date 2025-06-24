@@ -1,4 +1,4 @@
-package se.sundsvall.installedbase.api.model;
+package se.sundsvall.installedbase.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;

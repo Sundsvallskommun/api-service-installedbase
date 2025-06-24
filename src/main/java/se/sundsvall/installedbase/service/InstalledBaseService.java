@@ -1,22 +1,12 @@
 package se.sundsvall.installedbase.service;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.ALL_VALUE;
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.web.util.UriComponentsBuilder.fromPath;
-import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
-import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withDelegatedTo;
-import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withId;
-import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withMunicipalityId;
-import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseResponse;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
@@ -72,17 +62,13 @@ public class InstalledBaseService {
 	 * 
 	 * @param  municipalityId     municipalityId
 	 * @param  facilityDelegation FacilityDelegation object containing delegation details
-	 * @return                    ResponseEntity with status 201 Created and location header pointing to the created
+	 * @return                    id of the delegation
 	 *                            delegation
 	 */
 	@Transactional
-	public ResponseEntity<Void> createFacilityDelegation(String municipalityId, FacilityDelegation facilityDelegation) {
-		var spec = withMunicipalityId(municipalityId)
-			.and(withOwner(facilityDelegation.getOwner()))
-			.and(withDelegatedTo(facilityDelegation.getDelegatedTo()));
-
+	public String createFacilityDelegation(String municipalityId, FacilityDelegation facilityDelegation) {
 		// Check if the owner already has delegated to the same partyId
-		if (facilityDelegationRepository.findOne(spec).isPresent()) {
+		if (facilityDelegationRepository.findOne(municipalityId, facilityDelegation.getOwner(), facilityDelegation.getDelegatedTo()).isPresent()) {
 			throw Problem.builder()
 				.withTitle("Facility delegation already exists")
 				.withDetail("Owner with partyId: '" + facilityDelegation.getOwner() + "' has already delegated to partyId: '"
@@ -93,13 +79,7 @@ public class InstalledBaseService {
 
 		var entity = facilityDelegationRepository.save(EntityMapper.toEntity(municipalityId, facilityDelegation, DelegationStatus.ACTIVE));
 
-		var uri = fromPath(DELEGATES_BY_ID_PATH)
-			.buildAndExpand(entity.getMunicipalityId(), entity.getId())
-			.toUri();
-
-		return created(uri)
-			.header(CONTENT_TYPE, ALL_VALUE)
-			.build();
+		return entity.getId();
 	}
 
 	/**
@@ -111,12 +91,7 @@ public class InstalledBaseService {
 	 * @return                      FacilityDelegation object containing delegation details
 	 */
 	public FacilityDelegation getFacilityDelegation(String municipalityId, String facilityDelegationId) {
-		var spec = withMunicipalityId(municipalityId)
-			.and(withId(facilityDelegationId));
-
-		var facilityDelegationEntity = facilityDelegationRepository.findOne(spec);
-
-		return facilityDelegationEntity
+		return facilityDelegationRepository.findOne(municipalityId, facilityDelegationId)
 			.map(EntityMapper::toDelegate)
 			.orElseThrow(() -> Problem.builder()
 				.withDetail("Couldn't find delegation for id: " + facilityDelegationId)

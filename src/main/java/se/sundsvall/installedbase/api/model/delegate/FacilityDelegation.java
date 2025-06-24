@@ -42,7 +42,7 @@ public class FacilityDelegation {
 	}, example = "ACTIVE", accessMode = READ_ONLY)
 	private String status;
 
-	@Schema(description = "Municipality ID for the delegation", example = "1234", accessMode = READ_ONLY)
+	@Schema(description = "Municipality ID of the delegation", example = "1234", accessMode = READ_ONLY)
 	private String municipalityId;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

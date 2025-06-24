@@ -10,21 +10,28 @@ import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 
 public interface FacilityDelegationSpecification {
 
-	SpecificationBuilder<FacilityDelegationEntity> BUILDER = new SpecificationBuilder<>();
-
 	static Specification<FacilityDelegationEntity> withId(final String id) {
-		return BUILDER.buildEqualFilter(ID, id);
+		return buildEqualFilter(ID, id);
 	}
 
 	static Specification<FacilityDelegationEntity> withMunicipalityId(final String municipalityId) {
-		return BUILDER.buildEqualFilter(MUNICIPALITY_ID, municipalityId);
+		return buildEqualFilter(MUNICIPALITY_ID, municipalityId);
 	}
 
 	static Specification<FacilityDelegationEntity> withOwner(final String owner) {
-		return BUILDER.buildEqualFilter(OWNER, owner);
+		return buildEqualFilter(OWNER, owner);
 	}
 
 	static Specification<FacilityDelegationEntity> withDelegatedTo(final String delegatedTo) {
-		return BUILDER.buildEqualFilter(DELEGATED_TO, delegatedTo);
+		return buildEqualFilter(DELEGATED_TO, delegatedTo);
+	}
+
+	private static Specification<FacilityDelegationEntity> buildEqualFilter(final String attribute, final String value) {
+		return (entity, cq, cb) -> {
+			if (value != null) {
+				return cb.equal(entity.get(attribute), value);
+			}
+			return cb.and();
+		};
 	}
 }
