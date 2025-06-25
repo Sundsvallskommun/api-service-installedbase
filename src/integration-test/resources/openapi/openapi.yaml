@@ -1,18 +1,74 @@
 openapi: 3.0.1
 info:
   title: api-installedbase
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "3.0"
+  version: "3.1"
 servers:
-  - url: http://localhost:56427
+  - url: http://localhost:8080
     description: Generated server url
 tags:
   - name: Installed base
+    description: Delegation operations
+  - name: Installed base
     description: Installed base operations
 paths:
+  /{municipalityId}/delegates:
+    post:
+      tags:
+        - Installed base
+      summary: Delegate facilities
+      operationId: createDelegation
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacilityDelegation"
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            Location:
+              style: simple
+              schema:
+                type: string
+        "409":
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/installedbase/{organizationNumber}:
     get:
       tags:
@@ -86,6 +142,60 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/delegates/{id}:
+    get:
+      tags:
+        - Installed base
+      summary: Get a specific delegation
+      operationId: getDelegationById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacilityDelegation"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -126,11 +236,67 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
+    FacilityDelegation:
+      required:
+        - delegatedTo
+        - facilities
+        - owner
+      type: object
+      properties:
+        id:
           type: string
+          description: Unique identifier for the delegation
+          readOnly: true
+          example: 12345678-1234-1234-1234-123456789012
+        facilities:
+          minItems: 1
+          type: array
+          items:
+            minLength: 1
+            type: string
+        businessEngagementOrgId:
+          type: string
+          description: Organization number of the company owning the facility
+          example: "5591628136"
+        delegatedTo:
+          type: string
+          description: Party ID of the delegate
+          example: 81471222-5798-11e9-ae24-57fa13b361e2
+        owner:
+          type: string
+          description: Party ID of the delegation owner
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        status:
+          type: string
+          description: Status of the delegation
+          readOnly: true
+          example: ACTIVE
+        municipalityId:
+          type: string
+          description: Municipality ID of the delegation
+          readOnly: true
+          example: "1234"
+        created:
+          type: string
+          description: When the delegation was created
+          format: date-time
+          readOnly: true
+        updated:
+          type: string
+          description: When the delegation was last updated
+          format: date-time
+          readOnly: true
+        deleted:
+          type: string
+          description: When the delegation was deleted
+          format: date-time
+          readOnly: true
+      description: FacilityDelegation model
     ConstraintViolationProblem:
       type: object
       properties:
@@ -430,4 +596,4 @@ components:
           items:
             $ref: "#/components/schemas/InstalledBaseCustomer"
       description: Installed base response model
-  securitySchemes: { }
+  securitySchemes: {}
