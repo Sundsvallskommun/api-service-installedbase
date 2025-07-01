@@ -16,6 +16,76 @@ tags:
     description: Installed base operations
 paths:
   /{municipalityId}/delegates:
+    get:
+      tags:
+        - Installed base
+      summary: Get delegation by owner and/or delegate
+      operationId: getDelegations
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: owner
+          in: query
+          description: Owner of the delegation
+          required: false
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: delegatedTo
+          in: query
+          description: The delegate
+          required: false
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e2
+        - name: status
+          in: query
+          description: "Status of the delegation, will show all delegation statuses\
+          \ if not provided"
+          required: false
+          schema:
+            type: string
+          example: ACTIVE
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FacilityDelegation"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
     post:
       tags:
         - Installed base

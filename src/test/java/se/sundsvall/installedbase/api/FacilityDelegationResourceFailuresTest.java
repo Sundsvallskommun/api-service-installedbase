@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.installedbase.Application;
@@ -169,6 +170,94 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
 					.containsExactly(tuple("getDelegationById.id", "not a valid UUID"));
+			});
+	}
+
+	@Test
+	void getDelegationsWithInvalidMunicipalityId() {
+		var invalidMunicipalityId = "invalid";
+
+		webTestClient.get()
+			.uri("/{municipalityId}/delegates", invalidMunicipalityId)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("getDelegations.municipalityId", "not a valid municipality ID"));
+			});
+	}
+
+	@Test
+	void getDelegationsWithInvalidOwner() {
+		var invalidOwner = "invalid-owner";
+
+		webTestClient.get()
+			.uri("/{municipalityId}/delegates?owner={owner}", MUNICIPALITY_ID, invalidOwner)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("getDelegations.owner", "not a valid UUID"));
+			});
+	}
+
+	@Test
+	void getDelegationsWithInvalidDelegatedTo() {
+		var invalidDelegatedTo = "invalid-delegated-to";
+		webTestClient.get()
+			.uri("/{municipalityId}/delegates?delegatedTo={delegatedTo}", MUNICIPALITY_ID, invalidDelegatedTo)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("getDelegations.delegatedTo", "not a valid UUID"));
+			});
+	}
+
+	@Test
+	void getDelegationsWithNoOwnerOrDelegatedTo() {
+		webTestClient.get()
+			.uri("/{municipalityId}/delegates", MUNICIPALITY_ID)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(Problem.class)
+			.consumeWith(response -> {
+				assertThat(response).isNotNull();
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getTitle()).isEqualTo("Invalid search parameters");
+				assertThat(response.getResponseBody().getDetail()).isEqualTo("Either owner or delegatedTo must be provided");
+			});
+	}
+
+	@Test
+	void getDelegationsWithInvalidStatus() {
+		var owner = UUID.randomUUID().toString();
+		var invalidStatus = "invalid-status";
+
+		webTestClient.get()
+			.uri("/{municipalityId}/delegates?owner={owner}&status={status}", MUNICIPALITY_ID, owner, invalidStatus)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("getDelegations.status", "invalid delegation status 'invalid-status'. Must be one of 'ACTIVE, DELETED' or empty"));
 			});
 	}
 }

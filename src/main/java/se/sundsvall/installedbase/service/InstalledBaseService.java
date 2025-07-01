@@ -98,4 +98,11 @@ public class InstalledBaseService {
 				.withStatus(Status.NOT_FOUND)
 				.build());
 	}
+
+	public List<FacilityDelegation> getFacilityDelegations(String municipalityId, String owner, String delegatedTo, String status) {
+		return facilityDelegationRepository.findAll(municipalityId, owner, delegatedTo, status).stream()
+			.map(EntityMapper::toDelegate)
+			.toList();
+	}
+
 }
