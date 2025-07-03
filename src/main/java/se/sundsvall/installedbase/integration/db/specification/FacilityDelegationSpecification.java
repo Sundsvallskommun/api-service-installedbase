@@ -4,6 +4,7 @@ import static se.sundsvall.installedbase.integration.db.model.FacilityDelegation
 import static se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity_.ID;
 import static se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity_.MUNICIPALITY_ID;
 import static se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity_.OWNER;
+import static se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity_.STATUS;
 
 import org.springframework.data.jpa.domain.Specification;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
@@ -24,6 +25,10 @@ public interface FacilityDelegationSpecification {
 
 	static Specification<FacilityDelegationEntity> withDelegatedTo(final String delegatedTo) {
 		return buildEqualFilter(DELEGATED_TO, delegatedTo);
+	}
+
+	static Specification<FacilityDelegationEntity> withStatus(final String status) {
+		return buildEqualFilter(STATUS, status);
 	}
 
 	private static Specification<FacilityDelegationEntity> buildEqualFilter(final String attribute, final String value) {

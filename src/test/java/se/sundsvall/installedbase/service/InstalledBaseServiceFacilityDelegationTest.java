@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegationEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
+import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledBaseServiceFacilityDelegationTest {
@@ -69,14 +71,14 @@ class InstalledBaseServiceFacilityDelegationTest {
 
 	@Test
 	void testGetFacilityDelegation() {
-		var uuid = UUID.randomUUID().toString();
-		var facilityDelegationEntity = createFacilityDelegationEntity(uuid);
+		var id = UUID.randomUUID().toString();
+		var facilityDelegationEntity = createFacilityDelegationEntity(id);
 		when(mockFacilityDelegationRepository.findOne(anyString(), anyString())).thenReturn(Optional.of(facilityDelegationEntity));
 
-		var response = installedBaseService.getFacilityDelegation(MUNICIPALITY_ID, uuid);
+		var response = installedBaseService.getFacilityDelegation(MUNICIPALITY_ID, id);
 
 		assertThat(response).isNotNull();
-		assertThat(response.getId()).isEqualTo(uuid);
+		assertThat(response.getId()).isEqualTo(id);
 
 		verify(mockFacilityDelegationRepository).findOne(anyString(), anyString());
 		verifyNoMoreInteractions(mockFacilityDelegationRepository);
@@ -84,14 +86,51 @@ class InstalledBaseServiceFacilityDelegationTest {
 
 	@Test
 	void testGetFacilityDelegation_shouldThrowProblem_WhenNotFound() {
-		var uuid = UUID.randomUUID().toString();
+		var id = UUID.randomUUID().toString();
 		when(mockFacilityDelegationRepository.findOne(anyString(), anyString())).thenReturn(Optional.empty());
 
 		assertThatExceptionOfType(ThrowableProblem.class)
-			.isThrownBy(() -> installedBaseService.getFacilityDelegation(MUNICIPALITY_ID, uuid))
-			.withMessage("Couldn't find delegation for id: " + uuid);
+			.isThrownBy(() -> installedBaseService.getFacilityDelegation(MUNICIPALITY_ID, id))
+			.withMessage("Couldn't find delegation for id: " + id);
 
 		verify(mockFacilityDelegationRepository).findOne(anyString(), anyString());
 		verifyNoMoreInteractions(mockFacilityDelegationRepository);
 	}
+
+	// Tests for getFacilityDelegations
+
+	@Test
+	void testGetFacilityDelegations() {
+		var owner = UUID.randomUUID().toString();
+		var delegatedTo = UUID.randomUUID().toString();
+		var status = DelegationStatus.ACTIVE.name();
+		var facilityDelegationEntity = createFacilityDelegationEntity(UUID.randomUUID().toString());
+		when(mockFacilityDelegationRepository.findAll(MUNICIPALITY_ID, owner, delegatedTo, status))
+			.thenReturn(List.of(facilityDelegationEntity));
+
+		var response = installedBaseService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, status);
+
+		assertThat(response).isNotNull().hasSize(1);
+		assertThat(response.getFirst().getId()).isEqualTo(facilityDelegationEntity.getId());
+
+		verify(mockFacilityDelegationRepository).findAll(MUNICIPALITY_ID, owner, delegatedTo, status);
+		verifyNoMoreInteractions(mockFacilityDelegationRepository);
+	}
+
+	@Test
+	void testGetFacilityDelegations_shouldReturnEmptyList_whenNoDelegationsFound() {
+		var owner = UUID.randomUUID().toString();
+		var delegatedTo = UUID.randomUUID().toString();
+		var status = DelegationStatus.ACTIVE.name();
+		when(mockFacilityDelegationRepository.findAll(MUNICIPALITY_ID, owner, delegatedTo, status))
+			.thenReturn(List.of());
+
+		var response = installedBaseService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, status);
+
+		assertThat(response).isNotNull().isEmpty();
+
+		verify(mockFacilityDelegationRepository).findAll(MUNICIPALITY_ID, owner, delegatedTo, status);
+		verifyNoMoreInteractions(mockFacilityDelegationRepository);
+	}
+
 }

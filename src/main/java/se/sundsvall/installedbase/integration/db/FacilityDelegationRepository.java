@@ -4,7 +4,9 @@ import static se.sundsvall.installedbase.integration.db.specification.FacilityDe
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withMunicipalityId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
+import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withStatus;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +28,12 @@ public interface FacilityDelegationRepository extends JpaRepository<FacilityDele
 
 	default Optional<FacilityDelegationEntity> findOne(String municipalityId, String id) {
 		return findOne(municipalityId, id, null, null);
+	}
+
+	default List<FacilityDelegationEntity> findAll(String municipalityId, String owner, String delegatedTo, String status) {
+		return findAll(Specification.where(withMunicipalityId(municipalityId))
+			.and(withOwner(owner))
+			.and(withDelegatedTo(delegatedTo))
+			.and(withStatus(status)));
 	}
 }

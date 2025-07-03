@@ -1,4 +1,4 @@
-package se.sundsvall.installedbase.api.model.delegate;
+package se.sundsvall.installedbase.api.model.facilitydelegation;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;

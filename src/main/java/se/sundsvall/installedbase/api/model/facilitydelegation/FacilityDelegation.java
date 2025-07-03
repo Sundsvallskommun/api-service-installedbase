@@ -1,4 +1,4 @@
-package se.sundsvall.installedbase.api.model.delegate;
+package se.sundsvall.installedbase.api.model.facilitydelegation;
 
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
