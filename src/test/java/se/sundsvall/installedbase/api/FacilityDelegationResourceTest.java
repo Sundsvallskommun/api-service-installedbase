@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.installedbase.Application;
-import se.sundsvall.installedbase.api.model.delegate.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
 @ActiveProfiles("junit")

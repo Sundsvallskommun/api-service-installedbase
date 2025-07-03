@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
-import se.sundsvall.installedbase.api.model.delegate.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
 import se.sundsvall.installedbase.service.mapper.EntityMapper;

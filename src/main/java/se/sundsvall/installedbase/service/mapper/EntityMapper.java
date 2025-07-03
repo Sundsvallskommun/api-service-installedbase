@@ -1,6 +1,6 @@
 package se.sundsvall.installedbase.service.mapper;
 
-import se.sundsvall.installedbase.api.model.delegate.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 import se.sundsvall.installedbase.service.model.DelegationStatus;
 

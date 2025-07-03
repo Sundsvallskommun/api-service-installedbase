@@ -3,7 +3,7 @@ package se.sundsvall.installedbase;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import se.sundsvall.installedbase.api.model.delegate.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 import se.sundsvall.installedbase.service.model.DelegationStatus;
 

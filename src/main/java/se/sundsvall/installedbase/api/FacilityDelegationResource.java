@@ -9,6 +9,7 @@ import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
+import static se.sundsvall.installedbase.api.model.validation.ValidatorUtil.validateDelegationParameters;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
-import se.sundsvall.installedbase.api.model.delegate.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.validation.ValidDelegationStatus;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
@@ -103,17 +102,5 @@ class FacilityDelegationResource {
 		return created(uri)
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
-	}
-
-	// Check that at least one of the parameters owner or delegatedTo is provided
-	private void validateDelegationParameters(String owner, String delegatedTo) {
-		if (StringUtils.isBlank(owner) && StringUtils.isBlank(delegatedTo)) {
-
-			throw Problem.builder()
-				.withTitle("Invalid search parameters")
-				.withDetail("Either owner or delegatedTo must be provided")
-				.withStatus(Status.BAD_REQUEST)
-				.build();
-		}
 	}
 }
