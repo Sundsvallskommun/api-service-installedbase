@@ -6,10 +6,11 @@ import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
-import static se.sundsvall.installedbase.api.model.validation.ValidatorUtil.validateDelegationParameters;
+import static se.sundsvall.installedbase.api.model.validation.ValidatorUtil.validateFacilityDelegationParameters;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +42,7 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 @RestController
 @Validated
 @RequestMapping("/{municipalityId}/delegates")
-@Tag(name = "Installed base", description = "Delegation operations")
+@Tag(name = "Installed base", description = "Facility delegation operations")
 @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
@@ -55,12 +57,12 @@ class FacilityDelegationResource {
 	}
 
 	@GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get a specific delegation",
+	@Operation(summary = "Get a specific facility delegation",
 		responses = {
 			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	ResponseEntity<FacilityDelegation> getDelegationById(
+	ResponseEntity<FacilityDelegation> getFacilityDelegationById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
 		return ok(service.getFacilityDelegation(municipalityId, id));
@@ -72,13 +74,13 @@ class FacilityDelegationResource {
 			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	public ResponseEntity<List<FacilityDelegation>> getDelegations(
+	public ResponseEntity<List<FacilityDelegation>> getFacilityDelegations(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "owner", description = "Owner of the delegation", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid(nullable = true) @RequestParam(required = false) String owner,
 		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo,
 		@Parameter(name = "status", description = "Status of the delegation, will show all delegation statuses if not provided", example = "ACTIVE") @RequestParam(required = false) @ValidDelegationStatus String status) {
 
-		validateDelegationParameters(owner, delegatedTo);
+		validateFacilityDelegationParameters(owner, delegatedTo);
 
 		return ok(service.getFacilityDelegations(municipalityId, owner, delegatedTo, status));
 	}
@@ -89,7 +91,7 @@ class FacilityDelegationResource {
 			@ApiResponse(responseCode = "201", description = "Created", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "409", description = "Conflict", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	ResponseEntity<Void> createDelegation(
+	ResponseEntity<Void> createFacilityDelegation(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@RequestBody @Valid FacilityDelegation facilityDelegation) {
 
@@ -100,6 +102,26 @@ class FacilityDelegationResource {
 			.toUri();
 
 		return created(uri)
+			.header(CONTENT_TYPE, ALL_VALUE)
+			.build();
+	}
+
+	@PutMapping(path = "/{id}", produces = ALL_VALUE)
+	@Operation(summary = "Update a facility delegation",
+		description = "Update facilities, delegatedTo, and/or businessEngagementOrgId on an existing facility delegation."
+			+ "To change the owner or status of a delegation, use the DELETE and POST operations instead.",
+		responses = {
+			@ApiResponse(responseCode = "204", description = "No content", useReturnTypeSchema = true),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		})
+	ResponseEntity<Void> putFacilityDelegation(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id,
+		@RequestBody @Valid FacilityDelegation facilityDelegation) {
+
+		service.putFacilityDelegation(municipalityId, id, facilityDelegation);
+
+		return noContent()
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}

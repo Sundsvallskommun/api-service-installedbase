@@ -22,11 +22,14 @@ public final class TestDataFactory {
 	public static FacilityDelegationEntity createFacilityDelegationEntity(String id) {
 		return new FacilityDelegationEntity()
 			.withId(id)
+			.withMunicipalityId("2281")
+			.withOwner(UUID.randomUUID().toString())
+			.withDelegatedTo(UUID.randomUUID().toString())
+			.withFacilities(List.of("facility-3", "facility-4"))
 			.withStatus(DelegationStatus.ACTIVE)
 			.withCreated(LocalDateTime.now().minusMinutes(3))
-			.withUpdated(LocalDateTime.now())
-			.withMunicipalityId("2281")
-			.withBusinessEngagementOrgId("businessEngagementOrgId")
-			.withFacilities(List.of("facility-1", "facility-2"));
+			.withUpdated(LocalDateTime.now().minusMinutes(2))
+			.withDeleted(LocalDateTime.now().minusMinutes(1))
+			.withBusinessEngagementOrgId("engagementOrgId");
 	}
 }

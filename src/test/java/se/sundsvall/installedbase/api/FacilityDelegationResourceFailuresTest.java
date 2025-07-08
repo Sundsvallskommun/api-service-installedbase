@@ -50,7 +50,7 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(result.getResponseBody()).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("createDelegation.municipalityId", "not a valid municipality ID"));
+					.containsExactly(tuple("createFacilityDelegation.municipalityId", "not a valid municipality ID"));
 			});
 	}
 
@@ -151,7 +151,7 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getDelegationById.municipalityId", "not a valid municipality ID"));
+					.containsExactly(tuple("getFacilityDelegationById.municipalityId", "not a valid municipality ID"));
 			});
 	}
 
@@ -169,7 +169,7 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getDelegationById.id", "not a valid UUID"));
+					.containsExactly(tuple("getFacilityDelegationById.id", "not a valid UUID"));
 			});
 	}
 
@@ -187,7 +187,7 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getDelegations.municipalityId", "not a valid municipality ID"));
+					.containsExactly(tuple("getFacilityDelegations.municipalityId", "not a valid municipality ID"));
 			});
 	}
 
@@ -205,7 +205,7 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getDelegations.owner", "not a valid UUID"));
+					.containsExactly(tuple("getFacilityDelegations.owner", "not a valid UUID"));
 			});
 	}
 
@@ -222,7 +222,7 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getDelegations.delegatedTo", "not a valid UUID"));
+					.containsExactly(tuple("getFacilityDelegations.delegatedTo", "not a valid UUID"));
 			});
 	}
 
@@ -257,7 +257,116 @@ class FacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
 					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getDelegations.status", "invalid delegation status 'invalid-status'. Must be one of 'ACTIVE, DELETED' or empty"));
+					.containsExactly(tuple("getFacilityDelegations.status", "invalid delegation status 'invalid-status'. Must be one of 'ACTIVE, DELETED' or empty"));
+			});
+	}
+
+	@Test
+	void putDelegationInvalidMunicipalityId() {
+		var invalidMunicipalityId = "invalid";
+		var id = UUID.randomUUID().toString();
+		var delegate = createFacilityDelegation();
+
+		webTestClient.put()
+			.uri("/{municipalityId}/delegates/{id}", invalidMunicipalityId, id)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(delegate)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("putFacilityDelegation.municipalityId", "not a valid municipality ID"));
+			});
+	}
+
+	@Test
+	void putDelegationInvalidId() {
+		var invalidId = "invalid-id";
+		var delegate = createFacilityDelegation();
+
+		webTestClient.put()
+			.uri("/{municipalityId}/delegates/{id}", MUNICIPALITY_ID, invalidId)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(delegate)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("putFacilityDelegation.id", "not a valid UUID"));
+			});
+	}
+
+	@Test
+	void putDelegationInvalidOwner() {
+		var id = UUID.randomUUID().toString();
+		var invalidOwner = "invalid-owner";
+		var delegate = createFacilityDelegation();
+		delegate.setOwner(invalidOwner);
+
+		webTestClient.put()
+			.uri("/{municipalityId}/delegates/{id}", MUNICIPALITY_ID, id)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(delegate)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("owner", "not a valid UUID"));
+			});
+	}
+
+	@Test
+	void putDelegationInvalidDelegatedTo() {
+		var id = UUID.randomUUID().toString();
+		var invalidDelegatedTo = "invalid-delegated-to";
+		var delegate = createFacilityDelegation();
+		delegate.setDelegatedTo(invalidDelegatedTo);
+
+		webTestClient.put()
+			.uri("/{municipalityId}/delegates/{id}", MUNICIPALITY_ID, id)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(delegate)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("delegatedTo", "not a valid UUID"));
+			});
+	}
+
+	@Test
+	void putDelegationNonExistingDelegation() {
+		var id = UUID.randomUUID().toString();
+		var delegate = createFacilityDelegation();
+
+		webTestClient.put()
+			.uri("/{municipalityId}/delegates/{id}", MUNICIPALITY_ID, id)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(delegate)
+			.exchange()
+			.expectStatus().isNotFound()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(Problem.class)
+			.consumeWith(response -> {
+				assertThat(response.getResponseBody()).isNotNull();
+				assertThat(response.getResponseBody().getTitle()).isEqualTo("Facility delegation not found");
+				assertThat(response.getResponseBody().getDetail()).isEqualTo("Couldn't find any active facility delegations for id: " + id);
 			});
 	}
 }

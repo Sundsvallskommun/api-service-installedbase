@@ -7,20 +7,132 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "3.1"
 servers:
-  - url: http://localhost:8080
+  - url: http://127.0.0.1:8080
     description: Generated server url
 tags:
   - name: Installed base
-    description: Delegation operations
+    description: Facility delegation operations
   - name: Installed base
     description: Installed base operations
 paths:
+  /{municipalityId}/delegates/{id}:
+    get:
+      tags:
+        - Installed base
+      summary: Get a specific facility delegation
+      operationId: getFacilityDelegationById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacilityDelegation"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+    put:
+      tags:
+        - Installed base
+      summary: Update a facility delegation
+      description: "Update facilities, delegatedTo, and/or businessEngagementOrgId\
+        \ on an existing facility delegation.To change the owner or status of a delegation,\
+        \ use the DELETE and POST operations instead."
+      operationId: putFacilityDelegation
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacilityDelegation"
+        required: true
+      responses:
+        "204":
+          description: No content
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/delegates:
     get:
       tags:
         - Installed base
       summary: Get delegation by owner and/or delegate
-      operationId: getDelegations
+      operationId: getFacilityDelegations
       parameters:
         - name: municipalityId
           in: path
@@ -90,7 +202,7 @@ paths:
       tags:
         - Installed base
       summary: Delegate facilities
-      operationId: createDelegation
+      operationId: createFacilityDelegation
       parameters:
         - name: municipalityId
           in: path
@@ -200,60 +312,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-  /{municipalityId}/delegates/{id}:
-    get:
-      tags:
-        - Installed base
-      summary: Get a specific delegation
-      operationId: getDelegationById
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      responses:
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FacilityDelegation"
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:

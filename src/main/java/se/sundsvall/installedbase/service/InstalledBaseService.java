@@ -1,12 +1,20 @@
 package se.sundsvall.installedbase.service;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
+import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withDelegatedTo;
+import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withId;
+import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withMunicipalityId;
+import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
+import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withStatus;
+import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseResponse;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
@@ -20,6 +28,8 @@ import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @Service
 public class InstalledBaseService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InstalledBaseService.class);
 
 	private static final int DATAWAREHOUSEREADER_PAGE_LIMIT = 100;
 	private static final int DATAWAREHOUSEREADER_PAGE = 1;
@@ -57,18 +67,22 @@ public class InstalledBaseService {
 	}
 
 	/**
-	 * Create a facility delegation.
-	 * Throws a Problem with status 409 Conflict if a delegation already exists.
-	 * 
+	 * Create a facility delegation. Throws a Problem with status 409 Conflict if a delegation already exists.
+	 *
 	 * @param  municipalityId     municipalityId
 	 * @param  facilityDelegation FacilityDelegation object containing delegation details
-	 * @return                    id of the delegation
-	 *                            delegation
+	 * @return                    id of the delegation delegation
 	 */
 	@Transactional
 	public String createFacilityDelegation(String municipalityId, FacilityDelegation facilityDelegation) {
-		// Check if the owner already has delegated to the same partyId
-		if (facilityDelegationRepository.findOne(municipalityId, facilityDelegation.getOwner(), facilityDelegation.getDelegatedTo()).isPresent()) {
+		LOGGER.info("Create facility delegation for owner: {}, delegatedTo: {}", facilityDelegation.getOwner(), facilityDelegation.getDelegatedTo());
+
+		// Check if the owner already has a facility delegated to the same partyId
+		if (facilityDelegationRepository.findOne(
+			withMunicipalityId(municipalityId)
+				.and(withOwner(facilityDelegation.getOwner()))
+				.and(withDelegatedTo(facilityDelegation.getDelegatedTo())))
+			.isPresent()) {
 			throw Problem.builder()
 				.withTitle("Facility delegation already exists")
 				.withDetail("Owner with partyId: '" + facilityDelegation.getOwner() + "' has already delegated to partyId: '"
@@ -83,15 +97,19 @@ public class InstalledBaseService {
 	}
 
 	/**
-	 * Get delegation by id.
-	 * Throws a Problem with status 404 Not Found if the delegation does not exist.
-	 * 
+	 * Get delegation by municipality and facilityDelegationId. Throws a Problem with status 404 Not Found if the
+	 * delegation.
+	 * does not exist.
+	 *
 	 * @param  municipalityId       municipalityId
 	 * @param  facilityDelegationId id of the delegation
 	 * @return                      FacilityDelegation object containing delegation details
 	 */
 	public FacilityDelegation getFacilityDelegation(String municipalityId, String facilityDelegationId) {
-		return facilityDelegationRepository.findOne(municipalityId, facilityDelegationId)
+		LOGGER.info("Get facility delegation with id: {}", facilityDelegationId);
+
+		return facilityDelegationRepository.findOne(withMunicipalityId(municipalityId)
+			.and(withId(facilityDelegationId)))
 			.map(EntityMapper::toDelegate)
 			.orElseThrow(() -> Problem.builder()
 				.withDetail("Couldn't find delegation for id: " + facilityDelegationId)
@@ -99,10 +117,63 @@ public class InstalledBaseService {
 				.build());
 	}
 
+	/**
+	 * ' Get facility delegations by owner and/or delegatedTo.
+	 *
+	 * @param  municipalityId municipalityId
+	 * @param  owner          owner of the delegation
+	 * @param  delegatedTo    the party to which the facility is delegated
+	 * @param  status         status of the delegation, will show all delegation statuses if not provided
+	 * @return                List of FacilityDelegation objects containing delegation details
+	 */
 	public List<FacilityDelegation> getFacilityDelegations(String municipalityId, String owner, String delegatedTo, String status) {
-		return facilityDelegationRepository.findAll(municipalityId, owner, delegatedTo, status).stream()
+		LOGGER.info("Get facility delegations for owner: {}, delegatedTo: {}, status: {}", owner, delegatedTo, status);
+		return facilityDelegationRepository.findAll(
+			withMunicipalityId(municipalityId)
+				.and(withOwner(owner))
+				.and(withDelegatedTo(delegatedTo))
+				.and(withStatus(status)))
+			.stream()
 			.map(EntityMapper::toDelegate)
 			.toList();
 	}
 
+	/**
+	 * Update a facility delegation.
+	 * Owner of the delegation must match the one provided in the request otherwise a Problem with status 400 Bad Request is
+	 * thrown.
+	 * If owner needs to be changed, a new delegation should be created instead.
+	 *
+	 * @param municipalityId       municipalityId
+	 * @param facilityDelegationId id of the facility delegation to be updated
+	 * @param facilityDelegation   FacilityDelegation object containing delegation details to be updated
+	 */
+	public void putFacilityDelegation(String municipalityId, String facilityDelegationId, FacilityDelegation facilityDelegation) {
+		LOGGER.info("Updating facility delegation with id: {}", facilityDelegationId);
+
+		// Check that we have an active delegation to update, inactive delegations cannot be updated
+		var facilityDelegationEntity = facilityDelegationRepository.findOne(
+			withMunicipalityId(municipalityId)
+				.and(withId(facilityDelegationId))
+				.and(withStatus(DelegationStatus.ACTIVE.name())))
+			.orElseThrow(() -> Problem.builder()
+				.withTitle("Facility delegation not found")
+				.withDetail("Couldn't find any active facility delegations for id: " + facilityDelegationId)
+				.withStatus(Status.NOT_FOUND)
+				.build());
+
+		// Check that the owner of the delegation is the same as the one provided in the request.
+		// Don't want these two in the same problem/error message, hence the separate checks
+		if (!facilityDelegationEntity.getOwner().equals(facilityDelegation.getOwner())) {
+			throw Problem.builder()
+				.withTitle("Invalid delegation owner")
+				.withDetail("The owner of the delegation with id: '" + facilityDelegationId + "' is not the same as the one provided in the request.")
+				.withStatus(Status.BAD_REQUEST)
+				.build();
+		}
+
+		updateEntityForPutOperation(facilityDelegationEntity, facilityDelegation);
+
+		facilityDelegationRepository.save(facilityDelegationEntity);
+	}
 }
