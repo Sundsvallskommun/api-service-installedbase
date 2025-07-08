@@ -15,67 +15,14 @@ tags:
   - name: Installed base
     description: Installed base operations
 paths:
-  /{municipalityId}/delegates/{id}:
-    get:
-      tags:
-        - Installed base
-      summary: Get a specific facility delegation
-      operationId: getFacilityDelegationById
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      responses:
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FacilityDelegation"
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/delegates/{id}/{owner}:
     put:
       tags:
         - Installed base
       summary: Update a facility delegation
       description: "Update facilities, delegatedTo, and/or businessEngagementOrgId\
-        \ on an existing facility delegation.To change the owner or status of a delegation,\
-        \ use the DELETE and POST operations instead."
+        \ on an existing facility delegation for a specific owner.To change the owner\
+        \ or status of a delegation, use the DELETE and POST operations instead."
       operationId: putFacilityDelegation
       parameters:
         - name: municipalityId
@@ -92,11 +39,18 @@ paths:
           schema:
             type: string
           example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: owner
+          in: path
+          description: Owner of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FacilityDelegation"
+              $ref: "#/components/schemas/UpdateFacilityDelegation"
         required: true
       responses:
         "204":
@@ -171,7 +125,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/FacilityDelegation"
+                  $ref: "#/components/schemas/FacilityDelegationResponse"
         "404":
           description: Not Found
           content:
@@ -215,7 +169,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FacilityDelegation"
+              $ref: "#/components/schemas/CreateFacilityDelegation"
         required: true
       responses:
         "201":
@@ -324,6 +278,60 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/delegates/{id}:
+    get:
+      tags:
+        - Installed base
+      summary: Get a specific facility delegation
+      operationId: getFacilityDelegationById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacilityDelegationResponse"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -364,25 +372,15 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
-    FacilityDelegation:
-      required:
-        - delegatedTo
-        - facilities
-        - owner
+        reasonPhrase:
+          type: string
+    UpdateFacilityDelegation:
       type: object
       properties:
-        id:
-          type: string
-          description: Unique identifier for the delegation
-          readOnly: true
-          example: 12345678-1234-1234-1234-123456789012
         facilities:
-          minItems: 1
           type: array
           items:
             minLength: 1
@@ -395,36 +393,7 @@ components:
           type: string
           description: Party ID of the delegate
           example: 81471222-5798-11e9-ae24-57fa13b361e2
-        owner:
-          type: string
-          description: Party ID of the delegation owner
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-        status:
-          type: string
-          description: Status of the delegation
-          readOnly: true
-          example: ACTIVE
-        municipalityId:
-          type: string
-          description: Municipality ID of the delegation
-          readOnly: true
-          example: "1234"
-        created:
-          type: string
-          description: When the delegation was created
-          format: date-time
-          readOnly: true
-        updated:
-          type: string
-          description: When the delegation was last updated
-          format: date-time
-          readOnly: true
-        deleted:
-          type: string
-          description: When the delegation was deleted
-          format: date-time
-          readOnly: true
-      description: FacilityDelegation model
+      description: UpdateFacilityDelegation model
     ConstraintViolationProblem:
       type: object
       properties:
@@ -592,6 +561,32 @@ components:
           type: string
         message:
           type: string
+    CreateFacilityDelegation:
+      required:
+        - delegatedTo
+        - facilities
+        - owner
+      type: object
+      properties:
+        facilities:
+          minItems: 1
+          type: array
+          items:
+            minLength: 1
+            type: string
+        businessEngagementOrgId:
+          type: string
+          description: Organization number of the company owning the facility
+          example: "5591628136"
+        delegatedTo:
+          type: string
+          description: Party ID of the delegate
+          example: 81471222-5798-11e9-ae24-57fa13b361e2
+        owner:
+          type: string
+          description: Party ID of the delegation owner
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      description: CreateFacilityDelegation model
     InstalledBaseCustomer:
       type: object
       properties:
@@ -724,4 +719,48 @@ components:
           items:
             $ref: "#/components/schemas/InstalledBaseCustomer"
       description: Installed base response model
+    FacilityDelegationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the delegation
+          example: 12345678-1234-1234-1234-123456789012
+        facilities:
+          type: array
+          items:
+            type: string
+        businessEngagementOrgId:
+          type: string
+          description: Organization number of the company owning the facility
+          example: "5591628136"
+        delegatedTo:
+          type: string
+          description: Party ID of the delegate
+          example: 81471222-5798-11e9-ae24-57fa13b361e2
+        owner:
+          type: string
+          description: Party ID of the delegation owner
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        status:
+          type: string
+          description: Status of the delegation
+          example: ACTIVE
+        municipalityId:
+          type: string
+          description: Municipality ID of the delegation
+          example: "1234"
+        created:
+          type: string
+          description: When the delegation was created
+          format: date-time
+        updated:
+          type: string
+          description: When the delegation was last updated
+          format: date-time
+        deleted:
+          type: string
+          description: When the delegation was deleted
+          format: date-time
+      description: FacilityDelegation response model
   securitySchemes: {}

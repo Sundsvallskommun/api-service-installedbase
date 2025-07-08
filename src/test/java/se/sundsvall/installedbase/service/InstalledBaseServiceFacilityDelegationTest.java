@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegationEntity;
+import static se.sundsvall.installedbase.TestDataFactory.createUpdateFacilityDelegation;
 
 import java.util.List;
 import java.util.Optional;
@@ -137,15 +138,14 @@ class InstalledBaseServiceFacilityDelegationTest {
 	@Test
 	void testPutFacilityDelegation_shouldUpdateDelegation() {
 		var id = UUID.randomUUID().toString();
-
 		var facilityDelegationEntity = createFacilityDelegationEntity(id);
-		var updatedFacilityDelegation = createFacilityDelegation();
-		updatedFacilityDelegation.setOwner(facilityDelegationEntity.getOwner());
+		var owner = facilityDelegationEntity.getOwner();    // Use the owner from the entity to ensure it matches
+		var updateFacilityDelegation = createUpdateFacilityDelegation();
 
 		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.of(facilityDelegationEntity));
 		when(mockFacilityDelegationRepository.save(any(FacilityDelegationEntity.class))).thenReturn(facilityDelegationEntity);
 
-		installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, updatedFacilityDelegation);
+		installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, owner, updateFacilityDelegation); // Set same
 
 		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
 		verify(mockFacilityDelegationRepository).save(any(FacilityDelegationEntity.class));
@@ -155,12 +155,13 @@ class InstalledBaseServiceFacilityDelegationTest {
 	@Test
 	void testPutFacilityDelegation_shouldThrowProblem_whenFacilityDelegationNotFoundOrDeleted() {
 		var id = UUID.randomUUID().toString();
-		var updatedFacilityDelegation = createFacilityDelegation();
+		var owner = UUID.randomUUID().toString();
+		var updateFacilityDelegation = createUpdateFacilityDelegation();
 
 		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.empty());
 
 		assertThatExceptionOfType(ThrowableProblem.class)
-			.isThrownBy(() -> installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, updatedFacilityDelegation))
+			.isThrownBy(() -> installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, owner, updateFacilityDelegation))
 			.withMessage("Facility delegation not found: Couldn't find any active facility delegations for id: " + id);
 
 		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
@@ -170,14 +171,14 @@ class InstalledBaseServiceFacilityDelegationTest {
 	@Test
 	void testPutFacilityDelegation_shouldThrowProblem_whenOwnerMismatch() {
 		var id = UUID.randomUUID().toString();
+		var owner = UUID.randomUUID().toString();
 		var facilityDelegationEntity = createFacilityDelegationEntity(id);
-		var updatedFacilityDelegation = createFacilityDelegation();
-		updatedFacilityDelegation.setOwner(UUID.randomUUID().toString()); // Different owner than the one in the entity
+		var updateFacilityDelegation = createUpdateFacilityDelegation();
 
 		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.of(facilityDelegationEntity));
 
 		assertThatExceptionOfType(ThrowableProblem.class)
-			.isThrownBy(() -> installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, updatedFacilityDelegation))
+			.isThrownBy(() -> installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, owner, updateFacilityDelegation))
 			.withMessage("Invalid delegation owner: The owner of the delegation with id: '" + facilityDelegationEntity.getId() + "' is not the same as the one provided in the request.");
 
 		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());

@@ -7,8 +7,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegationEntity;
-import static se.sundsvall.installedbase.service.mapper.EntityMapper.toDelegate;
-import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
+import static se.sundsvall.installedbase.TestDataFactory.createUpdateFacilityDelegation;
+import static se.sundsvall.installedbase.service.mapper.EntityMapper.createFacilityDelegationToEntity;
+import static se.sundsvall.installedbase.service.mapper.EntityMapper.toFacilityDelegationResponse;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 
 import java.util.UUID;
@@ -22,12 +23,12 @@ import se.sundsvall.installedbase.service.model.DelegationStatus;
 class EntityMapperTest {
 
 	@Test
-	void testToEntity() {
+	void testCreateFacilityDelegationToEntity() {
 		var municipalityId = "2281";
 		var facilityDelegation = createFacilityDelegation();
 		var delegationStatus = DelegationStatus.ACTIVE;
 
-		var entity = toEntity(municipalityId, facilityDelegation, delegationStatus);
+		var entity = createFacilityDelegationToEntity(municipalityId, facilityDelegation, delegationStatus);
 
 		assertThat(entity.getId()).isNull();
 		assertThat(entity.getOwner()).isEqualTo(facilityDelegation.getOwner());
@@ -38,11 +39,11 @@ class EntityMapperTest {
 	}
 
 	@Test
-	void testToDelegate() {
+	void testToFacilityDelegationResponse() {
 		var id = UUID.randomUUID().toString();
 		var facilityDelegationEntity = createFacilityDelegationEntity(id);
 
-		var facilityDelegation = toDelegate(facilityDelegationEntity);
+		var facilityDelegation = toFacilityDelegationResponse(facilityDelegationEntity);
 
 		assertThat(facilityDelegation.getId()).isEqualTo(id);
 		assertThat(facilityDelegation.getOwner()).isEqualTo(facilityDelegationEntity.getOwner());
@@ -58,7 +59,7 @@ class EntityMapperTest {
 
 	@Test
 	void testUpdateEntityForPutOperation_shouldOnlyupdateSpecificFields() {
-		var facilityDelegation = createFacilityDelegation();
+		var facilityDelegation = createUpdateFacilityDelegation();
 
 		// Mock so we can verify that only specific methods are called
 		var entityMock = mock(FacilityDelegationEntity.class);
@@ -81,7 +82,7 @@ class EntityMapperTest {
 	@Test
 	void testUpdateEntityForPutOperation() {
 		var entity = createFacilityDelegationEntity(UUID.randomUUID().toString());
-		var facilityDelegation = createFacilityDelegation();
+		var facilityDelegation = createUpdateFacilityDelegation();
 
 		// original values for later comparison
 		var originalId = entity.getId();

@@ -1,6 +1,8 @@
 package se.sundsvall.installedbase.service.mapper;
 
-import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegationResponse;
+import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 import se.sundsvall.installedbase.service.model.DelegationStatus;
 
@@ -8,22 +10,14 @@ public final class EntityMapper {
 
 	private EntityMapper() {}
 
-	/**
-	 * Converts a FacilityDelegation to a FacilityDelegationEntity.
-	 *
-	 * @param  municipalityId     the municipality ID
-	 * @param  facilityDelegation the facilityDelegation to convert
-	 * @param  status             the delegation status
-	 * @return                    a FacilityDelegationEntity representing the facilityDelegation
-	 */
-	public static FacilityDelegationEntity toEntity(String municipalityId, FacilityDelegation facilityDelegation, DelegationStatus status) {
+	public static FacilityDelegationEntity createFacilityDelegationToEntity(String municipalityId, CreateFacilityDelegation facilityDelegation, DelegationStatus status) {
 		return new FacilityDelegationEntity()
+			.withMunicipalityId(municipalityId)
+			.withOwner(facilityDelegation.getOwner())
 			.withDelegatedTo(facilityDelegation.getDelegatedTo())
-			.withStatus(status)
 			.withFacilities(facilityDelegation.getFacilities())
 			.withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId())
-			.withOwner(facilityDelegation.getOwner())
-			.withMunicipalityId(municipalityId);
+			.withStatus(status);
 	}
 
 	/**
@@ -32,8 +26,8 @@ public final class EntityMapper {
 	 * @param  entity the FacilityDelegationEntity to convert
 	 * @return        a FacilityDelegation representing the entity
 	 */
-	public static FacilityDelegation toDelegate(FacilityDelegationEntity entity) {
-		return new FacilityDelegation()
+	public static FacilityDelegationResponse toFacilityDelegationResponse(FacilityDelegationEntity entity) {
+		return new FacilityDelegationResponse()
 			.withId(entity.getId())
 			.withFacilities(entity.getFacilities())
 			.withBusinessEngagementOrgId(entity.getBusinessEngagementOrgId())
@@ -53,7 +47,7 @@ public final class EntityMapper {
 	 * @param facilityDelegationEntity the FacilityDelegationEntity to update
 	 * @param facilityDelegation       the FacilityDelegation containing the new values
 	 */
-	public static void updateEntityForPutOperation(FacilityDelegationEntity facilityDelegationEntity, FacilityDelegation facilityDelegation) {
+	public static void updateEntityForPutOperation(FacilityDelegationEntity facilityDelegationEntity, UpdateFacilityDelegation facilityDelegation) {
 		// Update the entity with the new values, and only update specific fields
 		facilityDelegationEntity
 			.withFacilities(facilityDelegation.getFacilities())

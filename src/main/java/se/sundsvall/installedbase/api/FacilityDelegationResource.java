@@ -35,7 +35,9 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
-import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegationResponse;
+import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.validation.ValidDelegationStatus;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
@@ -62,7 +64,7 @@ class FacilityDelegationResource {
 			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	ResponseEntity<FacilityDelegation> getFacilityDelegationById(
+	ResponseEntity<FacilityDelegationResponse> getFacilityDelegationById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
 		return ok(service.getFacilityDelegation(municipalityId, id));
@@ -74,7 +76,7 @@ class FacilityDelegationResource {
 			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	public ResponseEntity<List<FacilityDelegation>> getFacilityDelegations(
+	public ResponseEntity<List<FacilityDelegationResponse>> getFacilityDelegations(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "owner", description = "Owner of the delegation", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid(nullable = true) @RequestParam(required = false) String owner,
 		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo,
@@ -93,7 +95,7 @@ class FacilityDelegationResource {
 		})
 	ResponseEntity<Void> createFacilityDelegation(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@RequestBody @Valid FacilityDelegation facilityDelegation) {
+		@RequestBody @Valid CreateFacilityDelegation facilityDelegation) {
 
 		var id = service.createFacilityDelegation(municipalityId, facilityDelegation);
 
@@ -106,9 +108,9 @@ class FacilityDelegationResource {
 			.build();
 	}
 
-	@PutMapping(path = "/{id}", produces = ALL_VALUE)
+	@PutMapping(path = "/{id}/{owner}", produces = ALL_VALUE)
 	@Operation(summary = "Update a facility delegation",
-		description = "Update facilities, delegatedTo, and/or businessEngagementOrgId on an existing facility delegation."
+		description = "Update facilities, delegatedTo, and/or businessEngagementOrgId on an existing facility delegation for a specific owner."
 			+ "To change the owner or status of a delegation, use the DELETE and POST operations instead.",
 		responses = {
 			@ApiResponse(responseCode = "204", description = "No content", useReturnTypeSchema = true),
@@ -117,9 +119,10 @@ class FacilityDelegationResource {
 	ResponseEntity<Void> putFacilityDelegation(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id,
-		@RequestBody @Valid FacilityDelegation facilityDelegation) {
+		@Parameter(name = "owner", description = "Owner of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "owner") final @ValidUuid String owner,
+		@RequestBody @Valid UpdateFacilityDelegation facilityDelegation) {
 
-		service.putFacilityDelegation(municipalityId, id, facilityDelegation);
+		service.putFacilityDelegation(municipalityId, id, owner, facilityDelegation);
 
 		return noContent()
 			.header(CONTENT_TYPE, ALL_VALUE)

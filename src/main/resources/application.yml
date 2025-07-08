@@ -30,3 +30,6 @@ spring:
 springdoc:
   swagger-ui:
     operationsSorter: method
+sonar:
+  cpd:
+    exclusions: '**/api/model/**'
