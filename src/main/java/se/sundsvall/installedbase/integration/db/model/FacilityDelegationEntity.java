@@ -77,6 +77,10 @@ public class FacilityDelegationEntity {
 	@PreUpdate
 	void onUpdate() {
 		updated = LocalDateTime.now();
+		// Since we do not actually delete delegations, we also set the deleted timestamp here.
+		if (DelegationStatus.DELETED.equals(this.status)) {
+			deleted = LocalDateTime.now();
+		}
 	}
 
 	@PrePersist

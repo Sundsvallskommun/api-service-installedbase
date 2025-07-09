@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.accepted;
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
@@ -23,6 +24,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -124,6 +126,22 @@ class FacilityDelegationResource {
 		service.putFacilityDelegation(municipalityId, id, facilityDelegation);
 
 		return noContent()
+			.header(CONTENT_TYPE, ALL_VALUE)
+			.build();
+	}
+
+	@DeleteMapping(path = "/{id}", produces = ALL_VALUE)
+	@Operation(summary = "Delete a facility delegation",
+		responses = {
+			@ApiResponse(responseCode = "202", description = "Accepted", useReturnTypeSchema = true)
+		})
+	ResponseEntity<Void> deleteFacilityDelegation(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
+
+		service.deleteFacilityDelegation(municipalityId, id);
+
+		return accepted()
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}

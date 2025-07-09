@@ -101,8 +101,7 @@ public class InstalledBaseService {
 
 	/**
 	 * Get delegation by municipality and facilityDelegationId. Throws a Problem with status 404 Not Found if the
-	 * delegation.
-	 * does not exist.
+	 * delegation. does not exist.
 	 *
 	 * @param  municipalityId       municipalityId
 	 * @param  facilityDelegationId id of the delegation
@@ -142,10 +141,8 @@ public class InstalledBaseService {
 	}
 
 	/**
-	 * Update a facility delegation.
-	 * Owner of the delegation must match the one provided in the request otherwise a Problem with status 400 Bad Request is
-	 * thrown.
-	 * If owner needs to be changed, a new delegation should be created instead.
+	 * Update a facility delegation. Owner of the delegation must match the one provided in the request otherwise a Problem
+	 * with status 400 Bad Request is thrown. If owner needs to be changed, a new delegation should be created instead.
 	 *
 	 * @param municipalityId       municipalityId
 	 * @param facilityDelegationId id of the facility delegation to be updated
@@ -178,5 +175,22 @@ public class InstalledBaseService {
 		updateEntityForPutOperation(facilityDelegationEntity, facilityDelegation);
 
 		facilityDelegationRepository.save(facilityDelegationEntity);
+	}
+
+	/**
+	 * "Delete" a facility delegation by setting its status to DELETED and save it.
+	 * 
+	 * @param municipalityId municipalityId
+	 * @param id             id of the facility delegation to be deleted
+	 */
+	public void deleteFacilityDelegation(String municipalityId, String id) {
+		facilityDelegationRepository.findOne(
+			withMunicipalityId(municipalityId)
+				.and(withId(id)))
+			.ifPresentOrElse(entity -> {
+				LOGGER.info("Deleting facility delegation with id: {}", id);
+				entity.setStatus(DelegationStatus.DELETED);
+				facilityDelegationRepository.save(entity);
+			}, () -> LOGGER.info("No facility delegation found with id: {} to delete", id));
 	}
 }

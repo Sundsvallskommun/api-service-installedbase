@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
 import static se.sundsvall.installedbase.service.model.DelegationStatus.ACTIVE;
+import static se.sundsvall.installedbase.service.model.DelegationStatus.DELETED;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -82,7 +83,9 @@ class FacilityDelegationEntityTest {
 	@Test
 	void testPrePersist() {
 		var entity = new FacilityDelegationEntity();
+
 		entity.onCreate();
+
 		assertThat(entity.getCreated()).isNotNull();
 		assertThat(entity.getCreated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
 	}
@@ -93,11 +96,23 @@ class FacilityDelegationEntityTest {
 		var entity = new FacilityDelegationEntity();
 		entity.onCreate();
 
-		// Simulate an update by calling onUpdate
+		// Store the initial value and simulate an update by calling onUpdate
 		var initialCreated = entity.getCreated();
 		entity.onUpdate();
+
 		assertThat(entity.getUpdated()).isNotNull();
 		assertThat(entity.getUpdated()).isAfter(initialCreated);
 		assertThat(entity.getUpdated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
+		assertThat(entity.getDeleted()).isNull();
+	}
+
+	@Test
+	void testPreUpdateWithDelegationStatusDeleted_shouldSetDeleted() {
+		var entity = new FacilityDelegationEntity();
+		entity.setStatus(DELETED);
+
+		entity.onUpdate();
+
+		assertThat(entity.getDeleted()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
 	}
 }

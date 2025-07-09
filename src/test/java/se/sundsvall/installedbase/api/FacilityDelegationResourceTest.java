@@ -250,4 +250,21 @@ class FacilityDelegationResourceTest {
 		verify(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), any(UpdateFacilityDelegation.class));
 		verifyNoMoreInteractions(mockService);
 	}
+
+	@Test
+	void testDeleteFacilityDelegation() {
+		var id = UUID.randomUUID().toString();
+
+		doNothing().when(mockService).deleteFacilityDelegation(MUNICIPALITY_ID, id);
+
+		webTestClient.delete()
+			.uri(BASE_URL + "/{id}", MUNICIPALITY_ID, id)
+			.exchange()
+			.expectStatus().isAccepted()
+			.expectHeader().contentType(ALL_VALUE)
+			.expectBody(ResponseEntity.class);
+
+		verify(mockService).deleteFacilityDelegation(MUNICIPALITY_ID, id);
+		verifyNoMoreInteractions(mockService);
+	}
 }

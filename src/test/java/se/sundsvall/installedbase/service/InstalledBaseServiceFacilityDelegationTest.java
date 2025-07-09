@@ -3,6 +3,7 @@ package se.sundsvall.installedbase.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -178,6 +179,33 @@ class InstalledBaseServiceFacilityDelegationTest {
 		assertThatExceptionOfType(ThrowableProblem.class)
 			.isThrownBy(() -> installedBaseService.putFacilityDelegation(MUNICIPALITY_ID, id, updateFacilityDelegation))
 			.withMessage("Invalid delegation owner: The owner of the delegation with id: '" + facilityDelegationEntity.getId() + "' is not the same as the one provided in the request.");
+
+		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
+		verifyNoMoreInteractions(mockFacilityDelegationRepository);
+	}
+
+	@Test
+	void testDeleteFacilityDelegation() {
+		var id = UUID.randomUUID().toString();
+		var entityMock = mock(FacilityDelegationEntity.class);
+
+		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.of(entityMock));
+
+		installedBaseService.deleteFacilityDelegation(MUNICIPALITY_ID, id);
+
+		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
+		verify(mockFacilityDelegationRepository).save(any(FacilityDelegationEntity.class));
+		verify(entityMock).setStatus(DelegationStatus.DELETED);
+		verifyNoMoreInteractions(mockFacilityDelegationRepository);
+	}
+
+	@Test
+	void testDeleteFacilityDelegation_shouldDoNothing_whenNotFound() {
+		var id = UUID.randomUUID().toString();
+
+		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.empty());
+
+		installedBaseService.deleteFacilityDelegation(MUNICIPALITY_ID, id);
 
 		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
 		verifyNoMoreInteractions(mockFacilityDelegationRepository);
