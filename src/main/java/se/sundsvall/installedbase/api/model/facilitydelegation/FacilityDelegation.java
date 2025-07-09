@@ -1,60 +1,48 @@
 package se.sundsvall.installedbase.api.model.facilitydelegation;
 
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
-import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 
-@Schema(description = "FacilityDelegation model")
+@Schema(description = "FacilityDelegation response model")
 public class FacilityDelegation {
 
-	@Schema(description = "Unique identifier for the delegation", example = "12345678-1234-1234-1234-123456789012", accessMode = READ_ONLY)
+	@Schema(description = "Unique identifier for the delegation", example = "12345678-1234-1234-1234-123456789012")
 	private String id;
 
-	@NotEmpty(message = "facilities must contain at least one facility")
-	@ArraySchema(schema = @Schema(implementation = String.class, description = "List of facility IDs to be delegated", example = "[\"facility1\", \"facility2\"]", requiredMode = REQUIRED))
-	private List<@NotBlank(message = "Facility cannot be blank") String> facilities;
+	@ArraySchema(schema = @Schema(implementation = String.class, description = "List of facility IDs to be delegated", example = "[\"facility1\", \"facility2\"]"))
+	private List<String> facilities;
 
-	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = NOT_REQUIRED)
+	@Schema(description = "Organization number of the company owning the facility", example = "5591628136")
 	private String businessEngagementOrgId;
 
-	@ValidUuid
-	@Schema(description = "Party ID of the delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2", requiredMode = REQUIRED)
+	@Schema(description = "Party ID of the delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2")
 	private String delegatedTo;
 
-	@ValidUuid
-	@Schema(description = "Party ID of the delegation owner", example = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = REQUIRED)
+	@Schema(description = "Party ID of the delegation owner", example = "81471222-5798-11e9-ae24-57fa13b361e1")
 	private String owner;
 
-	// Status will be determined by the operation performed via the API.
-	// ACTIVE == /post, DELETED == /delete
 	@Schema(description = "Status of the delegation", examples = {
 		"ACTIVE | DELETED"
-	}, example = "ACTIVE", accessMode = READ_ONLY)
+	}, example = "ACTIVE")
 	private String status;
 
-	@Schema(description = "Municipality ID of the delegation", example = "1234", accessMode = READ_ONLY)
+	@Schema(description = "Municipality ID of the delegation", example = "1234")
 	private String municipalityId;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	@Schema(description = "When the delegation was created", example = "2025-01-01T12:00:00", accessMode = READ_ONLY)
+	@Schema(description = "When the delegation was created", example = "2025-01-01T12:00:00")
 	private LocalDateTime created;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	@Schema(description = "When the delegation was last updated", example = "2025-04-01T12:00:00", accessMode = READ_ONLY)
+	@Schema(description = "When the delegation was last updated", example = "2025-04-01T12:00:00")
 	private LocalDateTime updated;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	@Schema(description = "When the delegation was deleted", example = "2025-06-01T12:00:00", accessMode = READ_ONLY)
+	@Schema(description = "When the delegation was deleted", example = "2025-06-01T12:00:00")
 	private LocalDateTime deleted;
 
 	public String getId() {

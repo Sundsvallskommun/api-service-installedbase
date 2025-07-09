@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -11,6 +13,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
+import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegationResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +25,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.installedbase.Application;
+import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
+import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
 @ActiveProfiles("junit")
@@ -43,9 +48,8 @@ class FacilityDelegationResourceTest {
 		var id = UUID.randomUUID().toString();
 
 		var facilityDelegation = createFacilityDelegation();
-		facilityDelegation.setId(id);
 
-		when(mockService.createFacilityDelegation(anyString(), any(FacilityDelegation.class))).thenReturn(id);
+		when(mockService.createFacilityDelegation(anyString(), any(CreateFacilityDelegation.class))).thenReturn(id);
 
 		webTestClient.post()
 			.uri(BASE_URL, MUNICIPALITY_ID)
@@ -63,7 +67,7 @@ class FacilityDelegationResourceTest {
 
 	@Test
 	void getDelegateById() {
-		var delegate = createFacilityDelegation();
+		var delegate = createFacilityDelegationResponse();
 
 		when(mockService.getFacilityDelegation(MUNICIPALITY_ID, delegate.getId())).thenReturn(delegate);
 
@@ -78,15 +82,16 @@ class FacilityDelegationResourceTest {
 
 		assertThat(response).isNotNull();
 		assertThat(response.getId()).isEqualTo(delegate.getId());
+
 		verify(mockService).getFacilityDelegation(MUNICIPALITY_ID, delegate.getId());
 		verifyNoMoreInteractions(mockService);
 	}
 
 	@Test
 	void getDelegationsByOwner() {
-		var delegation1 = createFacilityDelegation();
+		var delegation1 = createFacilityDelegationResponse();
 		// Set the same owner and delegatedTo for both delegations to ensure they are returned
-		var delegation2 = createFacilityDelegation();
+		var delegation2 = createFacilityDelegationResponse();
 		delegation2.setOwner(delegation1.getOwner());
 		delegation2.setDelegatedTo(delegation1.getDelegatedTo());
 
@@ -114,7 +119,7 @@ class FacilityDelegationResourceTest {
 
 	@Test
 	void getDelegationsByOwnerAndDelegatedTo() {
-		var delegation = createFacilityDelegation();
+		var delegation = createFacilityDelegationResponse();
 
 		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), null)).thenReturn(List.of(delegation));
 
@@ -138,7 +143,7 @@ class FacilityDelegationResourceTest {
 
 	@Test
 	void getDelegationsByOwnerAndDelegatedToAndStatus() {
-		var delegation = createFacilityDelegation();
+		var delegation = createFacilityDelegationResponse();
 
 		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), "ACTIVE")).thenReturn(List.of(delegation));
 
@@ -162,7 +167,7 @@ class FacilityDelegationResourceTest {
 
 	@Test
 	void getDelegationsByOwnerAndStatus() {
-		var delegation = createFacilityDelegation();
+		var delegation = createFacilityDelegationResponse();
 
 		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null, "ACTIVE")).thenReturn(List.of(delegation));
 
@@ -179,11 +184,14 @@ class FacilityDelegationResourceTest {
 			.hasSize(1)
 			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
+
+		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null, "ACTIVE");
+		verifyNoMoreInteractions(mockService);
 	}
 
 	@Test
 	void getDelegationsByDelegatedToAndStatus() {
-		var delegation = createFacilityDelegation();
+		var delegation = createFacilityDelegationResponse();
 
 		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo(), "ACTIVE")).thenReturn(List.of(delegation));
 
@@ -220,6 +228,26 @@ class FacilityDelegationResourceTest {
 			.hasSize(0);
 
 		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, "ACTIVE");
+		verifyNoMoreInteractions(mockService);
+	}
+
+	@Test
+	void putDelegations() {
+		var id = UUID.randomUUID().toString();
+		var facilityDelegation = createFacilityDelegation();
+
+		doNothing().when(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), any(UpdateFacilityDelegation.class));
+
+		webTestClient.put()
+			.uri(BASE_URL + "/{id}", MUNICIPALITY_ID, id)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(facilityDelegation)
+			.exchange()
+			.expectStatus().isNoContent()
+			.expectHeader().contentType(ALL_VALUE)
+			.expectBody(ResponseEntity.class);
+
+		verify(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), any(UpdateFacilityDelegation.class));
 		verifyNoMoreInteractions(mockService);
 	}
 }
