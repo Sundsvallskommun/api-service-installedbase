@@ -4,7 +4,6 @@ import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDel
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
-import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 public final class EntityMapper {
 
@@ -15,17 +14,15 @@ public final class EntityMapper {
 	 * 
 	 * @param  municipalityId     the ID of the municipality
 	 * @param  facilityDelegation the CreateFacilityDelegation object containing delegation details
-	 * @param  status             the status of the delegation
 	 * @return                    a FacilityDelegationEntity
 	 */
-	public static FacilityDelegationEntity toEntity(String municipalityId, CreateFacilityDelegation facilityDelegation, DelegationStatus status) {
+	public static FacilityDelegationEntity toEntity(String municipalityId, CreateFacilityDelegation facilityDelegation) {
 		return new FacilityDelegationEntity()
 			.withMunicipalityId(municipalityId)
 			.withOwner(facilityDelegation.getOwner())
 			.withDelegatedTo(facilityDelegation.getDelegatedTo())
 			.withFacilities(facilityDelegation.getFacilities())
-			.withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId())
-			.withStatus(status);
+			.withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId());
 	}
 
 	/**
@@ -42,10 +39,8 @@ public final class EntityMapper {
 			.withDelegatedTo(entity.getDelegatedTo())
 			.withMunicipalityId(entity.getMunicipalityId())
 			.withOwner(entity.getOwner())
-			.withStatus(entity.getStatus().name())
 			.withCreated(entity.getCreated())
-			.withUpdated(entity.getUpdated())
-			.withDeleted(entity.getDeleted());
+			.withUpdated(entity.getUpdated());
 	}
 
 	/**

@@ -198,14 +198,6 @@ paths:
           schema:
             type: string
           example: 81471222-5798-11e9-ae24-57fa13b361e2
-        - name: status
-          in: query
-          description: "Status of the delegation, will show all delegation statuses\
-          \ if not provided"
-          required: false
-          schema:
-            type: string
-          example: ACTIVE
       responses:
         "200":
           description: Successful Operation
@@ -398,20 +390,20 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     UpdateFacilityDelegation:
       required:
         - owner
@@ -556,12 +548,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:
@@ -783,10 +775,6 @@ components:
           type: string
           description: Party ID of the delegation owner
           example: 81471222-5798-11e9-ae24-57fa13b361e1
-        status:
-          type: string
-          description: Status of the delegation
-          example: ACTIVE
         municipalityId:
           type: string
           description: Municipality ID of the delegation
@@ -798,10 +786,6 @@ components:
         updated:
           type: string
           description: When the delegation was last updated
-          format: date-time
-        deleted:
-          type: string
-          description: When the delegation was deleted
           format: date-time
       description: FacilityDelegation response model
   securitySchemes: {}

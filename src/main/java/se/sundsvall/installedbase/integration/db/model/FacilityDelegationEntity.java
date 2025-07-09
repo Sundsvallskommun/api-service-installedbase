@@ -4,8 +4,6 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
@@ -19,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
-import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @Entity
 @Table(name = "facility_delegation",
@@ -61,15 +58,8 @@ public class FacilityDelegationEntity {
 	@Column(length = 36, name = "owner", nullable = false)
 	private String owner; // PartyId of the person who owns the facilities
 
-	@Column(name = "status", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private DelegationStatus status;
-
 	@Column(name = "created", nullable = false)
 	private LocalDateTime created;
-
-	@Column(name = "deleted")
-	private LocalDateTime deleted;
 
 	@Column(name = "updated")
 	private LocalDateTime updated;
@@ -77,10 +67,6 @@ public class FacilityDelegationEntity {
 	@PreUpdate
 	void onUpdate() {
 		updated = LocalDateTime.now();
-		// Since we do not actually delete delegations, we also set the deleted timestamp here.
-		if (DelegationStatus.DELETED.equals(this.status)) {
-			deleted = LocalDateTime.now();
-		}
 	}
 
 	@PrePersist
@@ -138,28 +124,12 @@ public class FacilityDelegationEntity {
 		this.owner = owner;
 	}
 
-	public DelegationStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(DelegationStatus status) {
-		this.status = status;
-	}
-
 	public LocalDateTime getCreated() {
 		return created;
 	}
 
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
-	}
-
-	public LocalDateTime getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(LocalDateTime deleted) {
-		this.deleted = deleted;
 	}
 
 	public LocalDateTime getUpdated() {
@@ -200,18 +170,8 @@ public class FacilityDelegationEntity {
 		return this;
 	}
 
-	public FacilityDelegationEntity withStatus(DelegationStatus status) {
-		this.status = status;
-		return this;
-	}
-
 	public FacilityDelegationEntity withCreated(LocalDateTime created) {
 		this.created = created;
-		return this;
-	}
-
-	public FacilityDelegationEntity withDeleted(LocalDateTime deleted) {
-		this.deleted = deleted;
 		return this;
 	}
 
@@ -225,12 +185,12 @@ public class FacilityDelegationEntity {
 		if (!(o instanceof FacilityDelegationEntity that))
 			return false;
 		return Objects.equals(id, that.id) && Objects.equals(businessEngagementOrgId, that.businessEngagementOrgId) && Objects.equals(delegatedTo, that.delegatedTo) && Objects.equals(municipalityId, that.municipalityId)
-			&& Objects.equals(owner, that.owner) && status == that.status && Objects.equals(created, that.created) && Objects.equals(deleted, that.deleted) && Objects.equals(updated, that.updated);
+			&& Objects.equals(owner, that.owner) && Objects.equals(created, that.created) && Objects.equals(updated, that.updated);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, businessEngagementOrgId, delegatedTo, municipalityId, owner, status, created, deleted, updated);
+		return Objects.hash(id, businessEngagementOrgId, delegatedTo, municipalityId, owner, created, updated);
 	}
 
 	@Override
@@ -242,9 +202,7 @@ public class FacilityDelegationEntity {
 			", delegatedTo='" + delegatedTo + '\'' +
 			", municipalityId='" + municipalityId + '\'' +
 			", owner='" + owner + '\'' +
-			", status=" + status +
 			", created=" + created +
-			", deleted=" + deleted +
 			", updated=" + updated +
 			'}';
 	}
