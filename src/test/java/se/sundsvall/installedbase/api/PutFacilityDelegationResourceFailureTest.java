@@ -2,6 +2,7 @@ package se.sundsvall.installedbase.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
@@ -10,6 +11,7 @@ import static se.sundsvall.installedbase.TestDataFactory.createUpdateFacilityDel
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -17,10 +19,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.installedbase.Application;
+import se.sundsvall.installedbase.service.InstalledBaseService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -30,8 +34,16 @@ class PutFacilityDelegationResourceFailureTest {
 	private static final String VALID_FACILITY_DELEGATION_ID = UUID.randomUUID().toString();
 	private static final String VALID_OWNER_ID = UUID.randomUUID().toString();
 
+	@MockitoBean
+	private InstalledBaseService mockService;
+
 	@Autowired
 	private WebTestClient webTestClient;
+
+	@AfterEach
+	void tearDown() {
+		verifyNoInteractions(mockService);
+	}
 
 	@Test
 	void putDelegationInvalidMunicipalityId() {

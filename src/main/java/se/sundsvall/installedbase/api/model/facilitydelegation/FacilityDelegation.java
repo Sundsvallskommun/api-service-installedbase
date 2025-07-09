@@ -191,7 +191,7 @@ public class FacilityDelegation {
 
 	@Override
 	public String toString() {
-		return "FacilityDelegationResponse{" +
+		return "FacilityDelegation{" +
 			"id='" + id + '\'' +
 			", facilities=" + facilities +
 			", businessEngagementOrgId='" + businessEngagementOrgId + '\'' +

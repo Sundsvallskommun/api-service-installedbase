@@ -82,6 +82,7 @@ class FacilityDelegationResourceTest {
 
 		assertThat(response).isNotNull();
 		assertThat(response.getId()).isEqualTo(delegate.getId());
+
 		verify(mockService).getFacilityDelegation(MUNICIPALITY_ID, delegate.getId());
 		verifyNoMoreInteractions(mockService);
 	}
@@ -183,6 +184,9 @@ class FacilityDelegationResourceTest {
 			.hasSize(1)
 			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
+
+		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null, "ACTIVE");
+		verifyNoMoreInteractions(mockService);
 	}
 
 	@Test
@@ -242,5 +246,8 @@ class FacilityDelegationResourceTest {
 			.expectStatus().isNoContent()
 			.expectHeader().contentType(ALL_VALUE)
 			.expectBody(ResponseEntity.class);
+
+		verify(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), any(UpdateFacilityDelegation.class));
+		verifyNoMoreInteractions(mockService);
 	}
 }
