@@ -179,6 +179,10 @@ public class InstalledBaseService {
 	 * @param id             id of the facility delegation to be deleted
 	 */
 	public void deleteFacilityDelegation(String municipalityId, String id) {
-		facilityDelegationRepository.deleteByMunicipalityIdAndId(municipalityId, id);
+		facilityDelegationRepository.deleteByMunicipalityIdAndId(municipalityId, id)
+			.ifPresentOrElse(entity -> {
+				// TODO send a deleted event to EventLog
+				LOGGER.info("Deleted facility delegation with id: {}", id);
+			}, () -> LOGGER.warn("No facility delegation found with id: {} for municipalityId: {}", id, municipalityId));
 	}
 }

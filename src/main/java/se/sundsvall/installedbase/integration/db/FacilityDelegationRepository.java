@@ -6,5 +6,4 @@ import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 
 public interface FacilityDelegationRepository extends JpaRepository<FacilityDelegationEntity, String>, JpaSpecificationExecutor<FacilityDelegationEntity> {
 
-	void deleteByMunicipalityIdAndId(String municipalityId, String id);
 }
