@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Objects;
+import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.installedbase.api.model.validation.UniqueElements;
 
@@ -20,6 +21,7 @@ public class CreateFacilityDelegation {
 	@ArraySchema(schema = @Schema(implementation = String.class, description = "List of facility IDs to be delegated", example = "[\"facility1\", \"facility2\"]", requiredMode = REQUIRED))
 	private List<@NotBlank(message = "Facility cannot be blank") String> facilities;
 
+	@ValidOrganizationNumber(nullable = true)
 	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = NOT_REQUIRED)
 	private String businessEngagementOrgId;
 

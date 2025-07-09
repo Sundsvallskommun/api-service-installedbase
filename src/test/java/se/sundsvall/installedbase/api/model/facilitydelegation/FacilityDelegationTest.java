@@ -18,7 +18,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class FacilityDelegationResponseTest {
+class FacilityDelegationTest {
 
 	private final String id = "id";
 	private final List<String> facilities = List.of("facility-1", "facility-2");
@@ -38,12 +38,12 @@ class FacilityDelegationResponseTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(new FacilityDelegationResponse()).hasAllNullFieldsOrProperties();
+		assertThat(new FacilityDelegation()).hasAllNullFieldsOrProperties();
 	}
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(FacilityDelegationResponse.class, allOf(
+		MatcherAssert.assertThat(FacilityDelegation.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -53,7 +53,7 @@ class FacilityDelegationResponseTest {
 
 	@Test
 	void testBuilders() {
-		var delegate = new FacilityDelegationResponse()
+		var delegate = new FacilityDelegation()
 			.withId(id)
 			.withFacilities(facilities)
 			.withBusinessEngagementOrgId(businessEngagementOrgId)
@@ -64,6 +64,8 @@ class FacilityDelegationResponseTest {
 			.withCreated(created)
 			.withUpdated(updated)
 			.withDeleted(deleted);
+
+		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
 		assertThat(delegate.getId()).isEqualTo(id);
 		assertThat(delegate.getFacilities()).isEqualTo(facilities);
@@ -79,7 +81,7 @@ class FacilityDelegationResponseTest {
 
 	@Test
 	void testSettersAndGetters() {
-		var delegate = new FacilityDelegationResponse();
+		var delegate = new FacilityDelegation();
 		delegate.setId(id);
 		delegate.setFacilities(facilities);
 		delegate.setBusinessEngagementOrgId(businessEngagementOrgId);
@@ -90,6 +92,8 @@ class FacilityDelegationResponseTest {
 		delegate.setCreated(created);
 		delegate.setUpdated(updated);
 		delegate.setDeleted(deleted);
+
+		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
 		assertThat(delegate.getId()).isEqualTo(id);
 		assertThat(delegate.getFacilities()).isEqualTo(facilities);

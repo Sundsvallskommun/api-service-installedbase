@@ -6,6 +6,7 @@ import static se.sundsvall.installedbase.integration.db.specification.FacilityDe
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withMunicipalityId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withStatus;
+import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
@@ -21,7 +22,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
-import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegationResponse;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
@@ -93,7 +94,7 @@ public class InstalledBaseService {
 				.build();
 		}
 
-		var entity = facilityDelegationRepository.save(EntityMapper.createFacilityDelegationToEntity(municipalityId, facilityDelegation, DelegationStatus.ACTIVE));
+		var entity = facilityDelegationRepository.save(toEntity(municipalityId, facilityDelegation, DelegationStatus.ACTIVE));
 
 		return entity.getId();
 	}
@@ -107,12 +108,12 @@ public class InstalledBaseService {
 	 * @param  facilityDelegationId id of the delegation
 	 * @return                      FacilityDelegation object containing delegation details
 	 */
-	public FacilityDelegationResponse getFacilityDelegation(String municipalityId, String facilityDelegationId) {
+	public FacilityDelegation getFacilityDelegation(String municipalityId, String facilityDelegationId) {
 		LOGGER.info("Get facility delegation with id: {}", facilityDelegationId);
 
 		return facilityDelegationRepository.findOne(withMunicipalityId(municipalityId)
 			.and(withId(facilityDelegationId)))
-			.map(EntityMapper::toFacilityDelegationResponse)
+			.map(EntityMapper::toFacilityDelegation)
 			.orElseThrow(() -> Problem.builder()
 				.withDetail("Couldn't find delegation for id: " + facilityDelegationId)
 				.withStatus(Status.NOT_FOUND)
@@ -128,7 +129,7 @@ public class InstalledBaseService {
 	 * @param  status         status of the delegation, will show all delegation statuses if not provided
 	 * @return                List of FacilityDelegation objects containing delegation details
 	 */
-	public List<FacilityDelegationResponse> getFacilityDelegations(String municipalityId, String owner, String delegatedTo, String status) {
+	public List<FacilityDelegation> getFacilityDelegations(String municipalityId, String owner, String delegatedTo, String status) {
 		LOGGER.info("Get facility delegations for owner: {}, delegatedTo: {}, status: {}", owner, delegatedTo, status);
 		return facilityDelegationRepository.findAll(
 			withMunicipalityId(municipalityId)
@@ -136,7 +137,7 @@ public class InstalledBaseService {
 				.and(withDelegatedTo(delegatedTo))
 				.and(withStatus(status)))
 			.stream()
-			.map(EntityMapper::toFacilityDelegationResponse)
+			.map(EntityMapper::toFacilityDelegation)
 			.toList();
 	}
 
@@ -150,7 +151,7 @@ public class InstalledBaseService {
 	 * @param facilityDelegationId id of the facility delegation to be updated
 	 * @param facilityDelegation   FacilityDelegation object containing delegation details to be updated
 	 */
-	public void putFacilityDelegation(String municipalityId, String facilityDelegationId, String owner, UpdateFacilityDelegation facilityDelegation) {
+	public void putFacilityDelegation(String municipalityId, String facilityDelegationId, UpdateFacilityDelegation facilityDelegation) {
 		LOGGER.info("Updating facility delegation with id: {}", facilityDelegationId);
 
 		// Check that we have an active delegation to update, inactive delegations cannot be updated
@@ -166,7 +167,7 @@ public class InstalledBaseService {
 
 		// Check that the owner of the delegation is the same as the one provided in the request.
 		// Don't want these two in the same problem/error message, hence the separate checks
-		if (!facilityDelegationEntity.getOwner().equals(owner)) {
+		if (!facilityDelegationEntity.getOwner().equals(facilityDelegation.getOwner())) {
 			throw Problem.builder()
 				.withTitle("Invalid delegation owner")
 				.withDetail("The owner of the delegation with id: '" + facilityDelegationId + "' is not the same as the one provided in the request.")

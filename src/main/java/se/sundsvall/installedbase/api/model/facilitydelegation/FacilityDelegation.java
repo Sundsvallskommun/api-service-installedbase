@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Schema(description = "FacilityDelegation response model")
-public class FacilityDelegationResponse {
+public class FacilityDelegation {
 
 	@Schema(description = "Unique identifier for the delegation", example = "12345678-1234-1234-1234-123456789012")
 	private String id;
@@ -125,59 +125,59 @@ public class FacilityDelegationResponse {
 		this.deleted = deleted;
 	}
 
-	public FacilityDelegationResponse withId(String id) {
+	public FacilityDelegation withId(String id) {
 		this.id = id;
 		return this;
 	}
 
-	public FacilityDelegationResponse withFacilities(List<String> facilities) {
+	public FacilityDelegation withFacilities(List<String> facilities) {
 		this.facilities = facilities;
 		return this;
 	}
 
-	public FacilityDelegationResponse withBusinessEngagementOrgId(String businessEngagementOrgId) {
+	public FacilityDelegation withBusinessEngagementOrgId(String businessEngagementOrgId) {
 		this.businessEngagementOrgId = businessEngagementOrgId;
 		return this;
 	}
 
-	public FacilityDelegationResponse withDelegatedTo(String delegatedTo) {
+	public FacilityDelegation withDelegatedTo(String delegatedTo) {
 		this.delegatedTo = delegatedTo;
 		return this;
 	}
 
-	public FacilityDelegationResponse withOwner(String owner) {
+	public FacilityDelegation withOwner(String owner) {
 		this.owner = owner;
 		return this;
 	}
 
-	public FacilityDelegationResponse withStatus(String status) {
+	public FacilityDelegation withStatus(String status) {
 		this.status = status;
 		return this;
 	}
 
-	public FacilityDelegationResponse withCreated(LocalDateTime created) {
+	public FacilityDelegation withCreated(LocalDateTime created) {
 		this.created = created;
 		return this;
 	}
 
-	public FacilityDelegationResponse withUpdated(LocalDateTime updated) {
+	public FacilityDelegation withUpdated(LocalDateTime updated) {
 		this.updated = updated;
 		return this;
 	}
 
-	public FacilityDelegationResponse withDeleted(LocalDateTime deleted) {
+	public FacilityDelegation withDeleted(LocalDateTime deleted) {
 		this.deleted = deleted;
 		return this;
 	}
 
-	public FacilityDelegationResponse withMunicipalityId(String municipalityId) {
+	public FacilityDelegation withMunicipalityId(String municipalityId) {
 		this.municipalityId = municipalityId;
 		return this;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof FacilityDelegationResponse facilityDelegation))
+		if (!(o instanceof FacilityDelegation facilityDelegation))
 			return false;
 		return Objects.equals(id, facilityDelegation.id) && Objects.equals(facilities, facilityDelegation.facilities) && Objects.equals(businessEngagementOrgId, facilityDelegation.businessEngagementOrgId) && Objects.equals(delegatedTo,
 			facilityDelegation.delegatedTo) && Objects.equals(owner, facilityDelegation.owner) && Objects.equals(status, facilityDelegation.status) && Objects.equals(municipalityId, facilityDelegation.municipalityId) && Objects.equals(created,

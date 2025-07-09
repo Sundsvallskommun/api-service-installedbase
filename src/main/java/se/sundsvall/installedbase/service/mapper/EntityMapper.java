@@ -1,7 +1,7 @@
 package se.sundsvall.installedbase.service.mapper;
 
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
-import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegationResponse;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 import se.sundsvall.installedbase.service.model.DelegationStatus;
@@ -10,7 +10,15 @@ public final class EntityMapper {
 
 	private EntityMapper() {}
 
-	public static FacilityDelegationEntity createFacilityDelegationToEntity(String municipalityId, CreateFacilityDelegation facilityDelegation, DelegationStatus status) {
+	/**
+	 * Converts a CreateFacilityDelegation to a FacilityDelegationEntity.
+	 * 
+	 * @param  municipalityId     the ID of the municipality
+	 * @param  facilityDelegation the CreateFacilityDelegation object containing delegation details
+	 * @param  status             the status of the delegation
+	 * @return                    a FacilityDelegationEntity
+	 */
+	public static FacilityDelegationEntity toEntity(String municipalityId, CreateFacilityDelegation facilityDelegation, DelegationStatus status) {
 		return new FacilityDelegationEntity()
 			.withMunicipalityId(municipalityId)
 			.withOwner(facilityDelegation.getOwner())
@@ -26,8 +34,8 @@ public final class EntityMapper {
 	 * @param  entity the FacilityDelegationEntity to convert
 	 * @return        a FacilityDelegation representing the entity
 	 */
-	public static FacilityDelegationResponse toFacilityDelegationResponse(FacilityDelegationEntity entity) {
-		return new FacilityDelegationResponse()
+	public static FacilityDelegation toFacilityDelegation(FacilityDelegationEntity entity) {
+		return new FacilityDelegation()
 			.withId(entity.getId())
 			.withFacilities(entity.getFacilities())
 			.withBusinessEngagementOrgId(entity.getBusinessEngagementOrgId())

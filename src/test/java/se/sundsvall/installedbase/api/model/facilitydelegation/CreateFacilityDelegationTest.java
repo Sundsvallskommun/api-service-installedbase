@@ -21,7 +21,7 @@ class CreateFacilityDelegationTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(new FacilityDelegationResponse()).hasAllNullFieldsOrProperties();
+		assertThat(new FacilityDelegation()).hasAllNullFieldsOrProperties();
 	}
 
 	@Test
@@ -42,6 +42,8 @@ class CreateFacilityDelegationTest {
 			.withDelegatedTo(delegatedTo)
 			.withOwner(owner);
 
+		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
+
 		assertThat(delegate.getFacilities()).isEqualTo(facilities);
 		assertThat(delegate.getBusinessEngagementOrgId()).isEqualTo(businessEngagementOrgId);
 		assertThat(delegate.getDelegatedTo()).isEqualTo(delegatedTo);
@@ -55,6 +57,8 @@ class CreateFacilityDelegationTest {
 		delegate.setBusinessEngagementOrgId(businessEngagementOrgId);
 		delegate.setDelegatedTo(delegatedTo);
 		delegate.setOwner(owner);
+
+		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
 		assertThat(delegate.getFacilities()).isEqualTo(facilities);
 		assertThat(delegate.getBusinessEngagementOrgId()).isEqualTo(businessEngagementOrgId);

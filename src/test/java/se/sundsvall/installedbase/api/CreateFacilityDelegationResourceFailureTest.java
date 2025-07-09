@@ -81,6 +81,7 @@ class CreateFacilityDelegationResourceFailureTest {
 			Arguments.of(List.of(), "facilities", "facilities must contain at least one facility"),
 			Arguments.of(List.of(""), "facilities[0]", "Facility cannot be blank"),
 			Arguments.of(List.of(" "), "facilities[0]", "Facility cannot be blank"),
+			Arguments.of(List.of("facility-1", "facility-1"), "facilities", "List must contain unique elements"),
 			Arguments.of(List.of("", "facility-1"), "facilities[0]", "Facility cannot be blank"));
 	}
 
@@ -134,5 +135,27 @@ class CreateFacilityDelegationResourceFailureTest {
 			arguments("blank uuid", " ", "not a valid UUID"),
 			arguments("null uuid", null, "not a valid UUID"),
 			arguments("invalid uuid", "not-a-uuid", "not a valid UUID"));
+	}
+
+	@Test
+	void createDelegateInvalidBusinessEngagementOrgId() {
+		var invalidBusinessEngagementOrgId = "invalid-org-id";
+		var delegate = createFacilityDelegation();
+		delegate.setBusinessEngagementOrgId(invalidBusinessEngagementOrgId);
+
+		webTestClient.post()
+			.uri("/{municipalityId}/delegates", MUNICIPALITY_ID)
+			.contentType(APPLICATION_JSON)
+			.bodyValue(delegate)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+			.expectBody(ConstraintViolationProblem.class)
+			.consumeWith(result -> {
+				assertThat(result.getResponseBody()).isNotNull();
+				assertThat(result.getResponseBody().getViolations())
+					.extracting(Violation::getField, Violation::getMessage)
+					.containsExactly(tuple("businessEngagementOrgId", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+			});
 	}
 }

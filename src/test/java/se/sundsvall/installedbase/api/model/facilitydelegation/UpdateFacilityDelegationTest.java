@@ -17,10 +17,11 @@ class UpdateFacilityDelegationTest {
 	private final List<String> facilities = List.of("facility-1", "facility-2");
 	private final String businessEngagementOrgId = "businessEngagementOrgId";
 	private final String delegatedTo = UUID.randomUUID().toString();
+	private final String owner = UUID.randomUUID().toString();
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(new FacilityDelegationResponse()).hasAllNullFieldsOrProperties();
+		assertThat(new FacilityDelegation()).hasAllNullFieldsOrProperties();
 	}
 
 	@Test
@@ -38,7 +39,10 @@ class UpdateFacilityDelegationTest {
 		var delegate = new UpdateFacilityDelegation()
 			.withFacilities(facilities)
 			.withBusinessEngagementOrgId(businessEngagementOrgId)
-			.withDelegatedTo(delegatedTo);
+			.withDelegatedTo(delegatedTo)
+			.withOwner(owner);
+
+		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
 		assertThat(delegate.getFacilities()).isEqualTo(facilities);
 		assertThat(delegate.getBusinessEngagementOrgId()).isEqualTo(businessEngagementOrgId);
@@ -51,6 +55,9 @@ class UpdateFacilityDelegationTest {
 		delegate.setFacilities(facilities);
 		delegate.setBusinessEngagementOrgId(businessEngagementOrgId);
 		delegate.setDelegatedTo(delegatedTo);
+		delegate.setOwner(owner);
+
+		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
 		assertThat(delegate.getFacilities()).isEqualTo(facilities);
 		assertThat(delegate.getBusinessEngagementOrgId()).isEqualTo(businessEngagementOrgId);

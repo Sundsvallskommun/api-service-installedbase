@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegationEntity;
 import static se.sundsvall.installedbase.TestDataFactory.createUpdateFacilityDelegation;
-import static se.sundsvall.installedbase.service.mapper.EntityMapper.createFacilityDelegationToEntity;
-import static se.sundsvall.installedbase.service.mapper.EntityMapper.toFacilityDelegationResponse;
+import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
+import static se.sundsvall.installedbase.service.mapper.EntityMapper.toFacilityDelegation;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 
 import java.util.UUID;
@@ -23,12 +23,12 @@ import se.sundsvall.installedbase.service.model.DelegationStatus;
 class EntityMapperTest {
 
 	@Test
-	void testCreateFacilityDelegationToEntity() {
+	void testToEntity() {
 		var municipalityId = "2281";
 		var facilityDelegation = createFacilityDelegation();
 		var delegationStatus = DelegationStatus.ACTIVE;
 
-		var entity = createFacilityDelegationToEntity(municipalityId, facilityDelegation, delegationStatus);
+		var entity = toEntity(municipalityId, facilityDelegation, delegationStatus);
 
 		assertThat(entity.getId()).isNull();
 		assertThat(entity.getOwner()).isEqualTo(facilityDelegation.getOwner());
@@ -39,11 +39,11 @@ class EntityMapperTest {
 	}
 
 	@Test
-	void testToFacilityDelegationResponse() {
+	void testToFacilityDelegation() {
 		var id = UUID.randomUUID().toString();
 		var facilityDelegationEntity = createFacilityDelegationEntity(id);
 
-		var facilityDelegation = toFacilityDelegationResponse(facilityDelegationEntity);
+		var facilityDelegation = toFacilityDelegation(facilityDelegationEntity);
 
 		assertThat(facilityDelegation.getId()).isEqualTo(id);
 		assertThat(facilityDelegation.getOwner()).isEqualTo(facilityDelegationEntity.getOwner());

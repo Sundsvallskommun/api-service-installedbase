@@ -26,7 +26,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.installedbase.Application;
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
-import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegationResponse;
+import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
@@ -76,7 +76,7 @@ class FacilityDelegationResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(FacilityDelegationResponse.class)
+			.expectBody(FacilityDelegation.class)
 			.returnResult()
 			.getResponseBody();
 
@@ -101,13 +101,13 @@ class FacilityDelegationResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegationResponse.class)
+			.expectBodyList(FacilityDelegation.class)
 			.returnResult()
 			.getResponseBody();
 
 		assertThat(response)
 			.hasSize(2)
-			.extracting(FacilityDelegationResponse::getOwner, FacilityDelegationResponse::getDelegatedTo)
+			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(
 				tuple(delegation1.getOwner(), delegation2.getDelegatedTo()),
 				tuple(delegation2.getOwner(), delegation2.getDelegatedTo()));
@@ -127,13 +127,13 @@ class FacilityDelegationResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegationResponse.class)
+			.expectBodyList(FacilityDelegation.class)
 			.returnResult()
 			.getResponseBody();
 
 		assertThat(response)
 			.hasSize(1)
-			.extracting(FacilityDelegationResponse::getOwner, FacilityDelegationResponse::getDelegatedTo)
+			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
 
 		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), null);
@@ -151,13 +151,13 @@ class FacilityDelegationResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegationResponse.class)
+			.expectBodyList(FacilityDelegation.class)
 			.returnResult()
 			.getResponseBody();
 
 		assertThat(response)
 			.hasSize(1)
-			.extracting(FacilityDelegationResponse::getOwner, FacilityDelegationResponse::getDelegatedTo)
+			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
 
 		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), "ACTIVE");
@@ -175,13 +175,13 @@ class FacilityDelegationResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegationResponse.class)
+			.expectBodyList(FacilityDelegation.class)
 			.returnResult()
 			.getResponseBody();
 
 		assertThat(response)
 			.hasSize(1)
-			.extracting(FacilityDelegationResponse::getOwner, FacilityDelegationResponse::getDelegatedTo)
+			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
 	}
 
@@ -196,13 +196,13 @@ class FacilityDelegationResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegationResponse.class)
+			.expectBodyList(FacilityDelegation.class)
 			.returnResult()
 			.getResponseBody();
 
 		assertThat(response)
 			.hasSize(1)
-			.extracting(FacilityDelegationResponse::getOwner, FacilityDelegationResponse::getDelegatedTo)
+			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
 
 		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo(), "ACTIVE");
@@ -220,7 +220,7 @@ class FacilityDelegationResourceTest {
 			.uri(BASE_URL + "?owner={owner}&delegatedTo={delegatedTo}&status={status}", MUNICIPALITY_ID, owner, delegatedTo, "ACTIVE")
 			.exchange()
 			.expectStatus().isOk()
-			.expectBodyList(FacilityDelegationResponse.class)
+			.expectBodyList(FacilityDelegation.class)
 			.hasSize(0);
 
 		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, "ACTIVE");
@@ -230,13 +230,12 @@ class FacilityDelegationResourceTest {
 	@Test
 	void putDelegations() {
 		var id = UUID.randomUUID().toString();
-		var owner = UUID.randomUUID().toString();
 		var facilityDelegation = createFacilityDelegation();
 
-		doNothing().when(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), eq(owner), any(UpdateFacilityDelegation.class));
+		doNothing().when(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), any(UpdateFacilityDelegation.class));
 
 		webTestClient.put()
-			.uri(BASE_URL + "/{id}/{owner}", MUNICIPALITY_ID, id, owner)
+			.uri(BASE_URL + "/{id}", MUNICIPALITY_ID, id)
 			.contentType(APPLICATION_JSON)
 			.bodyValue(facilityDelegation)
 			.exchange()

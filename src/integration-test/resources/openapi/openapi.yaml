@@ -15,7 +15,60 @@ tags:
   - name: Installed base
     description: Installed base operations
 paths:
-  /{municipalityId}/delegates/{id}/{owner}:
+  /{municipalityId}/delegates/{id}:
+    get:
+      tags:
+        - Installed base
+      summary: Get a specific facility delegation
+      operationId: getFacilityDelegationById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacilityDelegation"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
     put:
       tags:
         - Installed base
@@ -35,13 +88,6 @@ paths:
         - name: id
           in: path
           description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-        - name: owner
-          in: path
-          description: Owner of the delegation
           required: true
           schema:
             type: string
@@ -125,7 +171,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/FacilityDelegationResponse"
+                  $ref: "#/components/schemas/FacilityDelegation"
         "404":
           description: Not Found
           content:
@@ -278,60 +324,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/delegates/{id}:
-    get:
-      tags:
-        - Installed base
-      summary: Get a specific facility delegation
-      operationId: getFacilityDelegationById
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      responses:
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FacilityDelegationResponse"
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -372,12 +364,14 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     UpdateFacilityDelegation:
+      required:
+        - owner
       type: object
       properties:
         facilities:
@@ -393,6 +387,10 @@ components:
           type: string
           description: Party ID of the delegate
           example: 81471222-5798-11e9-ae24-57fa13b361e2
+        owner:
+          type: string
+          description: Party ID of the delegation owner
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       description: UpdateFacilityDelegation model
     ConstraintViolationProblem:
       type: object
@@ -719,7 +717,7 @@ components:
           items:
             $ref: "#/components/schemas/InstalledBaseCustomer"
       description: Installed base response model
-    FacilityDelegationResponse:
+    FacilityDelegation:
       type: object
       properties:
         id:
