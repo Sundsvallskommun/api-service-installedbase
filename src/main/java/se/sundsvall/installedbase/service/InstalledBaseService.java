@@ -1,5 +1,8 @@
 package se.sundsvall.installedbase.service;
 
+import static generated.se.sundsvall.eventlog.EventType.CREATE;
+import static generated.se.sundsvall.eventlog.EventType.DELETE;
+import static generated.se.sundsvall.eventlog.EventType.UPDATE;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withDelegatedTo;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withId;
@@ -7,10 +10,12 @@ import static se.sundsvall.installedbase.integration.db.specification.FacilityDe
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
+import static se.sundsvall.installedbase.service.mapper.EventlogMapper.toEvent;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseResponse;
 
+import generated.se.sundsvall.eventlog.EventType;
 import java.time.LocalDate;
 import java.util.List;
 import org.slf4j.Logger;
@@ -25,6 +30,8 @@ import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegatio
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
+import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
+import se.sundsvall.installedbase.integration.eventlog.EventLogClient;
 import se.sundsvall.installedbase.service.mapper.EntityMapper;
 
 @Service
@@ -39,10 +46,12 @@ public class InstalledBaseService {
 
 	private final DataWarehouseReaderClient dataWarehouseReaderClient;
 	private final FacilityDelegationRepository facilityDelegationRepository;
+	private final EventLogClient eventLogClient;
 
-	public InstalledBaseService(DataWarehouseReaderClient dataWarehouseReaderClient, FacilityDelegationRepository facilityDelegationRepository) {
+	public InstalledBaseService(DataWarehouseReaderClient dataWarehouseReaderClient, FacilityDelegationRepository facilityDelegationRepository, EventLogClient eventLogClient) {
 		this.dataWarehouseReaderClient = dataWarehouseReaderClient;
 		this.facilityDelegationRepository = facilityDelegationRepository;
+		this.eventLogClient = eventLogClient;
 	}
 
 	public InstalledBaseResponse getInstalledBase(String municipalityId, String organizationNumber, List<String> partyIds, LocalDate modifiedFrom) {
@@ -93,6 +102,8 @@ public class InstalledBaseService {
 		}
 
 		var entity = facilityDelegationRepository.save(toEntity(municipalityId, facilityDelegation));
+
+		sendEvent(municipalityId, entity, CREATE);
 
 		return entity.getId();
 	}
@@ -148,7 +159,7 @@ public class InstalledBaseService {
 		LOGGER.info("Updating facility delegation with id: {}", facilityDelegationId);
 
 		// Check that we have an active delegation to update, inactive delegations cannot be updated
-		var facilityDelegationEntity = facilityDelegationRepository.findOne(
+		var entity = facilityDelegationRepository.findOne(
 			withMunicipalityId(municipalityId)
 				.and(withId(facilityDelegationId)))
 			.orElseThrow(() -> Problem.builder()
@@ -159,7 +170,7 @@ public class InstalledBaseService {
 
 		// Check that the owner of the delegation is the same as the one provided in the request.
 		// Don't want these two in the same problem/error message, hence the separate checks
-		if (!facilityDelegationEntity.getOwner().equals(facilityDelegation.getOwner())) {
+		if (!entity.getOwner().equals(facilityDelegation.getOwner())) {
 			throw Problem.builder()
 				.withTitle("Invalid delegation owner")
 				.withDetail("The owner of the delegation with id: '" + facilityDelegationId + "' is not the same as the one provided in the request.")
@@ -167,9 +178,11 @@ public class InstalledBaseService {
 				.build();
 		}
 
-		updateEntityForPutOperation(facilityDelegationEntity, facilityDelegation);
+		updateEntityForPutOperation(entity, facilityDelegation);
 
-		facilityDelegationRepository.save(facilityDelegationEntity);
+		facilityDelegationRepository.save(entity);
+
+		sendEvent(municipalityId, entity, UPDATE);
 	}
 
 	/**
@@ -179,10 +192,32 @@ public class InstalledBaseService {
 	 * @param id             id of the facility delegation to be deleted
 	 */
 	public void deleteFacilityDelegation(String municipalityId, String id) {
-		facilityDelegationRepository.deleteByMunicipalityIdAndId(municipalityId, id)
+		facilityDelegationRepository.findOne(withMunicipalityId(municipalityId)
+			.and(withId(id)))
 			.ifPresentOrElse(entity -> {
-				// TODO send a deleted event to EventLog
-				LOGGER.info("Deleted facility delegation with id: {}", id);
-			}, () -> LOGGER.warn("No facility delegation found with id: {} for municipalityId: {}", id, municipalityId));
+				LOGGER.info("Deleting facility delegation with id: {}", id);
+
+				facilityDelegationRepository.delete(entity);
+				sendEvent(municipalityId, entity, DELETE);
+			}, () -> LOGGER.info("Couldn't delete facility delegation with id: {} as it does not exist", id));
+	}
+
+	/**
+	 * Creates and sends an event for a facility delegation operation.
+	 * 
+	 * @param municipalityId municipalityId
+	 * @param entity         FacilityDelegationEntity containing delegation details
+	 * @param eventType      EventType representing the type of event (CREATE, UPDATE, DELETE)
+	 */
+	private void sendEvent(String municipalityId, FacilityDelegationEntity entity, EventType eventType) {
+		LOGGER.info("Creating event for facility delegation with id: {}", entity.getId());
+
+		try {
+			eventLogClient.createEvent(municipalityId, entity.getId(),
+				toEvent(entity.getId(), entity.getOwner(), entity.getDelegatedTo(), eventType));
+		} catch (Exception e) {
+			LOGGER.warn("Failed to send event for facility delegation with id: {}", entity.getId(), e);
+			LOGGER.info("Facility delegation content: {}", entity);
+		}
 	}
 }
