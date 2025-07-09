@@ -25,11 +25,6 @@ public class FacilityDelegation {
 	@Schema(description = "Party ID of the delegation owner", example = "81471222-5798-11e9-ae24-57fa13b361e1")
 	private String owner;
 
-	@Schema(description = "Status of the delegation", examples = {
-		"ACTIVE | DELETED"
-	}, example = "ACTIVE")
-	private String status;
-
 	@Schema(description = "Municipality ID of the delegation", example = "1234")
 	private String municipalityId;
 
@@ -40,10 +35,6 @@ public class FacilityDelegation {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	@Schema(description = "When the delegation was last updated", example = "2025-04-01T12:00:00")
 	private LocalDateTime updated;
-
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	@Schema(description = "When the delegation was deleted", example = "2025-06-01T12:00:00")
-	private LocalDateTime deleted;
 
 	public String getId() {
 		return id;
@@ -85,14 +76,6 @@ public class FacilityDelegation {
 		this.owner = owner;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public String getMunicipalityId() {
 		return municipalityId;
 	}
@@ -115,14 +98,6 @@ public class FacilityDelegation {
 
 	public void setUpdated(LocalDateTime updated) {
 		this.updated = updated;
-	}
-
-	public LocalDateTime getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(LocalDateTime deleted) {
-		this.deleted = deleted;
 	}
 
 	public FacilityDelegation withId(String id) {
@@ -150,11 +125,6 @@ public class FacilityDelegation {
 		return this;
 	}
 
-	public FacilityDelegation withStatus(String status) {
-		this.status = status;
-		return this;
-	}
-
 	public FacilityDelegation withCreated(LocalDateTime created) {
 		this.created = created;
 		return this;
@@ -165,11 +135,6 @@ public class FacilityDelegation {
 		return this;
 	}
 
-	public FacilityDelegation withDeleted(LocalDateTime deleted) {
-		this.deleted = deleted;
-		return this;
-	}
-
 	public FacilityDelegation withMunicipalityId(String municipalityId) {
 		this.municipalityId = municipalityId;
 		return this;
@@ -177,16 +142,15 @@ public class FacilityDelegation {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof FacilityDelegation facilityDelegation))
+		if (!(o instanceof FacilityDelegation that))
 			return false;
-		return Objects.equals(id, facilityDelegation.id) && Objects.equals(facilities, facilityDelegation.facilities) && Objects.equals(businessEngagementOrgId, facilityDelegation.businessEngagementOrgId) && Objects.equals(delegatedTo,
-			facilityDelegation.delegatedTo) && Objects.equals(owner, facilityDelegation.owner) && Objects.equals(status, facilityDelegation.status) && Objects.equals(municipalityId, facilityDelegation.municipalityId) && Objects.equals(created,
-				facilityDelegation.created) && Objects.equals(updated, facilityDelegation.updated) && Objects.equals(deleted, facilityDelegation.deleted);
+		return Objects.equals(id, that.id) && Objects.equals(facilities, that.facilities) && Objects.equals(businessEngagementOrgId, that.businessEngagementOrgId) && Objects.equals(delegatedTo, that.delegatedTo)
+			&& Objects.equals(owner, that.owner) && Objects.equals(municipalityId, that.municipalityId) && Objects.equals(created, that.created) && Objects.equals(updated, that.updated);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, facilities, businessEngagementOrgId, delegatedTo, owner, status, municipalityId, created, updated, deleted);
+		return Objects.hash(id, facilities, businessEngagementOrgId, delegatedTo, owner, municipalityId, created, updated);
 	}
 
 	@Override
@@ -197,11 +161,9 @@ public class FacilityDelegation {
 			", businessEngagementOrgId='" + businessEngagementOrgId + '\'' +
 			", delegatedTo='" + delegatedTo + '\'' +
 			", owner='" + owner + '\'' +
-			", status='" + status + '\'' +
 			", municipalityId='" + municipalityId + '\'' +
 			", created=" + created +
 			", updated=" + updated +
-			", deleted=" + deleted +
 			'}';
 	}
 }

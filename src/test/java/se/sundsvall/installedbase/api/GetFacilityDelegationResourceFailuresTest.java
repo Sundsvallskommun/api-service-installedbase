@@ -142,24 +142,4 @@ class GetFacilityDelegationResourceFailuresTest {
 				assertThat(response.getResponseBody().getDetail()).isEqualTo("Either owner or delegatedTo must be provided");
 			});
 	}
-
-	@Test
-	void getDelegationsWithInvalidStatus() {
-		var owner = UUID.randomUUID().toString();
-		var invalidStatus = "invalid-status";
-
-		webTestClient.get()
-			.uri("/{municipalityId}/delegates?owner={owner}&status={status}", MUNICIPALITY_ID, owner, invalidStatus)
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-			.expectBody(ConstraintViolationProblem.class)
-			.consumeWith(response -> {
-				assertThat(response.getResponseBody()).isNotNull();
-				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
-					.containsExactly(tuple("getFacilityDelegations.status", "invalid delegation status 'invalid-status'. Must be one of 'ACTIVE, DELETED' or empty"));
-			});
-	}
-
 }

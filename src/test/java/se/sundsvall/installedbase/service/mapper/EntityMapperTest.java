@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
-import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @ExtendWith(MockitoExtension.class)
 class EntityMapperTest {
@@ -26,16 +25,14 @@ class EntityMapperTest {
 	void testToEntity() {
 		var municipalityId = "2281";
 		var facilityDelegation = createFacilityDelegation();
-		var delegationStatus = DelegationStatus.ACTIVE;
 
-		var entity = toEntity(municipalityId, facilityDelegation, delegationStatus);
+		var entity = toEntity(municipalityId, facilityDelegation);
 
 		assertThat(entity.getId()).isNull();
 		assertThat(entity.getOwner()).isEqualTo(facilityDelegation.getOwner());
 		assertThat(entity.getDelegatedTo()).isEqualTo(facilityDelegation.getDelegatedTo());
 		assertThat(entity.getFacilities()).isEqualTo(facilityDelegation.getFacilities());
 		assertThat(entity.getBusinessEngagementOrgId()).isEqualTo(facilityDelegation.getBusinessEngagementOrgId());
-		assertThat(entity.getStatus()).isEqualTo(DelegationStatus.ACTIVE);
 	}
 
 	@Test
@@ -51,9 +48,7 @@ class EntityMapperTest {
 		assertThat(facilityDelegation.getFacilities()).isEqualTo(facilityDelegationEntity.getFacilities());
 		assertThat(facilityDelegation.getBusinessEngagementOrgId()).isEqualTo(facilityDelegationEntity.getBusinessEngagementOrgId());
 		assertThat(facilityDelegation.getMunicipalityId()).isEqualTo(facilityDelegationEntity.getMunicipalityId());
-		assertThat(facilityDelegation.getStatus()).isEqualTo(DelegationStatus.ACTIVE.name());
 		assertThat(facilityDelegation.getCreated()).isEqualTo(facilityDelegationEntity.getCreated());
-		assertThat(facilityDelegation.getDeleted()).isEqualTo(facilityDelegationEntity.getDeleted());
 		assertThat(facilityDelegation.getUpdated()).isEqualTo(facilityDelegationEntity.getUpdated());
 	}
 
@@ -88,10 +83,8 @@ class EntityMapperTest {
 		var originalId = entity.getId();
 		var originalMunicipalityId = entity.getMunicipalityId();
 		var originalOwner = entity.getOwner();
-		var originalStatus = entity.getStatus();
 		var originalCreated = entity.getCreated();
 		var originalUpdated = entity.getUpdated();
-		var originalDeleted = entity.getDeleted();
 
 		// Update the entity with the new values
 		updateEntityForPutOperation(entity, facilityDelegation);
@@ -105,9 +98,7 @@ class EntityMapperTest {
 		assertThat(entity.getId()).isEqualTo(originalId);
 		assertThat(entity.getMunicipalityId()).isEqualTo(originalMunicipalityId);
 		assertThat(entity.getOwner()).isEqualTo(originalOwner);
-		assertThat(entity.getStatus()).isEqualTo(originalStatus);
 		assertThat(entity.getCreated()).isEqualTo(originalCreated);
 		assertThat(entity.getUpdated()).isEqualTo(originalUpdated);
-		assertThat(entity.getDeleted()).isEqualTo(originalDeleted);
 	}
 }

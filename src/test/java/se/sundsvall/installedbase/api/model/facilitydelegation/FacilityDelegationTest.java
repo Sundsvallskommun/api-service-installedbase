@@ -26,10 +26,8 @@ class FacilityDelegationTest {
 	private final String delegatedTo = UUID.randomUUID().toString();
 	private final String owner = UUID.randomUUID().toString();
 	private final String municipalityId = "2281";
-	private final String status = "active";
 	private final LocalDateTime created = now().minusMinutes(2);
 	private final LocalDateTime updated = now().minusMinutes(1);
-	private final LocalDateTime deleted = now();
 
 	@BeforeAll
 	static void setup() {
@@ -60,10 +58,8 @@ class FacilityDelegationTest {
 			.withDelegatedTo(delegatedTo)
 			.withOwner(owner)
 			.withMunicipalityId(municipalityId)
-			.withStatus(status)
 			.withCreated(created)
-			.withUpdated(updated)
-			.withDeleted(deleted);
+			.withUpdated(updated);
 
 		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
@@ -73,10 +69,8 @@ class FacilityDelegationTest {
 		assertThat(delegate.getDelegatedTo()).isEqualTo(delegatedTo);
 		assertThat(delegate.getOwner()).isEqualTo(owner);
 		assertThat(delegate.getMunicipalityId()).isEqualTo(municipalityId);
-		assertThat(delegate.getStatus()).isEqualTo(status);
 		assertThat(delegate.getCreated()).isEqualTo(created);
 		assertThat(delegate.getUpdated()).isEqualTo(updated);
-		assertThat(delegate.getDeleted()).isEqualTo(deleted);
 	}
 
 	@Test
@@ -88,10 +82,8 @@ class FacilityDelegationTest {
 		delegate.setDelegatedTo(delegatedTo);
 		delegate.setOwner(owner);
 		delegate.setMunicipalityId(municipalityId);
-		delegate.setStatus(status);
 		delegate.setCreated(created);
 		delegate.setUpdated(updated);
-		delegate.setDeleted(deleted);
 
 		assertThat(delegate).isNotNull().hasNoNullFieldsOrProperties();
 
@@ -101,9 +93,7 @@ class FacilityDelegationTest {
 		assertThat(delegate.getDelegatedTo()).isEqualTo(delegatedTo);
 		assertThat(delegate.getOwner()).isEqualTo(owner);
 		assertThat(delegate.getMunicipalityId()).isEqualTo(municipalityId);
-		assertThat(delegate.getStatus()).isEqualTo(status);
 		assertThat(delegate.getCreated()).isEqualTo(created);
 		assertThat(delegate.getUpdated()).isEqualTo(updated);
-		assertThat(delegate.getDeleted()).isEqualTo(deleted);
 	}
 }

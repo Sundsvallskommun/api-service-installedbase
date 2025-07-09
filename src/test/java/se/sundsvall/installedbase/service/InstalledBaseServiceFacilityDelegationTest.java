@@ -24,7 +24,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
-import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledBaseServiceFacilityDelegationTest {
@@ -106,12 +105,11 @@ class InstalledBaseServiceFacilityDelegationTest {
 	void testGetFacilityDelegations() {
 		var owner = UUID.randomUUID().toString();
 		var delegatedTo = UUID.randomUUID().toString();
-		var status = DelegationStatus.ACTIVE.name();
 		var facilityDelegationEntity = createFacilityDelegationEntity(UUID.randomUUID().toString());
 		when(mockFacilityDelegationRepository.findAll(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any()))
 			.thenReturn(List.of(facilityDelegationEntity));
 
-		var response = installedBaseService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, status);
+		var response = installedBaseService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo);
 
 		assertThat(response).isNotNull().hasSize(1);
 		assertThat(response.getFirst().getId()).isEqualTo(facilityDelegationEntity.getId());
@@ -124,11 +122,10 @@ class InstalledBaseServiceFacilityDelegationTest {
 	void testGetFacilityDelegations_shouldReturnEmptyList_whenNoDelegationsFound() {
 		var owner = UUID.randomUUID().toString();
 		var delegatedTo = UUID.randomUUID().toString();
-		var status = DelegationStatus.ACTIVE.name();
 		when(mockFacilityDelegationRepository.findAll(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any()))
 			.thenReturn(List.of());
 
-		var response = installedBaseService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, status);
+		var response = installedBaseService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo);
 
 		assertThat(response).isNotNull().isEmpty();
 
@@ -154,7 +151,7 @@ class InstalledBaseServiceFacilityDelegationTest {
 	}
 
 	@Test
-	void testPutFacilityDelegation_shouldThrowProblem_whenFacilityDelegationNotFoundOrDeleted() {
+	void testPutFacilityDelegation_shouldThrowProblem_whenFacilityDelegationNotFound() {
 		var id = UUID.randomUUID().toString();
 		var updateFacilityDelegation = createUpdateFacilityDelegation();
 
@@ -187,27 +184,12 @@ class InstalledBaseServiceFacilityDelegationTest {
 	@Test
 	void testDeleteFacilityDelegation() {
 		var id = UUID.randomUUID().toString();
-		var entityMock = mock(FacilityDelegationEntity.class);
-
-		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.of(entityMock));
-
-		installedBaseService.deleteFacilityDelegation(MUNICIPALITY_ID, id);
-
-		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
-		verify(mockFacilityDelegationRepository).save(any(FacilityDelegationEntity.class));
-		verify(entityMock).setStatus(DelegationStatus.DELETED);
-		verifyNoMoreInteractions(mockFacilityDelegationRepository);
-	}
-
-	@Test
-	void testDeleteFacilityDelegation_shouldDoNothing_whenNotFound() {
-		var id = UUID.randomUUID().toString();
-
-		when(mockFacilityDelegationRepository.findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any())).thenReturn(Optional.empty());
+		var mock = mock(FacilityDelegationEntity.class);
+		when(mockFacilityDelegationRepository.deleteByMunicipalityIdAndId(MUNICIPALITY_ID, id)).thenReturn(Optional.of(mock));
 
 		installedBaseService.deleteFacilityDelegation(MUNICIPALITY_ID, id);
 
-		verify(mockFacilityDelegationRepository).findOne(ArgumentMatchers.<Specification<FacilityDelegationEntity>>any());
+		verify(mockFacilityDelegationRepository).deleteByMunicipalityIdAndId(MUNICIPALITY_ID, id);
 		verifyNoMoreInteractions(mockFacilityDelegationRepository);
 	}
 }

@@ -40,7 +40,6 @@ import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
-import se.sundsvall.installedbase.api.model.validation.ValidDelegationStatus;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
 @RestController
@@ -81,12 +80,11 @@ class FacilityDelegationResource {
 	public ResponseEntity<List<FacilityDelegation>> getFacilityDelegations(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "owner", description = "Owner of the delegation", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid(nullable = true) @RequestParam(required = false) String owner,
-		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo,
-		@Parameter(name = "status", description = "Status of the delegation, will show all delegation statuses if not provided", example = "ACTIVE") @RequestParam(required = false) @ValidDelegationStatus String status) {
+		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo) {
 
 		validateFacilityDelegationParameters(owner, delegatedTo);
 
-		return ok(service.getFacilityDelegations(municipalityId, owner, delegatedTo, status));
+		return ok(service.getFacilityDelegations(municipalityId, owner, delegatedTo));
 	}
 
 	@PostMapping(produces = ALL_VALUE)
