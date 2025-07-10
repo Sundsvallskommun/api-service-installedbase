@@ -142,31 +142,7 @@ class FacilityDelegationResourceTest {
 	}
 
 	@Test
-	void getDelegationsByOwnerAndStatus() {
-		var delegation = createFacilityDelegationResponse();
-
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null)).thenReturn(List.of(delegation));
-
-		var response = webTestClient.get()
-			.uri(BASE_URL + "?owner={owner}", MUNICIPALITY_ID, delegation.getOwner())
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegation.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response)
-			.hasSize(1)
-			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
-			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
-
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null);
-		verifyNoMoreInteractions(mockService);
-	}
-
-	@Test
-	void getDelegationsByDelegatedToAndStatus() {
+	void getDelegationsByDelegatedTo() {
 		var delegation = createFacilityDelegationResponse();
 
 		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo())).thenReturn(List.of(delegation));

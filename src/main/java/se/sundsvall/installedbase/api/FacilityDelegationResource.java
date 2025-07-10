@@ -50,7 +50,6 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 	Problem.class, ConstraintViolationProblem.class
 })))
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class FacilityDelegationResource {
 
 	private final InstalledBaseService service;
