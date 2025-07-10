@@ -9,7 +9,6 @@ import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
-import static se.sundsvall.installedbase.service.model.DelegationStatus.ACTIVE;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -50,9 +49,7 @@ class FacilityDelegationEntityTest {
 		var delegatedTo = "delegatedTo123";
 		var municipalityId = "2281";
 		var owner = "owner123";
-		var status = ACTIVE;
 		var created = LocalDateTime.now();
-		var deleted = LocalDateTime.now().plusDays(1);
 		var updated = LocalDateTime.now().plusMinutes(2);
 
 		var entity = new FacilityDelegationEntity()
@@ -62,10 +59,8 @@ class FacilityDelegationEntityTest {
 			.withDelegatedTo(delegatedTo)
 			.withMunicipalityId(municipalityId)
 			.withOwner(owner)
-			.withStatus(status)
 			.withCreated(created)
-			.withUpdated(updated)
-			.withDeleted(deleted);
+			.withUpdated(updated);
 
 		assertThat(entity.getId()).isEqualTo(id);
 		assertThat(entity.getFacilities()).isEqualTo(facilites);
@@ -73,16 +68,16 @@ class FacilityDelegationEntityTest {
 		assertThat(entity.getDelegatedTo()).isEqualTo(delegatedTo);
 		assertThat(entity.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(entity.getOwner()).isEqualTo(owner);
-		assertThat(entity.getStatus()).isEqualTo(status);
 		assertThat(entity.getCreated()).isEqualTo(created);
 		assertThat(entity.getUpdated()).isEqualTo(updated);
-		assertThat(entity.getDeleted()).isEqualTo(deleted);
 	}
 
 	@Test
 	void testPrePersist() {
 		var entity = new FacilityDelegationEntity();
+
 		entity.onCreate();
+
 		assertThat(entity.getCreated()).isNotNull();
 		assertThat(entity.getCreated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
 	}
@@ -93,9 +88,10 @@ class FacilityDelegationEntityTest {
 		var entity = new FacilityDelegationEntity();
 		entity.onCreate();
 
-		// Simulate an update by calling onUpdate
+		// Store the initial value and simulate an update by calling onUpdate
 		var initialCreated = entity.getCreated();
 		entity.onUpdate();
+
 		assertThat(entity.getUpdated()).isNotNull();
 		assertThat(entity.getUpdated()).isAfter(initialCreated);
 		assertThat(entity.getUpdated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));

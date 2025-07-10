@@ -7,7 +7,6 @@ import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDel
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
-import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 public final class TestDataFactory {
 
@@ -44,10 +43,8 @@ public final class TestDataFactory {
 			.withOwner(UUID.randomUUID().toString())
 			.withDelegatedTo(UUID.randomUUID().toString())
 			.withFacilities(List.of("facility-7", "facility-8"))
-			.withStatus(DelegationStatus.ACTIVE)
 			.withCreated(LocalDateTime.now().minusMinutes(3))
 			.withUpdated(LocalDateTime.now().minusMinutes(2))
-			.withDeleted(LocalDateTime.now().minusMinutes(1))
 			.withBusinessEngagementOrgId("5591628140");
 	}
 }

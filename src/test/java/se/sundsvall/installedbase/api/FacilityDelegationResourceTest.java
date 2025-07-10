@@ -95,7 +95,7 @@ class FacilityDelegationResourceTest {
 		delegation2.setOwner(delegation1.getOwner());
 		delegation2.setDelegatedTo(delegation1.getDelegatedTo());
 
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation1.getOwner(), null, null)).thenReturn(List.of(delegation1, delegation2));
+		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation1.getOwner(), null)).thenReturn(List.of(delegation1, delegation2));
 
 		var response = webTestClient.get()
 			.uri(BASE_URL + "?owner={owner}", MUNICIPALITY_ID, delegation1.getOwner())
@@ -113,7 +113,7 @@ class FacilityDelegationResourceTest {
 				tuple(delegation1.getOwner(), delegation2.getDelegatedTo()),
 				tuple(delegation2.getOwner(), delegation2.getDelegatedTo()));
 
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation1.getOwner(), null, null);
+		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation1.getOwner(), null);
 		verifyNoMoreInteractions(mockService);
 	}
 
@@ -121,7 +121,7 @@ class FacilityDelegationResourceTest {
 	void getDelegationsByOwnerAndDelegatedTo() {
 		var delegation = createFacilityDelegationResponse();
 
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), null)).thenReturn(List.of(delegation));
+		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo())).thenReturn(List.of(delegation));
 
 		var response = webTestClient.get()
 			.uri(BASE_URL + "?owner={owner}&delegatedTo={delegatedTo}", MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo())
@@ -137,18 +137,18 @@ class FacilityDelegationResourceTest {
 			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
 
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), null);
+		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo());
 		verifyNoMoreInteractions(mockService);
 	}
 
 	@Test
-	void getDelegationsByOwnerAndDelegatedToAndStatus() {
+	void getDelegationsByDelegatedTo() {
 		var delegation = createFacilityDelegationResponse();
 
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), "ACTIVE")).thenReturn(List.of(delegation));
+		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo())).thenReturn(List.of(delegation));
 
 		var response = webTestClient.get()
-			.uri(BASE_URL + "?owner={owner}&delegatedTo={delegatedTo}&status={status}", MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), "ACTIVE")
+			.uri(BASE_URL + "?delegatedTo={delegatedTo}", MUNICIPALITY_ID, delegation.getDelegatedTo())
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -161,55 +161,7 @@ class FacilityDelegationResourceTest {
 			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
 			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
 
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), delegation.getDelegatedTo(), "ACTIVE");
-		verifyNoMoreInteractions(mockService);
-	}
-
-	@Test
-	void getDelegationsByOwnerAndStatus() {
-		var delegation = createFacilityDelegationResponse();
-
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null, "ACTIVE")).thenReturn(List.of(delegation));
-
-		var response = webTestClient.get()
-			.uri(BASE_URL + "?owner={owner}&status={status}", MUNICIPALITY_ID, delegation.getOwner(), "ACTIVE")
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegation.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response)
-			.hasSize(1)
-			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
-			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
-
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, delegation.getOwner(), null, "ACTIVE");
-		verifyNoMoreInteractions(mockService);
-	}
-
-	@Test
-	void getDelegationsByDelegatedToAndStatus() {
-		var delegation = createFacilityDelegationResponse();
-
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo(), "ACTIVE")).thenReturn(List.of(delegation));
-
-		var response = webTestClient.get()
-			.uri(BASE_URL + "?delegatedTo={delegatedTo}&status={status}", MUNICIPALITY_ID, delegation.getDelegatedTo(), "ACTIVE")
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBodyList(FacilityDelegation.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response)
-			.hasSize(1)
-			.extracting(FacilityDelegation::getOwner, FacilityDelegation::getDelegatedTo)
-			.containsExactly(tuple(delegation.getOwner(), delegation.getDelegatedTo()));
-
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo(), "ACTIVE");
+		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, null, delegation.getDelegatedTo());
 		verifyNoMoreInteractions(mockService);
 	}
 
@@ -218,16 +170,16 @@ class FacilityDelegationResourceTest {
 		var owner = UUID.randomUUID().toString();
 		var delegatedTo = UUID.randomUUID().toString();
 
-		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, "ACTIVE")).thenReturn(List.of());
+		when(mockService.getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo)).thenReturn(List.of());
 
 		webTestClient.get()
-			.uri(BASE_URL + "?owner={owner}&delegatedTo={delegatedTo}&status={status}", MUNICIPALITY_ID, owner, delegatedTo, "ACTIVE")
+			.uri(BASE_URL + "?owner={owner}&delegatedTo={delegatedTo}", MUNICIPALITY_ID, owner, delegatedTo)
 			.exchange()
 			.expectStatus().isOk()
 			.expectBodyList(FacilityDelegation.class)
 			.hasSize(0);
 
-		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo, "ACTIVE");
+		verify(mockService).getFacilityDelegations(MUNICIPALITY_ID, owner, delegatedTo);
 		verifyNoMoreInteractions(mockService);
 	}
 
@@ -248,6 +200,23 @@ class FacilityDelegationResourceTest {
 			.expectBody(ResponseEntity.class);
 
 		verify(mockService).putFacilityDelegation(eq(MUNICIPALITY_ID), eq(id), any(UpdateFacilityDelegation.class));
+		verifyNoMoreInteractions(mockService);
+	}
+
+	@Test
+	void testDeleteFacilityDelegation() {
+		var id = UUID.randomUUID().toString();
+
+		doNothing().when(mockService).deleteFacilityDelegation(MUNICIPALITY_ID, id);
+
+		webTestClient.delete()
+			.uri(BASE_URL + "/{id}", MUNICIPALITY_ID, id)
+			.exchange()
+			.expectStatus().isAccepted()
+			.expectHeader().contentType(ALL_VALUE)
+			.expectBody(ResponseEntity.class);
+
+		verify(mockService).deleteFacilityDelegation(MUNICIPALITY_ID, id);
 		verifyNoMoreInteractions(mockService);
 	}
 }

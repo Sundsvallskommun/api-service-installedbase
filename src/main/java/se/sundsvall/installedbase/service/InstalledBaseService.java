@@ -5,7 +5,6 @@ import static se.sundsvall.installedbase.integration.db.specification.FacilityDe
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withMunicipalityId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
-import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withStatus;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
@@ -27,7 +26,6 @@ import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDel
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
 import se.sundsvall.installedbase.service.mapper.EntityMapper;
-import se.sundsvall.installedbase.service.model.DelegationStatus;
 
 @Service
 @Transactional
@@ -94,15 +92,14 @@ public class InstalledBaseService {
 				.build();
 		}
 
-		var entity = facilityDelegationRepository.save(toEntity(municipalityId, facilityDelegation, DelegationStatus.ACTIVE));
+		var entity = facilityDelegationRepository.save(toEntity(municipalityId, facilityDelegation));
 
 		return entity.getId();
 	}
 
 	/**
 	 * Get delegation by municipality and facilityDelegationId. Throws a Problem with status 404 Not Found if the
-	 * delegation.
-	 * does not exist.
+	 * delegation. does not exist.
 	 *
 	 * @param  municipalityId       municipalityId
 	 * @param  facilityDelegationId id of the delegation
@@ -126,26 +123,22 @@ public class InstalledBaseService {
 	 * @param  municipalityId municipalityId
 	 * @param  owner          owner of the delegation
 	 * @param  delegatedTo    the party to which the facility is delegated
-	 * @param  status         status of the delegation, will show all delegation statuses if not provided
 	 * @return                List of FacilityDelegation objects containing delegation details
 	 */
-	public List<FacilityDelegation> getFacilityDelegations(String municipalityId, String owner, String delegatedTo, String status) {
-		LOGGER.info("Get facility delegations for owner: {}, delegatedTo: {}, status: {}", owner, delegatedTo, status);
+	public List<FacilityDelegation> getFacilityDelegations(String municipalityId, String owner, String delegatedTo) {
+		LOGGER.info("Get facility delegations for owner: {} and delegatedTo: {}", owner, delegatedTo);
 		return facilityDelegationRepository.findAll(
 			withMunicipalityId(municipalityId)
 				.and(withOwner(owner))
-				.and(withDelegatedTo(delegatedTo))
-				.and(withStatus(status)))
+				.and(withDelegatedTo(delegatedTo)))
 			.stream()
 			.map(EntityMapper::toFacilityDelegation)
 			.toList();
 	}
 
 	/**
-	 * Update a facility delegation.
-	 * Owner of the delegation must match the one provided in the request otherwise a Problem with status 400 Bad Request is
-	 * thrown.
-	 * If owner needs to be changed, a new delegation should be created instead.
+	 * Update a facility delegation. Owner of the delegation must match the one provided in the request otherwise a Problem
+	 * with status 400 Bad Request is thrown. If owner needs to be changed, a new delegation should be created instead.
 	 *
 	 * @param municipalityId       municipalityId
 	 * @param facilityDelegationId id of the facility delegation to be updated
@@ -157,8 +150,7 @@ public class InstalledBaseService {
 		// Check that we have an active delegation to update, inactive delegations cannot be updated
 		var facilityDelegationEntity = facilityDelegationRepository.findOne(
 			withMunicipalityId(municipalityId)
-				.and(withId(facilityDelegationId))
-				.and(withStatus(DelegationStatus.ACTIVE.name())))
+				.and(withId(facilityDelegationId)))
 			.orElseThrow(() -> Problem.builder()
 				.withTitle("Facility delegation not found")
 				.withDetail("Couldn't find any active facility delegations for id: " + facilityDelegationId)
@@ -178,5 +170,15 @@ public class InstalledBaseService {
 		updateEntityForPutOperation(facilityDelegationEntity, facilityDelegation);
 
 		facilityDelegationRepository.save(facilityDelegationEntity);
+	}
+
+	/**
+	 * Deletes a facility delegation by municipalityId and id.
+	 * 
+	 * @param municipalityId municipalityId
+	 * @param id             id of the facility delegation to be deleted
+	 */
+	public void deleteFacilityDelegation(String municipalityId, String id) {
+		facilityDelegationRepository.deleteByMunicipalityIdAndId(municipalityId, id);
 	}
 }

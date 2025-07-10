@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.accepted;
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
@@ -23,6 +24,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +40,6 @@ import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
-import se.sundsvall.installedbase.api.model.validation.ValidDelegationStatus;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
 @RestController
@@ -49,7 +50,6 @@ import se.sundsvall.installedbase.service.InstalledBaseService;
 	Problem.class, ConstraintViolationProblem.class
 })))
 @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 class FacilityDelegationResource {
 
 	private final InstalledBaseService service;
@@ -79,12 +79,11 @@ class FacilityDelegationResource {
 	public ResponseEntity<List<FacilityDelegation>> getFacilityDelegations(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "owner", description = "Owner of the delegation", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid(nullable = true) @RequestParam(required = false) String owner,
-		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo,
-		@Parameter(name = "status", description = "Status of the delegation, will show all delegation statuses if not provided", example = "ACTIVE") @RequestParam(required = false) @ValidDelegationStatus String status) {
+		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo) {
 
 		validateFacilityDelegationParameters(owner, delegatedTo);
 
-		return ok(service.getFacilityDelegations(municipalityId, owner, delegatedTo, status));
+		return ok(service.getFacilityDelegations(municipalityId, owner, delegatedTo));
 	}
 
 	@PostMapping(produces = ALL_VALUE)
@@ -124,6 +123,22 @@ class FacilityDelegationResource {
 		service.putFacilityDelegation(municipalityId, id, facilityDelegation);
 
 		return noContent()
+			.header(CONTENT_TYPE, ALL_VALUE)
+			.build();
+	}
+
+	@DeleteMapping(path = "/{id}", produces = ALL_VALUE)
+	@Operation(summary = "Delete a facility delegation",
+		responses = {
+			@ApiResponse(responseCode = "202", description = "Accepted", useReturnTypeSchema = true)
+		})
+	ResponseEntity<Void> deleteFacilityDelegation(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
+
+		service.deleteFacilityDelegation(municipalityId, id);
+
+		return accepted()
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}

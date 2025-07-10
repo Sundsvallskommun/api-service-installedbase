@@ -63,12 +63,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
     put:
       tags:
         - Installed base
@@ -121,8 +115,39 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
+    delete:
+      tags:
+        - Installed base
+      summary: Delete a facility delegation
+      operationId: deleteFacilityDelegation
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
           content:
             application/problem+json:
               schema:
@@ -155,14 +180,6 @@ paths:
           schema:
             type: string
           example: 81471222-5798-11e9-ae24-57fa13b361e2
-        - name: status
-          in: query
-          description: "Status of the delegation, will show all delegation statuses\
-          \ if not provided"
-          required: false
-          schema:
-            type: string
-          example: ACTIVE
       responses:
         "200":
           description: Successful Operation
@@ -188,12 +205,6 @@ paths:
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
           content:
             application/problem+json:
               schema:
@@ -241,12 +252,6 @@ paths:
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad Gateway
           content:
             application/problem+json:
               schema:
@@ -355,12 +360,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
@@ -513,12 +518,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:
@@ -740,10 +745,6 @@ components:
           type: string
           description: Party ID of the delegation owner
           example: 81471222-5798-11e9-ae24-57fa13b361e1
-        status:
-          type: string
-          description: Status of the delegation
-          example: ACTIVE
         municipalityId:
           type: string
           description: Municipality ID of the delegation
@@ -755,10 +756,6 @@ components:
         updated:
           type: string
           description: When the delegation was last updated
-          format: date-time
-        deleted:
-          type: string
-          description: When the delegation was deleted
           format: date-time
       description: FacilityDelegation response model
   securitySchemes: {}
