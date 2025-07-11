@@ -67,6 +67,7 @@ class FacilityDelegationResource {
 	ResponseEntity<FacilityDelegation> getFacilityDelegationById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id) {
+
 		return ok(service.getFacilityDelegation(municipalityId, id));
 	}
 

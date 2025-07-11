@@ -369,11 +369,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     UpdateFacilityDelegation:
       required:
         - owner
