@@ -48,15 +48,16 @@ class EventlogMapperTest {
 			assertThat(event.getType()).isEqualTo(eventType);
 			assertThat(event.getMessage()).isEqualTo(eventType + " facility delegation");
 			assertThat(event.getOwner()).isEqualTo("InstalledBase");
-			assertThat(event.getHistoryReference()).isEqualTo(requestId);
+			assertThat(event.getHistoryReference()).isNull();
 			assertThat(event.getSourceType()).isEqualTo("FacilityDelegation");
-			assertThat(event.getMetadata()).hasSize(4);
+			assertThat(event.getMetadata()).hasSize(5);
 			assertThat(event.getMetadata()).extracting(Metadata::getKey, Metadata::getValue)
 				.containsExactlyInAnyOrder(
 					tuple("FacilityDelegationId", facilityDelegationId),
 					tuple("DelegationOwner", owner),
 					tuple("DelegatedTo", delegatedTo),
-					tuple("X-Sent-By", identifierHeader));
+					tuple("X-Sent-By", identifierHeader),
+					tuple("RequestId", requestId));
 		}
 
 		verify(mockIdentifier).toHeaderValue();
@@ -81,14 +82,15 @@ class EventlogMapperTest {
 			assertThat(event.getType()).isEqualTo(EventType.CREATE);
 			assertThat(event.getMessage()).isEqualTo("CREATE facility delegation");
 			assertThat(event.getOwner()).isEqualTo("InstalledBase");
-			assertThat(event.getHistoryReference()).isEqualTo(requestId);
+			assertThat(event.getHistoryReference()).isNull();
 			assertThat(event.getSourceType()).isEqualTo("FacilityDelegation");
-			assertThat(event.getMetadata()).hasSize(3);
+			assertThat(event.getMetadata()).hasSize(4);
 			assertThat(event.getMetadata()).extracting(Metadata::getKey, Metadata::getValue)
 				.containsExactlyInAnyOrder(
 					tuple("FacilityDelegationId", facilityDelegationId),
 					tuple("DelegationOwner", owner),
-					tuple("DelegatedTo", delegatedTo));
+					tuple("DelegatedTo", delegatedTo),
+					tuple("RequestId", requestId));
 		}
 	}
 }

@@ -21,7 +21,8 @@ public final class EventlogMapper {
 	private static final String X_SENT_BY = "X-Sent-By";
 	private static final String OWNER = "DelegationOwner";
 	private static final String DELEGATED_TO = "DelegatedTo";
-	private static final String MESSAGE = "%s facility delegation"; // Inserts the event type (e.g., CREATED, UPDATED, DELETED)
+	private static final String REQUEST_ID = "RequestId";
+	private static final String MESSAGE = "%s facility delegation"; // Inserts the event type (e.g., CREATE, UPDATE, DELETE)
 
 	private EventlogMapper() {}
 
@@ -32,7 +33,7 @@ public final class EventlogMapper {
 	 * @param  facilityDelegationId the ID of the facility delegation
 	 * @param  owner                the owner of the facility delegation
 	 * @param  delegatedTo          the delegate
-	 * @param  eventType            the type of event (e.g., CREATED, UPDATED, DELETED)
+	 * @param  eventType            the type of event (e.g., CREATE, UPDATE, DELETE)
 	 * @return                      an Event object populated with the provided details
 	 */
 	public static Event toEvent(String facilityDelegationId, String owner, String delegatedTo, EventType eventType) {
@@ -42,15 +43,15 @@ public final class EventlogMapper {
 			OWNER, owner,
 			DELEGATED_TO, delegatedTo));
 
-		// As the identifier might be null, we only conditionally add it to the metadata
+		// As the identifier & request-id might be null, we only conditionally add it to the metadata
 		getIdentifierHeaderValue().ifPresent(header -> metadata.put(X_SENT_BY, header));
+		getRequestId().ifPresent(id -> metadata.put(REQUEST_ID, id));
 
 		return new Event()
 			.expires(OffsetDateTime.now().plusMonths(18))
 			.type(eventType)
 			.message(MESSAGE.formatted(eventType.toString()))
 			.owner(EVENT_OWNER)
-			.historyReference(RequestId.get())
 			.sourceType(SOURCE_TYPE)
 			.metadata(toMetadatas(metadata));
 	}
@@ -82,5 +83,14 @@ public final class EventlogMapper {
 	private static Optional<String> getIdentifierHeaderValue() {
 		return ofNullable(Identifier.get())
 			.map(Identifier::toHeaderValue);
+	}
+
+	/**
+	 * Retrieves the Request ID if available.
+	 * 
+	 * @return an Optional containing the Request ID
+	 */
+	private static Optional<String> getRequestId() {
+		return ofNullable(RequestId.get());
 	}
 }
