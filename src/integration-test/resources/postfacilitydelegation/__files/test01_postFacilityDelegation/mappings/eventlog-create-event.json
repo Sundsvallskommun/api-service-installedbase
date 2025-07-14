@@ -1,0 +1,52 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"method": "POST",
+		"urlPathPattern": "/eventlog/2281/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+		"bodyPatterns": [
+			{
+				"equalToJson": {
+					"type": "CREATE",
+					"message": "CREATE facility delegation",
+					"expires": "${json-unit.any-string}",
+					"owner": "InstalledBase",
+					"sourceType": "FacilityDelegation",
+					"metadata": [
+						{
+							"key": "DelegatedTo",
+							"value": "e3cf6c05-fbd3-43de-b615-f8226d11f438"
+						},
+						{
+							"key": "FacilityDelegationId",
+							"value": "${json-unit.regex}[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+						},
+						{
+							"key": "RequestId",
+							"value": "${json-unit.regex}[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+						},
+						{
+							"key": "DelegationOwner",
+							"value": "b957e977-83f9-4592-b172-e5e8cc028e36"
+						},
+						{
+							"key": "X-Sent-By",
+							"value": "joe001doe; type=adAccount"
+						}
+					]
+				},
+				"ignoreArrayOrder": true,
+				"contains": ""
+			}
+		]
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200
+	}
+}

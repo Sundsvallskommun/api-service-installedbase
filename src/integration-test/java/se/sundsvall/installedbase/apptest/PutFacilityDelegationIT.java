@@ -24,7 +24,7 @@ class PutFacilityDelegationIT extends AbstractAppTest {
 	private static final String BASE_URL = "/" + MUNICIPALITY_ID + "/delegates";
 	private static final String X_SENT_BY = "X-Sent-By";
 	private static final String X_SENT_BY_VALUE = "joe001doe; type=adAccount";
-	
+		
 	@Test
 	void test01_putFacilityDelegation() {
 		var facilityDelegationId = "24504e65-08cf-4bc3-8f4f-a07204748c13";
