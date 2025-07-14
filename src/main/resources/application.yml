@@ -2,6 +2,9 @@ integration:
   datawarehousereader:
     connectTimeout: 5
     readTimeout: 110
+  eventlog:
+    connect-timeout: 5
+    read-timeout: 10
 logging:
   level:
     root: INFO
@@ -27,6 +30,9 @@ spring:
           datawarehousereader:
             authorization-grant-type: client_credentials
             provider: datawarehousereader
+          eventlog:
+            authorization-grant-type: client_credentials
+            provider: eventlog
 springdoc:
   swagger-ui:
     operationsSorter: method

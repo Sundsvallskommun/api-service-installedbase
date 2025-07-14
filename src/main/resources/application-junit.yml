@@ -3,6 +3,8 @@ integration:
     connectTimeout: 5
     readTimeout: 20
     url: http://datawarehousereader.url
+  eventlog:
+    url: http://eventlog.url
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
@@ -17,7 +19,12 @@ spring:
         provider:
           datawarehousereader:
             token-uri: http://token.url
+          eventlog:
+              token-uri: http://token.url
         registration:
           datawarehousereader:
+            client-id: the-client-id
+            client-secret: the-client-secret
+          eventlog:
             client-id: the-client-id
             client-secret: the-client-secret
