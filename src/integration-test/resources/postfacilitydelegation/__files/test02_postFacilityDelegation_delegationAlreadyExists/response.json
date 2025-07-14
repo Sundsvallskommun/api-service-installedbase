@@ -1,12 +1,5 @@
 {
-	"id": "${json-unit.regex}[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-	"facilities": [
-		"a-facility",
-		"another-facility"
-	],
-	"businessEngagementOrgId": "5591628136",
-	"delegatedTo": "e3cf6c05-fbd3-43de-b615-f8226d11f438",
-	"owner": "b957e977-83f9-4592-b172-e5e8cc028e36",
-	"municipalityId": "2281",
-	"created": "${json-unit.regex}\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}"
+	"title": "Facility delegation already exists",
+	"status": 409,
+	"detail": "Owner with partyId: '81471222-5798-11e9-ae24-57fa13b361e1' has already delegated to partyId: '81471222-5798-11e9-ae24-57fa13b361e2' for municipality: '2281'. Update existing delegation instead."
 }

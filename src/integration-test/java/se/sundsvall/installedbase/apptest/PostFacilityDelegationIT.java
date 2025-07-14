@@ -64,6 +64,7 @@ class PostFacilityDelegationIT extends AbstractAppTest {
 			.withRequest(REQUEST_FILE)
 			.withHeader(X_SENT_BY, X_SENT_BY_VALUE)
 			.withExpectedResponseStatus(CONFLICT)
-			.sendRequest();
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
 	}
 }
