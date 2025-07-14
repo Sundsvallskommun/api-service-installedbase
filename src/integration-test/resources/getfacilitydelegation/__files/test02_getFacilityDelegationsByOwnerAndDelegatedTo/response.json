@@ -1,0 +1,15 @@
+[
+	{
+		"id": "24504e65-08cf-4bc3-8f4f-a07204748c13",
+		"facilities": [
+			"facility-1",
+			"facility-2",
+			"facility-3"
+		],
+		"businessEngagementOrgId": "5591628136",
+		"delegatedTo": "f2949c12-bb83-406a-be96-bb8628f14612",
+		"owner": "81471222-5798-11e9-ae24-57fa13b361e1",
+		"municipalityId": "2281",
+		"created": "2025-07-11T10:03:26.342668"
+	}
+]

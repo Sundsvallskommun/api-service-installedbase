@@ -111,7 +111,7 @@ class FacilityDelegationResource {
 	@PutMapping(path = "/{id}", produces = ALL_VALUE)
 	@Operation(summary = "Update a facility delegation",
 		description = "Update facilities, delegatedTo, and/or businessEngagementOrgId on an existing facility delegation for a specific owner."
-			+ "To change the owner or status of a delegation, use the DELETE and POST operations instead.",
+			+ " To change the owner of a delegation, use the DELETE and POST operations instead.",
 		responses = {
 			@ApiResponse(responseCode = "204", description = "No content", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
