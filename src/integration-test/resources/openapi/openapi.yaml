@@ -68,8 +68,8 @@ paths:
         - Installed base
       summary: Update a facility delegation
       description: "Update facilities, delegatedTo, and/or businessEngagementOrgId\
-        \ on an existing facility delegation for a specific owner.To change the owner\
-        \ or status of a delegation, use the DELETE and POST operations instead."
+        \ on an existing facility delegation for a specific owner. To change the owner\
+        \ of a delegation, use the DELETE and POST operations instead."
       operationId: putFacilityDelegation
       parameters:
         - name: municipalityId

@@ -9,12 +9,12 @@ import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.installedbase.Application;
 
-@WireMockAppTestSuite(files = "classpath:/facilitydelegation/", classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/getfacilitydelegation/", classes = Application.class)
 @Sql(scripts = {
 	"/sql/truncate.sql",
 	"/sql/init-db.sql"
 })
-class FacilityDelegationIT extends AbstractAppTest {
+class GetFacilityDelegationIT extends AbstractAppTest {
 	
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String MUNICIPALITY_ID = "2281";
@@ -23,9 +23,9 @@ class FacilityDelegationIT extends AbstractAppTest {
 	// Get one delegation by id
 	@Test
 	void test01_getFacilityDelegationById() {
-		var failityDelegationId = "24504e65-08cf-4bc3-8f4f-a07204748c13";
+		var facilityDelegationId = "24504e65-08cf-4bc3-8f4f-a07204748c13";
 		setupCall()
-			.withServicePath(BASE_URL + "/" + failityDelegationId)
+			.withServicePath(BASE_URL + "/" + facilityDelegationId)
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
@@ -84,9 +84,9 @@ class FacilityDelegationIT extends AbstractAppTest {
 	// "Same" as above but with a specific delegation id and only one facility delegation.
 	@Test
 	void test06_getFacilityDelegationByIdAndMunicipalityId() {
-		var failityDelegationId = "78ee675d-4ab5-4c9c-a80a-5c508f1c55af";
+		var facilityDelegationId = "78ee675d-4ab5-4c9c-a80a-5c508f1c55af";
 		setupCall()
-			.withServicePath("/1984/delegates" + "/" + failityDelegationId)
+			.withServicePath("/1984/delegates" + "/" + facilityDelegationId)
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)

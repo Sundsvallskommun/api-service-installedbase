@@ -1,0 +1,13 @@
+{
+	"id": "24504e65-08cf-4bc3-8f4f-a07204748c13",
+	"facilities": [
+		"new-facility",
+		"another-new-facility"
+	],
+	"businessEngagementOrgId": "5591628137",
+	"delegatedTo": "db22e3d5-28a6-4625-91fa-bff0d78827a6",
+	"owner": "81471222-5798-11e9-ae24-57fa13b361e1",
+	"municipalityId": "2281",
+	"created": "${json-unit.regex}\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}",
+	"updated": "${json-unit.regex}\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}"
+}
