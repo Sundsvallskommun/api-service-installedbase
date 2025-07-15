@@ -10,152 +10,15 @@ servers:
   - url: http://127.0.0.1:8080
     description: Generated server url
 tags:
-  - name: Installed base
+  - name: Facility Delegation
     description: Facility delegation operations
   - name: Installed base
     description: Installed base operations
 paths:
-  /{municipalityId}/delegates/{id}:
-    get:
-      tags:
-        - Installed base
-      summary: Get a specific facility delegation
-      operationId: getFacilityDelegationById
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      responses:
-        "200":
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FacilityDelegation"
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-    put:
-      tags:
-        - Installed base
-      summary: Update a facility delegation
-      description: "Update facilities, delegatedTo, and/or businessEngagementOrgId\
-        \ on an existing facility delegation for a specific owner. To change the owner\
-        \ of a delegation, use the DELETE and POST operations instead."
-      operationId: putFacilityDelegation
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateFacilityDelegation"
-        required: true
-      responses:
-        "204":
-          description: No content
-        "404":
-          description: Not Found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-    delete:
-      tags:
-        - Installed base
-      summary: Delete a facility delegation
-      operationId: deleteFacilityDelegation
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: id
-          in: path
-          description: Id of the delegation
-          required: true
-          schema:
-            type: string
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      responses:
-        "202":
-          description: Accepted
-        "400":
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
   /{municipalityId}/delegates:
     get:
       tags:
-        - Installed base
+        - Facility Delegation
       summary: Get delegation by owner and/or delegate
       operationId: getFacilityDelegations
       parameters:
@@ -211,7 +74,7 @@ paths:
                 $ref: "#/components/schemas/Problem"
     post:
       tags:
-        - Installed base
+        - Facility Delegation
       summary: Delegate facilities
       operationId: createFacilityDelegation
       parameters:
@@ -329,6 +192,91 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/delegates/{id}:
+    get:
+      tags:
+        - Facility Delegation
+      summary: Get a specific facility delegation
+      operationId: getFacilityDelegationById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacilityDelegation"
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+    delete:
+      tags:
+        - Facility Delegation
+      summary: Delete a facility delegation
+      operationId: deleteFacilityDelegation
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -360,12 +308,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
@@ -374,12 +322,15 @@ components:
           format: int32
         reasonPhrase:
           type: string
-    UpdateFacilityDelegation:
+    CreateFacilityDelegation:
       required:
+        - delegatedTo
+        - facilities
         - owner
       type: object
       properties:
         facilities:
+          minItems: 1
           type: array
           items:
             minLength: 1
@@ -396,7 +347,7 @@ components:
           type: string
           description: Party ID of the delegation owner
           example: 81471222-5798-11e9-ae24-57fa13b361e1
-      description: UpdateFacilityDelegation model
+      description: CreateFacilityDelegation model
     ConstraintViolationProblem:
       type: object
       properties:
@@ -518,12 +469,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:
@@ -564,32 +515,6 @@ components:
           type: string
         message:
           type: string
-    CreateFacilityDelegation:
-      required:
-        - delegatedTo
-        - facilities
-        - owner
-      type: object
-      properties:
-        facilities:
-          minItems: 1
-          type: array
-          items:
-            minLength: 1
-            type: string
-        businessEngagementOrgId:
-          type: string
-          description: Organization number of the company owning the facility
-          example: "5591628136"
-        delegatedTo:
-          type: string
-          description: Party ID of the delegate
-          example: 81471222-5798-11e9-ae24-57fa13b361e2
-        owner:
-          type: string
-          description: Party ID of the delegation owner
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      description: CreateFacilityDelegation model
     InstalledBaseCustomer:
       type: object
       properties:

@@ -2,7 +2,6 @@ package se.sundsvall.installedbase.service.mapper;
 
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
-import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 
 public final class EntityMapper {
@@ -41,20 +40,5 @@ public final class EntityMapper {
 			.withOwner(entity.getOwner())
 			.withCreated(entity.getCreated())
 			.withUpdated(entity.getUpdated());
-	}
-
-	/**
-	 * Updates a FacilityDelegationEntity for a PUT operation.
-	 * Should only updates the facilities, delegatedTo, and businessEngagementOrgId fields.
-	 *
-	 * @param facilityDelegationEntity the FacilityDelegationEntity to update
-	 * @param facilityDelegation       the FacilityDelegation containing the new values
-	 */
-	public static void updateEntityForPutOperation(FacilityDelegationEntity facilityDelegationEntity, UpdateFacilityDelegation facilityDelegation) {
-		// Update the entity with the new values, and only update specific fields
-		facilityDelegationEntity
-			.withFacilities(facilityDelegation.getFacilities())
-			.withDelegatedTo(facilityDelegation.getDelegatedTo())
-			.withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId());
 	}
 }
