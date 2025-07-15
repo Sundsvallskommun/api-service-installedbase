@@ -1,22 +1,15 @@
 package se.sundsvall.installedbase.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegation;
 import static se.sundsvall.installedbase.TestDataFactory.createFacilityDelegationEntity;
-import static se.sundsvall.installedbase.TestDataFactory.createUpdateFacilityDelegation;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.toFacilityDelegation;
-import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
 
 @ExtendWith(MockitoExtension.class)
 class EntityMapperTest {
@@ -50,55 +43,5 @@ class EntityMapperTest {
 		assertThat(facilityDelegation.getMunicipalityId()).isEqualTo(facilityDelegationEntity.getMunicipalityId());
 		assertThat(facilityDelegation.getCreated()).isEqualTo(facilityDelegationEntity.getCreated());
 		assertThat(facilityDelegation.getUpdated()).isEqualTo(facilityDelegationEntity.getUpdated());
-	}
-
-	@Test
-	void testUpdateEntityForPutOperation_shouldOnlyupdateSpecificFields() {
-		var facilityDelegation = createUpdateFacilityDelegation();
-
-		// Mock so we can verify that only specific methods are called
-		var entityMock = mock(FacilityDelegationEntity.class);
-
-		when(entityMock.withFacilities(facilityDelegation.getFacilities())).thenReturn(entityMock);
-		when(entityMock.withDelegatedTo(facilityDelegation.getDelegatedTo())).thenReturn(entityMock);
-		when(entityMock.withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId())).thenReturn(entityMock);
-
-		updateEntityForPutOperation(entityMock, facilityDelegation);
-
-		// The update method should only update the facilities, delegatedTo, and businessEngagementOrgId fields
-		verify(entityMock).withFacilities(facilityDelegation.getFacilities());
-		verify(entityMock).withDelegatedTo(facilityDelegation.getDelegatedTo());
-		verify(entityMock).withBusinessEngagementOrgId(facilityDelegation.getBusinessEngagementOrgId());
-
-		// Verify that no other methods were called on the entityMock
-		verifyNoMoreInteractions(entityMock);
-	}
-
-	@Test
-	void testUpdateEntityForPutOperation() {
-		var entity = createFacilityDelegationEntity(UUID.randomUUID().toString());
-		var facilityDelegation = createUpdateFacilityDelegation();
-
-		// original values for later comparison
-		var originalId = entity.getId();
-		var originalMunicipalityId = entity.getMunicipalityId();
-		var originalOwner = entity.getOwner();
-		var originalCreated = entity.getCreated();
-		var originalUpdated = entity.getUpdated();
-
-		// Update the entity with the new values
-		updateEntityForPutOperation(entity, facilityDelegation);
-
-		// Assert the updated values
-		assertThat(entity.getFacilities()).isEqualTo(facilityDelegation.getFacilities());
-		assertThat(entity.getDelegatedTo()).isEqualTo(facilityDelegation.getDelegatedTo());
-		assertThat(entity.getBusinessEngagementOrgId()).isEqualTo(facilityDelegation.getBusinessEngagementOrgId());
-
-		// Assert the "original" values are not changed
-		assertThat(entity.getId()).isEqualTo(originalId);
-		assertThat(entity.getMunicipalityId()).isEqualTo(originalMunicipalityId);
-		assertThat(entity.getOwner()).isEqualTo(originalOwner);
-		assertThat(entity.getCreated()).isEqualTo(originalCreated);
-		assertThat(entity.getUpdated()).isEqualTo(originalUpdated);
 	}
 }

@@ -2,7 +2,6 @@ package se.sundsvall.installedbase.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -98,7 +97,7 @@ class CreateFacilityDelegationResourceFailureTest {
 	}
 
 	@ParameterizedTest(name = "{0}")
-	@MethodSource("invalidUuidProvider")
+	@MethodSource("se.sundsvall.installedbase.TestDataFactory#invalidUuidProvider")
 	void createDelegateInvalidDelegatedTo(String testName, String delegatedTo, String expectedMessage) {
 		var delegate = createFacilityDelegation();
 		delegate.setDelegatedTo(delegatedTo);
@@ -120,7 +119,7 @@ class CreateFacilityDelegationResourceFailureTest {
 	}
 
 	@ParameterizedTest(name = "{0}")
-	@MethodSource("invalidUuidProvider")
+	@MethodSource("se.sundsvall.installedbase.TestDataFactory#invalidUuidProvider")
 	void createDelegateInvalidOwner(String testName, String delegatedTo, String expectedMessage) {
 		var delegate = createFacilityDelegation();
 		delegate.setOwner(delegatedTo);
@@ -139,14 +138,6 @@ class CreateFacilityDelegationResourceFailureTest {
 					.extracting(Violation::getField, Violation::getMessage)
 					.containsExactly(tuple("owner", expectedMessage));
 			});
-	}
-
-	private static Stream<Arguments> invalidUuidProvider() {
-		return Stream.of(
-			arguments("empty uuid", "", "not a valid UUID"),
-			arguments("blank uuid", " ", "not a valid UUID"),
-			arguments("null uuid", null, "not a valid UUID"),
-			arguments("invalid uuid", "not-a-uuid", "not a valid UUID"));
 	}
 
 	@Test

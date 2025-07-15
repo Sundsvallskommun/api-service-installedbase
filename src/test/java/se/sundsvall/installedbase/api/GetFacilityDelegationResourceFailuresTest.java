@@ -9,6 +9,8 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -92,7 +94,8 @@ class GetFacilityDelegationResourceFailuresTest {
 			});
 	}
 
-	@Test
+	@ParameterizedTest(name = "{0}")
+	@MethodSource("se.sundsvall.installedbase.TestDataFactory#invalidUuidProvider")
 	void getDelegationsWithInvalidOwner() {
 		var invalidOwner = "invalid-owner";
 
@@ -110,7 +113,8 @@ class GetFacilityDelegationResourceFailuresTest {
 			});
 	}
 
-	@Test
+	@ParameterizedTest(name = "{0}")
+	@MethodSource("se.sundsvall.installedbase.TestDataFactory#invalidUuidProvider")
 	void getDelegationsWithInvalidDelegatedTo() {
 		var invalidDelegatedTo = "invalid-delegated-to";
 		webTestClient.get()

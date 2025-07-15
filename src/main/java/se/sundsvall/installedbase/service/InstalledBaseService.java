@@ -2,14 +2,12 @@ package se.sundsvall.installedbase.service;
 
 import static generated.se.sundsvall.eventlog.EventType.CREATE;
 import static generated.se.sundsvall.eventlog.EventType.DELETE;
-import static generated.se.sundsvall.eventlog.EventType.UPDATE;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withDelegatedTo;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withMunicipalityId;
 import static se.sundsvall.installedbase.integration.db.specification.FacilityDelegationSpecification.withOwner;
 import static se.sundsvall.installedbase.service.mapper.EntityMapper.toEntity;
-import static se.sundsvall.installedbase.service.mapper.EntityMapper.updateEntityForPutOperation;
 import static se.sundsvall.installedbase.service.mapper.EventlogMapper.toEvent;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
@@ -27,7 +25,6 @@ import org.zalando.problem.Status;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
-import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.installedbase.integration.db.FacilityDelegationRepository;
 import se.sundsvall.installedbase.integration.db.model.FacilityDelegationEntity;
@@ -145,44 +142,6 @@ public class InstalledBaseService {
 			.stream()
 			.map(EntityMapper::toFacilityDelegation)
 			.toList();
-	}
-
-	/**
-	 * Update a facility delegation. Owner of the delegation must match the one provided in the request otherwise a Problem
-	 * with status 400 Bad Request is thrown. If owner needs to be changed, a new delegation should be created instead.
-	 *
-	 * @param municipalityId       municipalityId
-	 * @param facilityDelegationId id of the facility delegation to be updated
-	 * @param facilityDelegation   FacilityDelegation object containing delegation details to be updated
-	 */
-	public void putFacilityDelegation(String municipalityId, String facilityDelegationId, UpdateFacilityDelegation facilityDelegation) {
-		LOGGER.info("Updating facility delegation with id: {}", facilityDelegationId);
-
-		// Check that we have an active delegation to update, inactive delegations cannot be updated
-		var entity = facilityDelegationRepository.findOne(
-			withMunicipalityId(municipalityId)
-				.and(withId(facilityDelegationId)))
-			.orElseThrow(() -> Problem.builder()
-				.withTitle("Facility delegation not found")
-				.withDetail("Couldn't find any active facility delegations for id: " + facilityDelegationId)
-				.withStatus(Status.NOT_FOUND)
-				.build());
-
-		// Check that the owner of the delegation is the same as the one provided in the request.
-		// Don't want these two in the same problem/error message, hence the separate checks
-		if (!entity.getOwner().equals(facilityDelegation.getOwner())) {
-			throw Problem.builder()
-				.withTitle("Invalid delegation owner")
-				.withDetail("The owner of the delegation with id: '" + facilityDelegationId + "' is not the same as the one provided in the request.")
-				.withStatus(Status.BAD_REQUEST)
-				.build();
-		}
-
-		updateEntityForPutOperation(entity, facilityDelegation);
-
-		facilityDelegationRepository.save(entity);
-
-		sendEvent(municipalityId, entity, UPDATE);
 	}
 
 	/**

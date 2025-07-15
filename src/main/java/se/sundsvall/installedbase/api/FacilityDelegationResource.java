@@ -7,7 +7,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.accepted;
 import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,13 +37,12 @@ import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.installedbase.api.model.facilitydelegation.CreateFacilityDelegation;
 import se.sundsvall.installedbase.api.model.facilitydelegation.FacilityDelegation;
-import se.sundsvall.installedbase.api.model.facilitydelegation.UpdateFacilityDelegation;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
 @RestController
 @Validated
 @RequestMapping("/{municipalityId}/delegates")
-@Tag(name = "Installed base", description = "Facility delegation operations")
+@Tag(name = "Facility Delegation", description = "Facility delegation operations")
 @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
@@ -104,26 +101,6 @@ class FacilityDelegationResource {
 			.toUri();
 
 		return created(uri)
-			.header(CONTENT_TYPE, ALL_VALUE)
-			.build();
-	}
-
-	@PutMapping(path = "/{id}", produces = ALL_VALUE)
-	@Operation(summary = "Update a facility delegation",
-		description = "Update facilities, delegatedTo, and/or businessEngagementOrgId on an existing facility delegation for a specific owner."
-			+ " To change the owner of a delegation, use the DELETE and POST operations instead.",
-		responses = {
-			@ApiResponse(responseCode = "204", description = "No content", useReturnTypeSchema = true),
-			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-		})
-	ResponseEntity<Void> putFacilityDelegation(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "id", description = "Id of the delegation", required = true, example = "81471222-5798-11e9-ae24-57fa13b361e1") @PathVariable(value = "id") final @ValidUuid String id,
-		@RequestBody @Valid UpdateFacilityDelegation facilityDelegation) {
-
-		service.putFacilityDelegation(municipalityId, id, facilityDelegation);
-
-		return noContent()
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
