@@ -16,14 +16,14 @@ class ValidatorUtilTest {
 	@ParameterizedTest
 	@MethodSource("validDelegationParameters")
 	void testValidDelegationParameters(String owner, String delegatedTo) {
-		assertDoesNotThrow(() -> ValidatorUtil.validateFacilityDelegationParameters(owner, delegatedTo));
+		assertDoesNotThrow(() -> ValidatorUtil.validateDelegationParameters(owner, delegatedTo));
 	}
 
 	@ParameterizedTest
 	@MethodSource("invalidDelegationParameters")
 	void testInvalidDelegationParameters(String owner, String delegatedTo) {
 		assertThatExceptionOfType(ThrowableProblem.class)
-			.isThrownBy(() -> ValidatorUtil.validateFacilityDelegationParameters(owner, delegatedTo))
+			.isThrownBy(() -> ValidatorUtil.validateDelegationParameters(owner, delegatedTo))
 			.withMessage("Invalid search parameters: Either owner or delegatedTo must be provided")
 			.satisfies(problem -> assertThat(problem.getStatus()).isEqualTo(Status.BAD_REQUEST));
 	}

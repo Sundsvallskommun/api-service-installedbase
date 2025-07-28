@@ -11,6 +11,24 @@ spring:
     url: jdbc:tc:mariadb:10.6.14:///
     username: user
     password: password
+  jpa:
+    properties:
+      jakarta:
+        persistence:
+          schema-generation:
+            database:
+              action: update
+            scripts:
+              action: create
+              create-target: target/database/generated-schema.sql
+            create-source: metadata
+      hibernate:
+        show-sql: false
+        hbm2ddl:
+          schema-generation:
+            script:
+              append: false
+        format_sql: true
   flyway:
     enabled: true
   security:

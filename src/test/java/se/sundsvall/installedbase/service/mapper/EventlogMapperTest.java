@@ -13,7 +13,9 @@ import generated.se.sundsvall.eventlog.EventType;
 import generated.se.sundsvall.eventlog.Metadata;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,12 +30,13 @@ class EventlogMapperTest {
 	@EnumSource(EventType.class)
 	@ParameterizedTest
 	void testToEvent(EventType eventType) {
-		var facilityDelegationId = UUID.randomUUID().toString();
-		var owner = UUID.randomUUID().toString();
-		var delegatedTo = UUID.randomUUID().toString();
-		var requestId = UUID.randomUUID().toString();
-		var identifierHeader = "joe001doe; type=adAccount";
-		var mockIdentifier = mock(Identifier.class);
+		final var delegationId = UUID.randomUUID().toString();
+		final var owner = UUID.randomUUID().toString();
+		final var delegatedTo = UUID.randomUUID().toString();
+		final var facilityIds = List.of("facility-1", "facility-2");
+		final var requestId = UUID.randomUUID().toString();
+		final var identifierHeader = "joe001doe; type=adAccount";
+		final var mockIdentifier = mock(Identifier.class);
 
 		try (var mockedRequestId = mockStatic(RequestId.class);
 			var mockedStaticIdentifier = mockStatic(Identifier.class)) {
@@ -42,20 +45,21 @@ class EventlogMapperTest {
 
 			when(mockIdentifier.toHeaderValue()).thenReturn(identifierHeader);
 
-			var event = EventlogMapper.toEvent(facilityDelegationId, owner, delegatedTo, eventType);
+			final var event = EventlogMapper.toEvent(delegationId, owner, delegatedTo, facilityIds, eventType);
 
 			assertThat(event.getExpires()).isCloseTo(OffsetDateTime.now().plusMonths(18), within(1, ChronoUnit.SECONDS));
 			assertThat(event.getType()).isEqualTo(eventType);
-			assertThat(event.getMessage()).isEqualTo(eventType + " facility delegation");
+			assertThat(event.getMessage()).isEqualTo(StringUtils.capitalize(eventType.name().toLowerCase()) + " facility delegation");
 			assertThat(event.getOwner()).isEqualTo("InstalledBase");
 			assertThat(event.getHistoryReference()).isNull();
-			assertThat(event.getSourceType()).isEqualTo("FacilityDelegation");
-			assertThat(event.getMetadata()).hasSize(5);
+			assertThat(event.getSourceType()).isEqualTo("Delegation");
+			assertThat(event.getMetadata()).hasSize(6);
 			assertThat(event.getMetadata()).extracting(Metadata::getKey, Metadata::getValue)
 				.containsExactlyInAnyOrder(
-					tuple("FacilityDelegationId", facilityDelegationId),
+					tuple("DelegationId", delegationId),
 					tuple("DelegationOwner", owner),
 					tuple("DelegatedTo", delegatedTo),
+					tuple("Facilities", String.join(", ", facilityIds)),
 					tuple("X-Sent-By", identifierHeader),
 					tuple("RequestId", requestId));
 		}
@@ -66,30 +70,31 @@ class EventlogMapperTest {
 
 	@Test
 	void testToEventWithoutIdentifier() {
-		var facilityDelegationId = UUID.randomUUID().toString();
-		var owner = UUID.randomUUID().toString();
-		var delegatedTo = UUID.randomUUID().toString();
-		var requestId = UUID.randomUUID().toString();
+		final var delegationId = UUID.randomUUID().toString();
+		final var owner = UUID.randomUUID().toString();
+		final var delegatedTo = UUID.randomUUID().toString();
+		final var requestId = UUID.randomUUID().toString();
 
 		try (var mockedRequestId = mockStatic(RequestId.class);
 			var mockedIdentifier = mockStatic(Identifier.class)) {
 			mockedRequestId.when(RequestId::get).thenReturn(requestId);
 			mockedIdentifier.when(Identifier::get).thenReturn(null);
 
-			var event = EventlogMapper.toEvent(facilityDelegationId, owner, delegatedTo, EventType.CREATE);
+			final var event = EventlogMapper.toEvent(delegationId, owner, delegatedTo, null, EventType.CREATE);
 
 			assertThat(event.getExpires()).isCloseTo(OffsetDateTime.now().plusMonths(18), within(1, ChronoUnit.SECONDS));
 			assertThat(event.getType()).isEqualTo(EventType.CREATE);
-			assertThat(event.getMessage()).isEqualTo("CREATE facility delegation");
+			assertThat(event.getMessage()).isEqualTo("Create facility delegation");
 			assertThat(event.getOwner()).isEqualTo("InstalledBase");
 			assertThat(event.getHistoryReference()).isNull();
-			assertThat(event.getSourceType()).isEqualTo("FacilityDelegation");
-			assertThat(event.getMetadata()).hasSize(4);
+			assertThat(event.getSourceType()).isEqualTo("Delegation");
+			assertThat(event.getMetadata()).hasSize(5);
 			assertThat(event.getMetadata()).extracting(Metadata::getKey, Metadata::getValue)
 				.containsExactlyInAnyOrder(
-					tuple("FacilityDelegationId", facilityDelegationId),
+					tuple("DelegationId", delegationId),
 					tuple("DelegationOwner", owner),
 					tuple("DelegatedTo", delegatedTo),
+					tuple("Facilities", ""),
 					tuple("RequestId", requestId));
 		}
 	}

@@ -1,6 +1,9 @@
 package se.sundsvall.installedbase.service.mapper;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 
 import generated.se.sundsvall.eventlog.Event;
 import generated.se.sundsvall.eventlog.EventType;
@@ -16,8 +19,9 @@ import se.sundsvall.dept44.support.Identifier;
 public final class EventlogMapper {
 
 	private static final String EVENT_OWNER = "InstalledBase";
-	private static final String SOURCE_TYPE = "FacilityDelegation";
-	private static final String FACILITY_DELEGATION_ID = "FacilityDelegationId";
+	private static final String SOURCE_TYPE = "Delegation";
+	private static final String DELEGATION_ID = "DelegationId";
+	private static final String FACILITIES = "Facilities";
 	private static final String X_SENT_BY = "X-Sent-By";
 	private static final String OWNER = "DelegationOwner";
 	private static final String DELEGATED_TO = "DelegatedTo";
@@ -29,19 +33,20 @@ public final class EventlogMapper {
 	/**
 	 * Creates an Event object for facility delegation events.
 	 * Conditionally includes the Identifier header as metadata if available.
-	 * 
-	 * @param  facilityDelegationId the ID of the facility delegation
-	 * @param  owner                the owner of the facility delegation
-	 * @param  delegatedTo          the delegate
-	 * @param  eventType            the type of event (e.g., CREATE, UPDATE, DELETE)
-	 * @return                      an Event object populated with the provided details
+	 *
+	 * @param  delegationId the ID of the delegation
+	 * @param  owner        the owner of the facility delegation
+	 * @param  delegatedTo  the delegate
+	 * @param  eventType    the type of event (e.g., CREATE, UPDATE, DELETE)
+	 * @return              an Event object populated with the provided details
 	 */
-	public static Event toEvent(String facilityDelegationId, String owner, String delegatedTo, EventType eventType) {
+	public static Event toEvent(String delegationId, String owner, String delegatedTo, List<String> facilityIds, EventType eventType) {
 
-		var metadata = new HashMap<>(Map.of(
-			FACILITY_DELEGATION_ID, facilityDelegationId,
+		final var metadata = new HashMap<>(Map.of(
+			DELEGATION_ID, delegationId,
 			OWNER, owner,
-			DELEGATED_TO, delegatedTo));
+			DELEGATED_TO, delegatedTo,
+			FACILITIES, toReadableString(facilityIds)));
 
 		// As the identifier & request-id might be null, we only conditionally add it to the metadata
 		getIdentifierHeaderValue().ifPresent(header -> metadata.put(X_SENT_BY, header));
@@ -50,10 +55,16 @@ public final class EventlogMapper {
 		return new Event()
 			.expires(OffsetDateTime.now().plusMonths(18))
 			.type(eventType)
-			.message(MESSAGE.formatted(eventType.toString()))
+			.message(MESSAGE.formatted(capitalize(lowerCase(eventType.toString()))))
 			.owner(EVENT_OWNER)
 			.sourceType(SOURCE_TYPE)
 			.metadata(toMetadatas(metadata));
+	}
+
+	private static String toReadableString(List<String> facilityIds) {
+		return String.join(", ", ofNullable(facilityIds).orElse(emptyList()).stream()
+			.sorted()
+			.toList());
 	}
 
 	/**
@@ -87,7 +98,7 @@ public final class EventlogMapper {
 
 	/**
 	 * Retrieves the Request ID if available.
-	 * 
+	 *
 	 * @return an Optional containing the Request ID
 	 */
 	private static Optional<String> getRequestId() {

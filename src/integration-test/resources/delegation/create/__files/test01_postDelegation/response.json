@@ -1,0 +1,16 @@
+{
+	"id": "${json-unit.regex}[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+	"facilities": [
+		{
+			"id": "a-facility",
+			"businessEngagementOrgId": "5591628136"
+		},
+		{
+			"id": "another-facility"
+		}
+	],
+	"delegatedTo": "e3cf6c05-fbd3-43de-b615-f8226d11f438",
+	"owner": "b957e977-83f9-4592-b172-e5e8cc028e36",
+	"municipalityId": "2281",
+	"created": "${json-unit.regex}\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{1,6}"
+}

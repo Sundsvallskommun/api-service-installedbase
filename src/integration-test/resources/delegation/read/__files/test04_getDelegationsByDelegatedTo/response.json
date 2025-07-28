@@ -1,0 +1,23 @@
+[
+	{
+		"id": "abdf934d-5696-41c9-84f5-28c79202d6c5",
+		"facilities": [
+			{
+				"id": "Facility-1",
+				"businessEngagementOrgId": "5591628136"
+			},
+			{
+				"id": "Facility-2",
+				"businessEngagementOrgId": "5591628136"
+			},
+			{
+				"id": "Facility-3",
+				"businessEngagementOrgId": "5591628136"
+			}
+		],
+		"delegatedTo": "81471222-5798-11e9-ae24-57fa13b361e2",
+		"owner": "81471222-5798-11e9-ae24-57fa13b361e1",
+		"municipalityId": "2281",
+		"created": "2025-07-11T10:03:07.426032"
+	}
+]

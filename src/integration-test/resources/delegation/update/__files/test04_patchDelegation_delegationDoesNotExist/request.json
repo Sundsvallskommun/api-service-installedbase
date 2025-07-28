@@ -1,0 +1,17 @@
+{
+	"facilities": [
+		{
+			"id": "x-facility",
+			"businessEngagementOrgId": "5591633531"
+		},
+		{
+			"id": "y-facility",
+			"businessEngagementOrgId": "5591633532"
+		},
+		{
+			"id": "z-facility",
+			"businessEngagementOrgId": "5591633533"
+		}
+	],
+	"delegatedTo": "b4b32135-0e80-4e96-b39a-7291a0bae33a"
+}

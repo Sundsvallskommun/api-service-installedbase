@@ -1,0 +1,20 @@
+{
+	"id": "cbba5149-82db-4e41-a2bb-f1ca396dc961",
+	"facilities": [
+		{
+			"id": "facility-501",
+			"businessEngagementOrgId": "5591633531"
+		},
+		{
+			"id": "facility-502"
+		},
+		{
+			"id": "facility-503"
+		}
+	],
+	"delegatedTo": "f2949c12-bb83-406a-be96-bb8628f14612",
+	"owner": "adb574c3-16a7-430e-a0de-823592e0db92",
+	"municipalityId": "2281",
+	"created": "2025-07-11T10:03:49.215221",
+	"updated": "${json-unit.ignore}"
+}
