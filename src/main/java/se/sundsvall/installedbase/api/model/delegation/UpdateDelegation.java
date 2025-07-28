@@ -14,12 +14,16 @@ import se.sundsvall.installedbase.api.model.validation.UniqueElements;
 public class UpdateDelegation {
 
 	@UniqueElements
-	@ArraySchema(uniqueItems = true, schema = @Schema(implementation = Facility.class, description = "List of facility IDs to be delegated", requiredMode = NOT_REQUIRED))
+	@ArraySchema(uniqueItems = true, schema = @Schema(implementation = Facility.class, description = "List of facilities to be delegated", requiredMode = NOT_REQUIRED))
 	private List<@Valid Facility> facilities;
 
 	@ValidUuid(nullable = true)
 	@Schema(description = "Party ID of the delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2", requiredMode = NOT_REQUIRED)
 	private String delegatedTo;
+
+	public static UpdateDelegation create() {
+		return new UpdateDelegation();
+	}
 
 	public List<Facility> getFacilities() {
 		return facilities;

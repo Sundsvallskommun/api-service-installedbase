@@ -88,7 +88,7 @@ public class DelegationService {
 	/**
 	 * Finds and reuses existing facility entity if found in database, else creates a new entity
 	 *
-	 * @param  delegation CreateDelegation object containing delegation details
+	 * @param  facilities List of Facility objects to find or create database entities for
 	 * @return            list of FacilityEntity with existing entities for those existing in db and new entities for those
 	 *                    who doesn't exist
 	 */

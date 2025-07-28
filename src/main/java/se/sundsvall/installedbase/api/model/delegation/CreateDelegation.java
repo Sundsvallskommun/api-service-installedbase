@@ -15,7 +15,7 @@ import se.sundsvall.installedbase.api.model.validation.UniqueElements;
 public class CreateDelegation {
 
 	@UniqueElements
-	@NotEmpty(message = "facilities must contain at least one facility")
+	@NotEmpty(message = "facilities must contain at least one member")
 	@ArraySchema(uniqueItems = true, schema = @Schema(implementation = Facility.class, description = "List of facilities to be delegated", requiredMode = REQUIRED))
 	private List<@Valid Facility> facilities;
 
@@ -26,6 +26,10 @@ public class CreateDelegation {
 	@ValidUuid
 	@Schema(description = "Party ID of the delegation owner", example = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = REQUIRED)
 	private String owner;
+
+	public static CreateDelegation create() {
+		return new CreateDelegation();
+	}
 
 	public List<Facility> getFacilities() {
 		return facilities;

@@ -89,12 +89,12 @@ class DelegationCreateResourceFailureTest {
 
 	private static Stream<Arguments> invalidFacilitiesProvider() {
 		return Stream.of(
-			Arguments.of(null, "facilities", "facilities must contain at least one facility"),
-			Arguments.of(List.of(), "facilities", "facilities must contain at least one facility"),
+			Arguments.of(null, "facilities", "facilities must contain at least one member"),
+			Arguments.of(List.of(), "facilities", "facilities must contain at least one member"),
 			Arguments.of(List.of(Facility.create()), "facilities[0].id", "Facility id cannot be blank"),
 			Arguments.of(List.of(Facility.create().withId("")), "facilities[0].id", "Facility id cannot be blank"),
 			Arguments.of(List.of(Facility.create().withId(" ")), "facilities[0].id", "Facility id cannot be blank"),
-			Arguments.of(List.of(Facility.create().withId("facility-1"), Facility.create().withId("facility-1")), "facilities", "List must contain unique elements"),
+			Arguments.of(List.of(Facility.create().withId("facility-1"), Facility.create().withId("Facility-1")), "facilities", "List must contain unique elements"),
 			Arguments.of(List.of(Facility.create().withId(""), Facility.create().withId("facility-1")), "facilities[0].id", "Facility id cannot be blank"));
 	}
 

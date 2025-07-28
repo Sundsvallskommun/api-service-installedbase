@@ -94,7 +94,7 @@ class DelegationUpdateIT extends AbstractAppTest {
 		transactionTemplate.executeWithoutResult(status -> {
 			assertThat(repository.findAll().stream()
 				.map(FacilityEntity::getFacilityId)
-				.toList()).isNotEmpty().doesNotContain("FACILITY-420", "FACILITY-421", "FACILITY-422"); // These should not be present as they have been replaced by 501, 502 and 503
+				.toList()).isNotEmpty().doesNotContain("facility-420", "facility-421", "facility-422"); // These should not be present as they have been replaced by 501, 502 and 503
 		});
 	}
 
@@ -128,7 +128,7 @@ class DelegationUpdateIT extends AbstractAppTest {
 
 			assertThat(repository.findAll().stream()
 				.map(FacilityEntity::getFacilityId)
-				.toList()).isNotEmpty().doesNotContain("FACILITY-70", "FACILITY-71"); // These should not be present as they have been removed (only 69 should still be there with a new companion - 666)
+				.toList()).isNotEmpty().doesNotContain("facility-70", "facility-71"); // These should not be present as they have been removed (only 69 should still be there with a new companion - 666)
 		});
 	}
 

@@ -20,6 +20,7 @@ class CreateDelegationTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
+		assertThat(CreateDelegation.create()).hasAllNullFieldsOrProperties();
 		assertThat(new CreateDelegation()).hasAllNullFieldsOrProperties();
 	}
 
@@ -35,7 +36,7 @@ class CreateDelegationTest {
 
 	@Test
 	void testBuilders() {
-		final var bean = new CreateDelegation()
+		final var bean = CreateDelegation.create()
 			.withFacilities(facilities)
 			.withDelegatedTo(delegatedTo)
 			.withOwner(owner);
