@@ -1,0 +1,23 @@
+[
+	{
+		"id": "78ee675d-4ab5-4c9c-a80a-5c508f1c55af",
+		"facilities": [
+			{
+				"id": "facility-69",
+				"businessEngagementOrgId": "5591628136"
+			},
+			{
+				"id": "facility-70",
+				"businessEngagementOrgId": "5591628136"
+			},
+			{
+				"id": "facility-71",
+				"businessEngagementOrgId": "5591628136"
+			}
+		],
+		"delegatedTo": "81471222-5798-11e9-ae24-57fa13b361e2",
+		"owner": "81471222-5798-11e9-ae24-57fa13b361e1",
+		"municipalityId": "1984",
+		"created": "2025-07-11T10:04:09.623724+02:00"
+	}
+]

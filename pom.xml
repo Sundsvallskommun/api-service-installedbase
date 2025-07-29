@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>6.0.11</version>
+		<version>6.0.12</version>
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
@@ -141,9 +141,6 @@
 				<configuration>
 					<excludes>
 						<exclude>**/se/sundsvall/installedbase/Application*</exclude>
-						<!-- TODO will be tested in future tasks -->
-						<exclude>**/se/sundsvall/installedbase/integration/db/specification/FacilityDelegationSpecification*</exclude>
-						<exclude>**/se/sundsvall/installedbase/integration/db//FacilityDelegationRepository*</exclude>
 						<!-- Exclude JPA specifications and metamodels -->
 						<exclude>**/se/sundsvall/installedbase/integration/db/model/**/*Entity_*</exclude>
 						<exclude>**/generated/se/sundsvall/**/*</exclude>

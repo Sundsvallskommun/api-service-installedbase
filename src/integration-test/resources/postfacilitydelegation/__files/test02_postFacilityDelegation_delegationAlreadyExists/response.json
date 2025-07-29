@@ -1,5 +1,0 @@
-{
-	"title": "Facility delegation already exists",
-	"status": 409,
-	"detail": "Owner with partyId: '81471222-5798-11e9-ae24-57fa13b361e1' has already delegated to partyId: '81471222-5798-11e9-ae24-57fa13b361e2' for municipality: '2281'. Update existing delegation instead."
-}

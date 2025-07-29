@@ -1,27 +1,43 @@
-create table facility_delegation
-(
-    municipality_id            varchar(4)  null,
-    created                    datetime(6) not null,
-    updated                    datetime(6) null,
-    business_engagement_org_id varchar(20) null,
-    delegated_to               varchar(36) not null,
-    id                         varchar(36) not null primary key,
-    owner                      varchar(36) not null,
-    constraint uk_delegated_to_owner
-        unique (delegated_to, owner, municipality_id)
-);
+    create table delegation (
+        municipality_id varchar(4),
+        created datetime(6) not null,
+        updated datetime(6),
+        delegated_to varchar(36) not null,
+        id varchar(36) not null,
+        owner varchar(36) not null,
+        primary key (id)
+    ) engine=InnoDB;
 
-create index idx_municipality_id_delegated_to
-    on facility_delegation (municipality_id, delegated_to);
+    create table delegation_facility (
+        delegation_id varchar(36) not null,
+        facility_id varchar(36) not null
+    ) engine=InnoDB;
 
-create index idx_municipality_id_owner
-    on facility_delegation (municipality_id, owner);
+    create table facility (
+        business_engagement_org_id varchar(20),
+        id varchar(36) not null,
+        facility_id varchar(256) not null,
+        primary key (id)
+    ) engine=InnoDB;
 
-create table facility_delegation_facilities
-(
-    facility_delegation_id varchar(36)  not null,
-    facility               varchar(256) null,
-    constraint fk_facility_delegation_facilities_facility_delegation_id
-        foreign key (facility_delegation_id) references facility_delegation (id)
-);
+    create index idx_municipality_id_delegated_to 
+       on delegation (municipality_id, delegated_to);
 
+    create index idx_municipality_id_owner 
+       on delegation (municipality_id, owner);
+
+    alter table if exists delegation 
+       add constraint uk_delegated_to_owner unique (delegated_to, owner, municipality_id);
+
+    alter table if exists delegation_facility 
+       add constraint uk_delegation_id_facility_id unique (delegation_id, facility_id);
+
+    alter table if exists delegation_facility 
+       add constraint fk_delegation_facility_delegation 
+       foreign key (facility_id) 
+       references facility (id);
+
+    alter table if exists delegation_facility 
+       add constraint fk_delegation_facility_facility 
+       foreign key (delegation_id) 
+       references delegation (id);

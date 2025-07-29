@@ -14,7 +14,7 @@ public final class ValidatorUtil {
 	 * @param owner       owner of the facility delegation
 	 * @param delegatedTo the party to which the facility is delegated
 	 */
-	public static void validateFacilityDelegationParameters(String owner, String delegatedTo) {
+	public static void validateDelegationParameters(String owner, String delegatedTo) {
 		if (StringUtils.isBlank(owner) && StringUtils.isBlank(delegatedTo)) {
 			throw Problem.builder()
 				.withTitle("Invalid search parameters")
