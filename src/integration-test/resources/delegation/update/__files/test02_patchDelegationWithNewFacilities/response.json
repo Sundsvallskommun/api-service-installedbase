@@ -15,6 +15,6 @@
 	"delegatedTo": "f2949c12-bb83-406a-be96-bb8628f14612",
 	"owner": "adb574c3-16a7-430e-a0de-823592e0db92",
 	"municipalityId": "2281",
-	"created": "2025-07-11T10:03:49.215221",
-	"updated": "${json-unit.ignore}"
+	"created": "2025-07-11T10:03:49.215221+02:00",
+	"updated": "${json-unit.regex}\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{1,6}\\+(01|02):00"
 }

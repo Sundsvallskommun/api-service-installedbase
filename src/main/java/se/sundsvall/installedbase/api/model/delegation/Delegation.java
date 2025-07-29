@@ -1,8 +1,10 @@
 package se.sundsvall.installedbase.api.model.delegation;
 
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
+
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,13 +27,13 @@ public class Delegation {
 	@Schema(description = "Municipality ID of the delegation", example = "1234")
 	private String municipalityId;
 
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@DateTimeFormat(iso = DATE_TIME)
 	@Schema(description = "When the delegation was created", example = "2025-01-01T12:00:00")
-	private LocalDateTime created;
+	private OffsetDateTime created;
 
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	@DateTimeFormat(iso = DATE_TIME)
 	@Schema(description = "When the delegation was last updated", example = "2025-04-01T12:00:00")
-	private LocalDateTime updated;
+	private OffsetDateTime updated;
 
 	public static Delegation create() {
 		return new Delegation();
@@ -77,19 +79,19 @@ public class Delegation {
 		this.municipalityId = municipalityId;
 	}
 
-	public LocalDateTime getCreated() {
+	public OffsetDateTime getCreated() {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(OffsetDateTime created) {
 		this.created = created;
 	}
 
-	public LocalDateTime getUpdated() {
+	public OffsetDateTime getUpdated() {
 		return updated;
 	}
 
-	public void setUpdated(LocalDateTime updated) {
+	public void setUpdated(OffsetDateTime updated) {
 		this.updated = updated;
 	}
 
@@ -113,12 +115,12 @@ public class Delegation {
 		return this;
 	}
 
-	public Delegation withCreated(LocalDateTime created) {
+	public Delegation withCreated(OffsetDateTime created) {
 		this.created = created;
 		return this;
 	}
 
-	public Delegation withUpdated(LocalDateTime updated) {
+	public Delegation withUpdated(OffsetDateTime updated) {
 		this.updated = updated;
 		return this;
 	}

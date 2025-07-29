@@ -7,6 +7,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toCollection;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withDelegatedTo;
 import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withId;
 import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withMunicipalityId;
@@ -61,7 +62,7 @@ public class DelegationService {
 	 * @return                id of the delegation delegation
 	 */
 	public String createDelegation(String municipalityId, CreateDelegation delegation) {
-		LOGGER.info("Create delegation for owner: {}, delegatedTo: {}", delegation.getOwner(), delegation.getDelegatedTo());
+		LOGGER.info("Create delegation for owner: {}, delegatedTo: {}", sanitizeForLogging(delegation.getOwner()), sanitizeForLogging(delegation.getDelegatedTo()));
 
 		// Check if the owner already has a facility delegated to the same partyId
 		if (delegationRepository.findOne(
@@ -108,7 +109,7 @@ public class DelegationService {
 	 * @param delegation     UpdateDelegation object containing updated properties
 	 */
 	public void updateDelegation(String municipalityId, String id, UpdateDelegation delegation) {
-		LOGGER.info("Update delegation with id: {}", id);
+		LOGGER.info("Update delegation with id: {}", sanitizeForLogging(id));
 
 		final var entity = delegationRepository.findOne(withMunicipalityId(municipalityId)
 			.and(withId(id)))
@@ -134,7 +135,7 @@ public class DelegationService {
 	 * @return                Delegation object containing delegation details
 	 */
 	public Delegation getDelegation(String municipalityId, String id) {
-		LOGGER.info("Get delegation with id: {}", id);
+		LOGGER.info("Get delegation with id: {}", sanitizeForLogging(id));
 
 		return delegationRepository.findOne(withMunicipalityId(municipalityId)
 			.and(withId(id)))
@@ -154,7 +155,7 @@ public class DelegationService {
 	 * @return                List of Delegation objects containing delegation details
 	 */
 	public List<Delegation> getDelegations(String municipalityId, String owner, String delegatedTo) {
-		LOGGER.info("Get facility delegations for owner: {} and delegatedTo: {}", owner, delegatedTo);
+		LOGGER.info("Get facility delegations for owner: {} and delegatedTo: {}", sanitizeForLogging(owner), sanitizeForLogging(delegatedTo));
 		return delegationRepository.findAll(
 			withMunicipalityId(municipalityId)
 				.and(withOwner(owner))
@@ -174,14 +175,14 @@ public class DelegationService {
 		delegationRepository.findOne(withMunicipalityId(municipalityId)
 			.and(withId(id)))
 			.ifPresentOrElse(entity -> {
-				LOGGER.info("Deleting delegation with id: {}", id);
+				LOGGER.info("Deleting delegation with id: {}", sanitizeForLogging(id));
 
 				final var facilityIds = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(FacilityEntity::getFacilityId).toList(); // Needs to be fetched before deletion to be visible in the event log
 
 				delegationRepository.delete(entity.withFacilities(null));
 				facilityRepository.deleteAllInBatch(facilityRepository.findAllByDelegationsIsEmpty()); // Clean up orphan facilities that has no connection to any delegation
 				sendEvent(municipalityId, entity, facilityIds, DELETE);
-			}, () -> LOGGER.info("Couldn't delete delegation with id: {} within municipality: {} as it does not exist", id, municipalityId));
+			}, () -> LOGGER.info("Couldn't delete delegation with id: {} within municipality: {} as it does not exist", sanitizeForLogging(id), sanitizeForLogging(municipalityId)));
 	}
 
 	/**

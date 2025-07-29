@@ -2,7 +2,7 @@ package se.sundsvall.installedbase;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -60,8 +60,8 @@ public final class TestDataFactory {
 			.withFacilities(Set.of(
 				FacilityEntity.create().withFacilityId("facility-7").withBusinessEngagementOrgId("5591628140"),
 				FacilityEntity.create().withFacilityId("facility-8").withBusinessEngagementOrgId("5591628140")))
-			.withCreated(LocalDateTime.now().minusMinutes(3))
-			.withUpdated(LocalDateTime.now().minusMinutes(2));
+			.withCreated(OffsetDateTime.now().minusMinutes(3))
+			.withUpdated(OffsetDateTime.now().minusMinutes(2));
 	}
 
 	public static FacilityEntity createFacilityEntity(String id) {

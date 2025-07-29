@@ -5,6 +5,7 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsExclud
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCodeExcluding;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToStringExcluding;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 
@@ -16,8 +17,10 @@ class FacilityEntityTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(new FacilityEntity()).hasAllNullFieldsOrProperties();
-		assertThat(FacilityEntity.create()).hasAllNullFieldsOrProperties();
+		assertThat(new FacilityEntity()).hasAllNullFieldsOrPropertiesExcept("delegations")
+			.hasFieldOrPropertyWithValue("delegations", emptyList());
+		assertThat(FacilityEntity.create()).hasAllNullFieldsOrPropertiesExcept("delegations")
+			.hasFieldOrPropertyWithValue("delegations", emptyList());
 	}
 
 	@Test

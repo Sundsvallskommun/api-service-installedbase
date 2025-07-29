@@ -6,11 +6,11 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
-import static java.time.LocalDateTime.now;
+import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -25,12 +25,12 @@ class DelegationTest {
 	private final String delegatedTo = UUID.randomUUID().toString();
 	private final String owner = UUID.randomUUID().toString();
 	private final String municipalityId = "2281";
-	private final LocalDateTime created = now().minusMinutes(2);
-	private final LocalDateTime updated = now().minusMinutes(1);
+	private final OffsetDateTime created = now().minusMinutes(2);
+	private final OffsetDateTime updated = now().minusMinutes(1);
 
 	@BeforeAll
 	static void setup() {
-		registerValueGenerator(() -> now().plusDays(new Random().nextInt()), LocalDateTime.class);
+		registerValueGenerator(() -> now().plusDays(new Random().nextInt()), OffsetDateTime.class);
 	}
 
 	@Test

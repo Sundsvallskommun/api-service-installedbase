@@ -1,5 +1,7 @@
 package se.sundsvall.installedbase.integration.db.model;
 
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +15,11 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -60,7 +64,7 @@ public class DelegationEntity {
 		}
 
 	)
-	private Set<FacilityEntity> facilities;
+	private Set<FacilityEntity> facilities = new HashSet<>();
 
 	@Column(length = 36, name = "delegated_to", nullable = false)
 	private String delegatedTo; // PartyId of the person to whom the facilities are delegated
@@ -72,10 +76,12 @@ public class DelegationEntity {
 	private String owner; // PartyId of the person who owns the facilities
 
 	@Column(name = "created", nullable = false)
-	private LocalDateTime created;
+	@TimeZoneStorage(NORMALIZE)
+	private OffsetDateTime created;
 
 	@Column(name = "updated")
-	private LocalDateTime updated;
+	@TimeZoneStorage(NORMALIZE)
+	private OffsetDateTime updated;
 
 	public static DelegationEntity create() {
 		return new DelegationEntity();
@@ -83,13 +89,13 @@ public class DelegationEntity {
 
 	@PreUpdate
 	void onUpdate() {
-		updated = LocalDateTime.now();
+		updated = OffsetDateTime.now();
 	}
 
 	@PrePersist
 	void onCreate() {
 		if (Objects.isNull(created)) {
-			created = LocalDateTime.now();
+			created = OffsetDateTime.now();
 		}
 	}
 
@@ -133,19 +139,19 @@ public class DelegationEntity {
 		this.owner = owner;
 	}
 
-	public LocalDateTime getCreated() {
+	public OffsetDateTime getCreated() {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(OffsetDateTime created) {
 		this.created = created;
 	}
 
-	public LocalDateTime getUpdated() {
+	public OffsetDateTime getUpdated() {
 		return updated;
 	}
 
-	public void setUpdated(LocalDateTime changed) {
+	public void setUpdated(OffsetDateTime changed) {
 		this.updated = changed;
 	}
 
@@ -174,12 +180,12 @@ public class DelegationEntity {
 		return this;
 	}
 
-	public DelegationEntity withCreated(LocalDateTime created) {
+	public DelegationEntity withCreated(OffsetDateTime created) {
 		this.created = created;
 		return this;
 	}
 
-	public DelegationEntity withUpdated(LocalDateTime updated) {
+	public DelegationEntity withUpdated(OffsetDateTime updated) {
 		this.updated = updated;
 		return this;
 	}

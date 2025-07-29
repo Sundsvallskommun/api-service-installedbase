@@ -7,6 +7,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
@@ -33,7 +34,7 @@ public class FacilityEntity {
 	private String businessEngagementOrgId;
 
 	@ManyToMany(mappedBy = "facilities")
-	private List<DelegationEntity> delegations;
+	private List<DelegationEntity> delegations = new ArrayList<>();
 
 	public static FacilityEntity create() {
 		return new FacilityEntity();

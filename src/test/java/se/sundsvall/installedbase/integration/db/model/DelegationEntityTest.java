@@ -6,11 +6,12 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCodeExcl
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.hamcrest.CoreMatchers.allOf;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.Set;
@@ -23,13 +24,15 @@ class DelegationEntityTest {
 
 	@BeforeAll
 	static void setup() {
-		registerValueGenerator(() -> LocalDateTime.now().plusDays(new Random().nextInt()), LocalDateTime.class);
+		registerValueGenerator(() -> OffsetDateTime.now().plusDays(new Random().nextInt()), OffsetDateTime.class);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(new DelegationEntity()).hasAllNullFieldsOrProperties();
-		assertThat(DelegationEntity.create()).hasAllNullFieldsOrProperties();
+		assertThat(new DelegationEntity()).hasAllNullFieldsOrPropertiesExcept("facilities")
+			.hasFieldOrPropertyWithValue("facilities", emptySet());
+		assertThat(DelegationEntity.create()).hasAllNullFieldsOrPropertiesExcept("facilities")
+			.hasFieldOrPropertyWithValue("facilities", emptySet());
 	}
 
 	@Test
@@ -51,8 +54,8 @@ class DelegationEntityTest {
 		final var delegatedTo = "delegatedTo123";
 		final var municipalityId = "2281";
 		final var owner = "owner123";
-		final var created = LocalDateTime.now();
-		final var updated = LocalDateTime.now().plusMinutes(2);
+		final var created = OffsetDateTime.now();
+		final var updated = OffsetDateTime.now().plusMinutes(2);
 
 		final var bean = DelegationEntity.create()
 			.withId(id)
@@ -82,8 +85,8 @@ class DelegationEntityTest {
 		final var delegatedTo = "delegatedTo123";
 		final var municipalityId = "2281";
 		final var owner = "owner123";
-		final var created = LocalDateTime.now();
-		final var updated = LocalDateTime.now().plusMinutes(2);
+		final var created = OffsetDateTime.now();
+		final var updated = OffsetDateTime.now().plusMinutes(2);
 
 		final var bean = new DelegationEntity();
 		bean.setId(id);
@@ -110,8 +113,9 @@ class DelegationEntityTest {
 
 		entity.onCreate();
 
-		assertThat(entity).hasAllNullFieldsOrPropertiesExcept("created");
-		assertThat(entity.getCreated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
+		assertThat(entity).hasAllNullFieldsOrPropertiesExcept("created", "facilities");
+		assertThat(entity.getCreated()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+		assertThat(entity.getFacilities()).isEmpty();
 	}
 
 	@Test
@@ -120,7 +124,8 @@ class DelegationEntityTest {
 
 		entity.onUpdate();
 
-		assertThat(entity).hasAllNullFieldsOrPropertiesExcept("updated");
-		assertThat(entity.getUpdated()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.SECONDS));
+		assertThat(entity).hasAllNullFieldsOrPropertiesExcept("updated", "facilities");
+		assertThat(entity.getUpdated()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+		assertThat(entity.getFacilities()).isEmpty();
 	}
 }

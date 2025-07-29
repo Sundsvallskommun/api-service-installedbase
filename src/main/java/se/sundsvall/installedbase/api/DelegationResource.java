@@ -53,7 +53,7 @@ class DelegationResource {
 
 	private final DelegationService service;
 
-	public DelegationResource(final DelegationService service) {
+	DelegationResource(final DelegationService service) {
 		this.service = service;
 	}
 
@@ -76,7 +76,7 @@ class DelegationResource {
 			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
 			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 		})
-	public ResponseEntity<List<Delegation>> getDelegations(
+	ResponseEntity<List<Delegation>> getDelegations(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "owner", description = "Owner of the delegation", example = "81471222-5798-11e9-ae24-57fa13b361e1") @ValidUuid(nullable = true) @RequestParam(required = false) String owner,
 		@Parameter(name = "delegatedTo", description = "The delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2") @ValidUuid(nullable = true) @RequestParam(required = false) String delegatedTo) {
