@@ -5,8 +5,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.installedbase.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_ID;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -48,12 +50,12 @@ class DataWarehouseReaderConfigurationTest {
 		when(propertiesMock.readTimeout()).thenReturn(2);
 		when(feignMultiCustomizerSpy.composeCustomizersToOne()).thenReturn(feignBuilderCustomizerMock);
 
-		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
+		try (final MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
 			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
 
-			var customizer = configuration.feignBuilderCustomizer(propertiesMock, clientRegistrationRepositoryMock);
+			final var customizer = configuration.feignBuilderCustomizer(propertiesMock, clientRegistrationRepositoryMock);
 
-			ArgumentCaptor<ProblemErrorDecoder> errorDecoderCaptor = ArgumentCaptor.forClass(ProblemErrorDecoder.class);
+			final ArgumentCaptor<ProblemErrorDecoder> errorDecoderCaptor = ArgumentCaptor.forClass(ProblemErrorDecoder.class);
 
 			verify(feignMultiCustomizerSpy).withErrorDecoder(errorDecoderCaptor.capture());
 			verify(clientRegistrationRepositoryMock).findByRegistrationId(CLIENT_ID);
@@ -63,8 +65,13 @@ class DataWarehouseReaderConfigurationTest {
 			verify(feignMultiCustomizerSpy).withRequestTimeoutsInSeconds(1, 2);
 			verify(feignMultiCustomizerSpy).composeCustomizersToOne();
 
-			assertThat(errorDecoderCaptor.getValue()).hasFieldOrPropertyWithValue("integrationName", CLIENT_ID);
 			assertThat(customizer).isSameAs(feignBuilderCustomizerMock);
+
+			// Assert ErrorDecoder
+			assertThat(errorDecoderCaptor.getValue())
+				.isInstanceOf(ProblemErrorDecoder.class)
+				.hasFieldOrPropertyWithValue("integrationName", CLIENT_ID)
+				.hasFieldOrPropertyWithValue("bypassResponseCodes", List.of(NOT_FOUND.value()));
 		}
 	}
 }
