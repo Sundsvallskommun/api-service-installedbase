@@ -43,27 +43,23 @@ public class DelegationEntity {
 	private String id;
 
 	@ManyToMany(cascade = {
-		CascadeType.PERSIST,
-		CascadeType.MERGE,
-		CascadeType.REFRESH
+		CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH
 	})
-	@JoinTable(name = "delegation_facility",
-		joinColumns = {
-			@JoinColumn(name = "delegation_id")
-		},
-		foreignKey = @ForeignKey(name = "fk_delegation_facility_facility"),
-
-		inverseJoinColumns = {
-			@JoinColumn(name = "facility_id")
-		},
-		inverseForeignKey = @ForeignKey(name = "fk_delegation_facility_delegation"),
-		uniqueConstraints = {
-			@UniqueConstraint(name = "uk_delegation_id_facility_id", columnNames = {
-				"delegation_id", "facility_id"
-			})
-		}
-
-	)
+	@JoinTable(
+		name = "delegation_facility",
+		joinColumns = @JoinColumn(
+			name = "delegation_id",
+			referencedColumnName = "id",
+			foreignKey = @ForeignKey(name = "fk_delegation_facility_delegation")),
+		inverseJoinColumns = @JoinColumn(
+			name = "facility_ref_id",
+			referencedColumnName = "id",
+			foreignKey = @ForeignKey(name = "fk_delegation_facility_facility")),
+		uniqueConstraints = @UniqueConstraint(
+			name = "uk_delegation_facility",
+			columnNames = {
+				"delegation_id", "facility_ref_id"
+			}))
 	private Set<FacilityEntity> facilities = new HashSet<>();
 
 	@Column(length = 36, name = "delegated_to", nullable = false)

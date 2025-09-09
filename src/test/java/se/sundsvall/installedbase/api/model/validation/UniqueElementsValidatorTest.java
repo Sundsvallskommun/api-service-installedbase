@@ -51,7 +51,7 @@ class UniqueElementsValidatorTest {
 			arguments("duplicate strings", List.of(createFacility("facility1"), createFacility("facility2"), createFacility("facility1"))),
 			arguments("duplicate strings with leading spaces", List.of(createFacility("facility1"), createFacility("facility2"), createFacility(" facility1"))),
 			arguments("duplicate strings with trailing spaces", List.of(createFacility("facility1"), createFacility("facility2"), createFacility("facility1 "))),
-			arguments("multiple duplicates", List.of(createFacility("facility1", "orgId1"), createFacility("facility2", "orgId1"), createFacility("facility1", "orgId2"), createFacility("facility2", "orgId2"))),
+			arguments("multiple duplicates", List.of(createFacility("facility1", "orgId1"), createFacility("facility2", "orgId2"), createFacility("facility1", "orgId1"), createFacility("facility2", "orgId2"))),
 			arguments("duplicate with different case strings", List.of(createFacility("Facility1"), createFacility("facility1"), createFacility("FACILITY1"))),
 			arguments("duplicate empty strings", List.of(createFacility("facility1"), createFacility(""), createFacility(""), createFacility("facility2"))),
 			arguments("duplicate whitespace strings", List.of(createFacility("facility1"), createFacility(" "), createFacility("  "), createFacility("facility2"))));

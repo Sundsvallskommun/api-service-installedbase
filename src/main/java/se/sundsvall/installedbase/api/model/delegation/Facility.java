@@ -56,15 +56,20 @@ public class Facility {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final Facility other)) { return false; }
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof final Facility other)) {
+			return false;
+		}
 		return Objects.equals(businessEngagementOrgId, other.businessEngagementOrgId) && Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("Facility [id=").append(id).append(", businessEngagementOrgId=").append(businessEngagementOrgId).append("]");
-		return builder.toString();
+		return "Facility{" +
+			"id='" + id + '\'' +
+			", businessEngagementOrgId='" + businessEngagementOrgId + '\'' +
+			'}';
 	}
 }
