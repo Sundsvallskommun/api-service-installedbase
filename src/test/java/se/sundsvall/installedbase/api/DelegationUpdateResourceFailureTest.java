@@ -113,11 +113,20 @@ class DelegationUpdateResourceFailureTest {
 
 	private static Stream<Arguments> invalidFacilitiesProvider() {
 		return Stream.of(
-			Arguments.of(List.of(Facility.create()), "facilities[0].id", "Facility id cannot be blank"),
-			Arguments.of(List.of(Facility.create().withId("")), "facilities[0].id", "Facility id cannot be blank"),
-			Arguments.of(List.of(Facility.create().withId(" ")), "facilities[0].id", "Facility id cannot be blank"),
-			Arguments.of(List.of(Facility.create().withId("facility-1"), Facility.create().withId("Facility-1")), "facilities", "List must contain unique elements"),
-			Arguments.of(List.of(Facility.create().withId(""), Facility.create().withId("facility-1")), "facilities[0].id", "Facility id cannot be blank"));
+			Arguments.of(List.of(
+				Facility.create().withId("123")), "facilities[0].businessEngagementOrgId", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"),
+			Arguments.of(List.of(
+				Facility.create().withBusinessEngagementOrgId("5591628135")), "facilities[0].id", "Facility id cannot be blank"),
+			Arguments.of(List.of(
+				Facility.create().withBusinessEngagementOrgId("5591628135").withId("")), "facilities[0].id", "Facility id cannot be blank"),
+			Arguments.of(List.of(
+				Facility.create().withBusinessEngagementOrgId("5591628135").withId(" ")), "facilities[0].id", "Facility id cannot be blank"),
+			Arguments.of(List.of(
+				Facility.create().withBusinessEngagementOrgId("5591628135").withId("facility-1"),
+				Facility.create().withBusinessEngagementOrgId("5591628135").withId("Facility-1")), "facilities", "List must contain unique elements"),
+			Arguments.of(List.of(
+				Facility.create().withBusinessEngagementOrgId("5591628135").withId(""),
+				Facility.create().withBusinessEngagementOrgId("5591628135").withId("facility-1")), "facilities[0].id", "Facility id cannot be blank"));
 	}
 
 	@ParameterizedTest(name = "{0}")

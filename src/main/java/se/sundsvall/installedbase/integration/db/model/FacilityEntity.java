@@ -19,7 +19,7 @@ import org.hibernate.annotations.UuidGenerator;
 	},
 	uniqueConstraints = {
 		@UniqueConstraint(
-			name = "uk_facility_org",
+			name = "uk_facility_id_business_engagement_org_id",
 			columnNames = {
 				"facility_id", "business_engagement_org_id"
 			})

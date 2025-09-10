@@ -43,6 +43,7 @@ class UniqueElementsValidatorTest {
 			arguments("single element", List.of(createFacility("facility1"))),
 			arguments("unique ids", List.of(createFacility("facility1"), createFacility("facility2"), createFacility("facility3"))),
 			arguments("ids including empty string", List.of(createFacility("facility1"), createFacility(""), createFacility("facility2"))),
+			arguments("two facilities with the same facility_id but different businessEngagementOrgId", List.of(createFacility("facility1", "orgId1"), createFacility("facility1", "orgId2"))),
 			arguments("ids including whitespace string", List.of(createFacility("facility1"), createFacility(" "), createFacility("facility2"))));
 	}
 

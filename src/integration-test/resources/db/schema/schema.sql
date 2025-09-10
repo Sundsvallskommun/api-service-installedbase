@@ -10,9 +10,9 @@
     ) engine=InnoDB;
 
     create table delegation_facility (
-        delegation_id varchar(36) not null,
+        delegation_ref_id varchar(36) not null,
         facility_ref_id varchar(36) not null,
-        constraint uk_delegation_facility primary key (delegation_id, facility_ref_id)
+        constraint uk_delegation_facility primary key (delegation_ref_id, facility_ref_id)
     ) engine=InnoDB;
 
     create table facility (
@@ -35,7 +35,7 @@
        on facility (facility_id);
 
     alter table if exists facility 
-       add constraint uk_facility_org unique (facility_id, business_engagement_org_id);
+       add constraint uk_facility_id_business_engagement_org_id unique (facility_id, business_engagement_org_id);
 
     alter table if exists delegation_facility 
        add constraint fk_delegation_facility_facility 
@@ -44,5 +44,5 @@
 
     alter table if exists delegation_facility 
        add constraint fk_delegation_facility_delegation 
-       foreign key (delegation_id) 
+       foreign key (delegation_ref_id) 
        references delegation (id);

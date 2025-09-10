@@ -17,9 +17,11 @@ values ('5591628136', '6081da18-db02-415c-b258-bb84d93b1794', 'Facility-1'),
        ('5591628136', 'e7dff452-4dc3-407f-a7cb-ace9f932a775', 'facility-71'),
        ('5591628136', '8fe56d6c-2a28-40aa-99ba-2b901144da9e', 'facility-420'),
        ('5591628136', '926be7f8-2a0e-4dbc-9653-bb73bce0b3a0', 'facility-421'),
-       ('5591628136', '769af92d-1aa5-4ba1-8573-f39d227bc392', 'facility-422');
+       ('5591628135', '926be7f8-2a0e-4dbc-9653-bb73bce0b3a2', 'facility-421'),
+       ('5591628136', '926be7f8-2a0e-4dbc-9653-bb73bce0b3a3', 'facility-422'),
+       ('5591628135', '769af92d-1aa5-4ba1-8573-f39d227bc392', 'facility-422');
 
-insert into delegation_facility (delegation_id, facility_ref_id)
+insert into delegation_facility (delegation_ref_id, facility_ref_id)
 values ('abdf934d-5696-41c9-84f5-28c79202d6c5', '6081da18-db02-415c-b258-bb84d93b1794'),
        ('abdf934d-5696-41c9-84f5-28c79202d6c5', 'a553b70f-83ad-4dc6-ba45-40a73741837b'),
        ('abdf934d-5696-41c9-84f5-28c79202d6c5', '13eb6487-00dc-4480-837b-9f3812f442cf'),

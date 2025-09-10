@@ -1,6 +1,5 @@
 package se.sundsvall.installedbase.api.model.delegation;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +14,8 @@ public class Facility {
 	@NotBlank(message = "Facility id cannot be blank")
 	private String id;
 
-	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = NOT_REQUIRED)
-	@ValidOrganizationNumber(nullable = true)
+	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = REQUIRED)
+	@ValidOrganizationNumber
 	private String businessEngagementOrgId;
 
 	public static Facility create() {

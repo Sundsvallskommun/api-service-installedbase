@@ -48,7 +48,7 @@ public class DelegationEntity {
 	@JoinTable(
 		name = "delegation_facility",
 		joinColumns = @JoinColumn(
-			name = "delegation_id",
+			name = "delegation_ref_id",
 			referencedColumnName = "id",
 			foreignKey = @ForeignKey(name = "fk_delegation_facility_delegation")),
 		inverseJoinColumns = @JoinColumn(
@@ -58,7 +58,7 @@ public class DelegationEntity {
 		uniqueConstraints = @UniqueConstraint(
 			name = "uk_delegation_facility",
 			columnNames = {
-				"delegation_id", "facility_ref_id"
+				"delegation_ref_id", "facility_ref_id"
 			}))
 	private Set<FacilityEntity> facilities = new HashSet<>();
 
