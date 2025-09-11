@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
 
 public interface FacilityRepository extends JpaRepository<FacilityEntity, String> {
-	Optional<FacilityEntity> findByFacilityIdIgnoreCase(String facilityId);
+	Optional<FacilityEntity> findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase(String facilityId, String businessEngagementOrgId);
 
 	List<FacilityEntity> findAllByDelegationsIsEmpty();
 }

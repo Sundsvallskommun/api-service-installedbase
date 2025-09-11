@@ -60,7 +60,7 @@ class DelegationDeleteIT extends AbstractAppTest {
 			.withHttpMethod(DELETE)
 			.withHeader(X_SENT_BY, X_SENT_BY_VALUE)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequest();
+			.sendRequestAndVerifyResponse();
 
 		// Verify that it was deleted
 		assertThat(repository.existsById(delegationId)).isFalse();
@@ -88,7 +88,7 @@ class DelegationDeleteIT extends AbstractAppTest {
 			.withHttpMethod(DELETE)
 			.withHeader(X_SENT_BY, X_SENT_BY_VALUE)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequest();
+			.sendRequestAndVerifyResponse();
 
 		// Verify that it was deleted
 		assertThat(repository.existsById(delegationId)).isFalse();

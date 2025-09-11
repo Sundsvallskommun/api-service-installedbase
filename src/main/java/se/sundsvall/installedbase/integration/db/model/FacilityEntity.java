@@ -17,9 +17,13 @@ import org.hibernate.annotations.UuidGenerator;
 	indexes = {
 		@Index(name = "idx_facility_id", columnList = "facility_id")
 	},
-	uniqueConstraints = @UniqueConstraint(name = "uk_facility_id", columnNames = {
-		"facility_id"
-	}))
+	uniqueConstraints = {
+		@UniqueConstraint(
+			name = "uk_facility_id_business_engagement_org_id",
+			columnNames = {
+				"facility_id", "business_engagement_org_id"
+			})
+	})
 public class FacilityEntity {
 
 	@Id
@@ -75,22 +79,25 @@ public class FacilityEntity {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(businessEngagementOrgId, facilityId, id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final FacilityEntity other)) { return false; }
-		return Objects.equals(businessEngagementOrgId, other.businessEngagementOrgId) && Objects.equals(facilityId, other.facilityId) && Objects.equals(id, other.id);
-	}
-
-	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("FacilityEntity [id=").append(id).append(", facilityId=").append(facilityId).append(", businessEngagementOrgId=").append(businessEngagementOrgId).append("]");
-		return builder.toString();
+		return "FacilityEntity{" +
+			"id='" + id + '\'' +
+			", facilityId='" + facilityId + '\'' +
+			", businessEngagementOrgId='" + businessEngagementOrgId + '\'' +
+			", delegations=" + delegations +
+			'}';
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass())
+			return false;
+		FacilityEntity that = (FacilityEntity) o;
+		return Objects.equals(id, that.id) && Objects.equals(facilityId, that.facilityId) && Objects.equals(businessEngagementOrgId, that.businessEngagementOrgId) && Objects.equals(delegations, that.delegations);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, facilityId, businessEngagementOrgId, delegations);
+	}
 }

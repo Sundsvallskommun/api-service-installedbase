@@ -43,6 +43,7 @@ import se.sundsvall.installedbase.service.mapper.DatabaseMapper;
 public class DelegationService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DelegationService.class);
+	private static final String FACILITY_INFORMATION = "%s (%s)";
 
 	private final DelegationRepository delegationRepository;
 	private final FacilityRepository facilityRepository;
@@ -80,8 +81,8 @@ public class DelegationService {
 
 		final var entity = delegationRepository.save(toDelegationEntity(municipalityId, delegation).withFacilities(toFacilities(delegation.getFacilities())));
 
-		final var facilityIds = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(FacilityEntity::getFacilityId).toList();
-		sendEvent(municipalityId, entity, facilityIds, CREATE);
+		final var facilityInfo = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId())).toList();
+		sendEvent(municipalityId, entity, facilityInfo, CREATE);
 
 		return entity.getId();
 	}
@@ -95,7 +96,7 @@ public class DelegationService {
 	 */
 	private Set<FacilityEntity> toFacilities(List<Facility> facilities) {
 		return ofNullable(facilities).orElse(emptyList()).stream()
-			.map(facility -> facilityRepository.findByFacilityIdIgnoreCase(facility.getId()).orElse(
+			.map(facility -> facilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase(facility.getId(), facility.getBusinessEngagementOrgId()).orElse(
 				toFacilityEntity(facility)))
 			.filter(Objects::nonNull)
 			.collect(toCollection(HashSet::new));
@@ -123,8 +124,8 @@ public class DelegationService {
 		delegationRepository.save(entity);
 		facilityRepository.deleteAllInBatch(facilityRepository.findAllByDelegationsIsEmpty()); // Clean up orphan facilities that has no connection to any delegation
 
-		final var facilityIds = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(FacilityEntity::getFacilityId).toList();
-		sendEvent(municipalityId, entity, facilityIds, UPDATE);
+		final var facilityInfo = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId())).toList();
+		sendEvent(municipalityId, entity, facilityInfo, UPDATE);
 	}
 
 	/**
@@ -177,11 +178,12 @@ public class DelegationService {
 			.ifPresentOrElse(entity -> {
 				LOGGER.info("Deleting delegation with id: {}", sanitizeForLogging(id));
 
-				final var facilityIds = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(FacilityEntity::getFacilityId).toList(); // Needs to be fetched before deletion to be visible in the event log
+				// Needs to be fetched before deletion to be visible in the event log
+				final var facilityInfo = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId())).toList();
 
 				delegationRepository.delete(entity.withFacilities(null));
 				facilityRepository.deleteAllInBatch(facilityRepository.findAllByDelegationsIsEmpty()); // Clean up orphan facilities that has no connection to any delegation
-				sendEvent(municipalityId, entity, facilityIds, DELETE);
+				sendEvent(municipalityId, entity, facilityInfo, DELETE);
 			}, () -> LOGGER.info("Couldn't delete delegation with id: {} within municipality: {} as it does not exist", sanitizeForLogging(id), sanitizeForLogging(municipalityId)));
 	}
 
@@ -190,16 +192,17 @@ public class DelegationService {
 	 *
 	 * @param municipalityId municipalityId
 	 * @param entity         DelegationEntity containing delegation details
+	 * @param facilityInfo   List with information regarding the facilities connected to the delegation
 	 * @param eventType      EventType representing the type of event (CREATE, UPDATE, DELETE)
 	 */
-	private void sendEvent(String municipalityId, DelegationEntity entity, List<String> facilityIds, EventType eventType) {
+	private void sendEvent(String municipalityId, DelegationEntity entity, List<String> facilityInfo, EventType eventType) {
 		LOGGER.info("Creating event for delegation with id: {}", entity.getId());
 		try {
 			eventLogClient.createEvent(municipalityId, entity.getId(),
 				toEvent(entity.getId(),
 					entity.getOwner(),
 					entity.getDelegatedTo(),
-					facilityIds,
+					ofNullable(facilityInfo).orElse(emptyList()).stream().sorted().toList(),
 					eventType));
 		} catch (final Exception e) {
 			LOGGER.warn("Failed to send event for delegation with id: {}", entity.getId(), e);

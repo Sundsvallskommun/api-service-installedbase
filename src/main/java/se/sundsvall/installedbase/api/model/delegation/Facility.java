@@ -1,6 +1,5 @@
 package se.sundsvall.installedbase.api.model.delegation;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +14,8 @@ public class Facility {
 	@NotBlank(message = "Facility id cannot be blank")
 	private String id;
 
-	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = NOT_REQUIRED)
-	@ValidOrganizationNumber(nullable = true)
+	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = REQUIRED)
+	@ValidOrganizationNumber
 	private String businessEngagementOrgId;
 
 	public static Facility create() {
@@ -56,15 +55,20 @@ public class Facility {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof final Facility other)) { return false; }
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof final Facility other)) {
+			return false;
+		}
 		return Objects.equals(businessEngagementOrgId, other.businessEngagementOrgId) && Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		final var builder = new StringBuilder();
-		builder.append("Facility [id=").append(id).append(", businessEngagementOrgId=").append(businessEngagementOrgId).append("]");
-		return builder.toString();
+		return "Facility{" +
+			"id='" + id + '\'' +
+			", businessEngagementOrgId='" + businessEngagementOrgId + '\'' +
+			'}';
 	}
 }

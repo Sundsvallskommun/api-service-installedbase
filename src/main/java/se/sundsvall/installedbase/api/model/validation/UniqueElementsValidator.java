@@ -2,9 +2,9 @@ package se.sundsvall.installedbase.api.model.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.sundsvall.installedbase.api.model.delegation.Facility;
 
 /**
@@ -17,14 +17,16 @@ public class UniqueElementsValidator implements ConstraintValidator<UniqueElemen
 		if (value == null) {
 			return true;
 		}
-		// If the size of the HashSet (which does not allow for duplicates) is the same as the original list
-		// then the list contains only unique elements.
-		final var facilityIds = value.stream()
-			.map(Facility::getId)
-			.filter(Objects::nonNull)
-			.map(String::toUpperCase) // Use case insentitive comparison
-			.map(String::trim) // Remove leading and trailing spaces before comparison
-			.toList();
-		return facilityIds.size() == new HashSet<>(facilityIds).size();
+
+		var facilitySet = value.stream()
+			.map(facility -> new UniqueFacility(Optional.ofNullable(facility.getId()).map(String::trim).map(String::toLowerCase).orElse(null), facility.getBusinessEngagementOrgId()))
+			.collect(Collectors.toSet());
+
+		// If the size of the original list is the same as the size of the set, all elements are unique
+		return value.size() == facilitySet.size();
+	}
+
+	// Helper record to represent unique combination of facility ID and business engagement org ID
+	private record UniqueFacility(String id, String businessEngagementOrgId) {
 	}
 }
