@@ -80,8 +80,8 @@ class DelegationServiceTest {
 		final var response = delegationService.createDelegation(MUNICIPALITY_ID, delegation);
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-3");
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-4");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-3", "5591628137");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-4", "5591628137");
 		verify(mockDelegationRepository).save(any(DelegationEntity.class));
 		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
@@ -96,8 +96,8 @@ class DelegationServiceTest {
 		final var facilityEntity = createFacilityEntity("facility-4");
 		final var delegationEntity = createDelegationEntity(id);
 
-		when(mockFacilityRepository.findByFacilityIdIgnoreCase("facility-3")).thenReturn(Optional.empty());
-		when(mockFacilityRepository.findByFacilityIdIgnoreCase("facility-4")).thenReturn(Optional.of(facilityEntity));
+		when(mockFacilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-3", "5591628137")).thenReturn(Optional.empty());
+		when(mockFacilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-4", "5591628137")).thenReturn(Optional.of(facilityEntity));
 		when(mockDelegationRepository.save(any(DelegationEntity.class))).thenReturn(delegationEntity);
 		when(mockEventLogClient.createEvent(eq(MUNICIPALITY_ID), eq(id), any())).thenReturn(ResponseEntity.ok().build());
 
@@ -107,8 +107,8 @@ class DelegationServiceTest {
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
 		verify(mockDelegationRepository).save(delegationEntityCaptor.capture());
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-3");
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-4");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-3", "5591628137");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-4", "5591628137");
 		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
 		assertThat(delegationEntityCaptor.getValue().getFacilities()).contains(facilityEntity);
@@ -145,8 +145,8 @@ class DelegationServiceTest {
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
 		verify(mockFacilityRepository).deleteAllInBatch(anyIterable());
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-9");
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-10");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-9", "5591628141");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-10", "5591628142");
 		verify(mockFacilityRepository).findAllByDelegationsIsEmpty();
 		verify(mockDelegationRepository).save(delegationEntityCaptor.capture());
 		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
@@ -165,14 +165,14 @@ class DelegationServiceTest {
 		final var facilityEntity = createFacilityEntity("facility-9");
 
 		when(mockDelegationRepository.findOne(ArgumentMatchers.<Specification<DelegationEntity>>any())).thenReturn(Optional.of(delegationEntity));
-		when(mockFacilityRepository.findByFacilityIdIgnoreCase("facility-9")).thenReturn(Optional.of(facilityEntity));
-		when(mockFacilityRepository.findByFacilityIdIgnoreCase("facility-10")).thenReturn(Optional.empty());
+		when(mockFacilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-9", "5591628141")).thenReturn(Optional.of(facilityEntity));
+		when(mockFacilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-10", "5591628142")).thenReturn(Optional.empty());
 
 		delegationService.updateDelegation(MUNICIPALITY_ID, id, delegation);
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-9");
-		verify(mockFacilityRepository).findByFacilityIdIgnoreCase("facility-10");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-9", "5591628141");
+		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-10", "5591628142");
 		verify(mockDelegationRepository).save(delegationEntityCaptor.capture());
 		verify(mockFacilityRepository).findAllByDelegationsIsEmpty();
 		verify(mockFacilityRepository).deleteAllInBatch(emptyList());

@@ -121,11 +121,6 @@ class DelegationUpdateIT extends AbstractAppTest {
 
 		// Verify that facility instances are no longer there
 		transactionTemplate.executeWithoutResult(status -> {
-			System.err.println(
-				repository.findAll().stream()
-					.map(FacilityEntity::getFacilityId)
-					.toList());
-
 			assertThat(repository.findAll().stream()
 				.map(FacilityEntity::getFacilityId)
 				.toList()).isNotEmpty().doesNotContain("facility-70", "facility-71"); // These should not be present as they have been removed (only 69 should still be there with a new companion - 666)
@@ -143,6 +138,6 @@ class DelegationUpdateIT extends AbstractAppTest {
 			.withHeader(X_SENT_BY, X_SENT_BY_VALUE)
 			.withExpectedResponseStatus(NOT_FOUND)
 			.withExpectedResponse(RESPONSE_FILE)
-			.sendRequest();
+			.sendRequestAndVerifyResponse();
 	}
 }
