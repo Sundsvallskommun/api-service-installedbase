@@ -1,13 +1,13 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: api-installedbase
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "3.1"
 servers:
-  - url: http://localhost:60684
+  - url: http://localhost:60245
     description: Generated server url
 tags:
   - name: Facility Delegation
@@ -347,6 +347,12 @@ components:
     Problem:
       type: object
       properties:
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -355,14 +361,7 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties:
-            type: object
-        detail:
-          type: string
-        title:
-          type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
+          additionalProperties: {}
     StatusType:
       type: object
       properties:
@@ -372,43 +371,49 @@ components:
         reasonPhrase:
           type: string
     CreateDelegation:
+      type: object
+      description: CreateDelegation model
+      properties:
+        facilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/Facility"
+            description: List of facilities to be delegated
+            uniqueItems: true
+          minItems: 1
+          uniqueItems: true
+        delegatedTo:
+          type: string
+          description: Party ID of the delegate
+          examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e2
+        owner:
+          type: string
+          description: Party ID of the delegation owner
+          examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e1
       required:
         - delegatedTo
         - facilities
         - owner
-      type: object
-      properties:
-        facilities:
-          minItems: 1
-          uniqueItems: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Facility"
-        delegatedTo:
-          type: string
-          description: Party ID of the delegate
-          example: 81471222-5798-11e9-ae24-57fa13b361e2
-        owner:
-          type: string
-          description: Party ID of the delegation owner
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
-      description: CreateDelegation model
     Facility:
-      required:
-        - businessEngagementOrgId
-        - id
       type: object
+      description: Facility model
       properties:
         id:
-          minLength: 1
           type: string
           description: Facility id
-          example: facility1
+          examples:
+            - facility1
+          minLength: 1
         businessEngagementOrgId:
           type: string
           description: Organization number of the company owning the facility
-          example: "5591628136"
-      description: Facility model
+          examples:
+            - "5591628136"
+      required:
+        - businessEngagementOrgId
+        - id
     ConstraintViolationProblem:
       type: object
       properties:
@@ -449,15 +454,14 @@ components:
           type: string
         message:
           type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
         parameters:
           type: object
-          additionalProperties:
-            type: object
-        detail:
-          type: string
+          additionalProperties: {}
         suppressed:
           type: array
           items:
@@ -494,8 +498,7 @@ components:
     ThrowableProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
+        cause: {}
         stackTrace:
           type: array
           items:
@@ -520,6 +523,12 @@ components:
                 type: boolean
         message:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -528,14 +537,7 @@ components:
           format: uri
         parameters:
           type: object
-          additionalProperties:
-            type: object
-        detail:
-          type: string
-        title:
-          type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
+          additionalProperties: {}
         suppressed:
           type: array
           items:
@@ -578,179 +580,209 @@ components:
           type: string
     UpdateDelegation:
       type: object
+      description: UpdateDelegation model
       properties:
         facilities:
-          uniqueItems: true
           type: array
           items:
             $ref: "#/components/schemas/Facility"
+            description: List of facilities to be delegated
+            uniqueItems: true
+          uniqueItems: true
         delegatedTo:
           type: string
           description: Party ID of the delegate
-          example: 81471222-5798-11e9-ae24-57fa13b361e2
-      description: UpdateDelegation model
+          examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e2
     InstalledBaseCustomer:
       type: object
+      description: Installed base owner model
       properties:
         customerNumber:
           type: string
           description: Customer number
+          examples:
+            - "10007"
           readOnly: true
-          example: "10007"
         partyId:
           type: string
           description: Party-ID
+          examples:
+            - cf9892ad-69d5-420f-ae98-9631dd1664fe
           readOnly: true
-          example: cf9892ad-69d5-420f-ae98-9631dd1664fe
         items:
           type: array
-          readOnly: true
           items:
             $ref: "#/components/schemas/InstalledBaseItem"
-      description: Installed base owner model
-      readOnly: true
+            readOnly: true
+          readOnly: true
     InstalledBaseItem:
       type: object
+      description: Installed base item model
       properties:
         type:
           type: string
           description: Type
+          examples:
+            - Fjärrvärme
           readOnly: true
-          example: Fjärrvärme
         facilityId:
           type: string
           description: Facility id
+          examples:
+            - "735999109270751042"
           readOnly: true
-          example: "735999109270751042"
         placementId:
           type: integer
-          description: Placement id
           format: int32
+          description: Placement id
+          examples:
+            - "5263"
           readOnly: true
-          example: 5263
         facilityCommitmentStartDate:
           type: string
-          description: Facility commitment start date
           format: date
+          description: Facility commitment start date
+          examples:
+            - 2020-04-01
           readOnly: true
-          example: 2020-04-01
         facilityCommitmentEndDate:
           type: string
-          description: Facility commitment end date
           format: date
+          description: Facility commitment end date
+          examples:
+            - 2020-09-30
           readOnly: true
-          example: 2020-09-30
         lastModifiedDate:
           type: string
+          format: date
           description: Last date for modification of item (or null if no modification
             has been done)
-          format: date
+          examples:
+            - 2020-06-01
           readOnly: true
-          example: 2020-06-01
         address:
           $ref: "#/components/schemas/InstalledBaseItemAddress"
-        metaData:
-          maxItems: 1000
-          type: array
           readOnly: true
+        metaData:
+          type: array
           items:
             $ref: "#/components/schemas/InstalledBaseItemMetaData"
-      description: Installed base item model
-      readOnly: true
+            maxItems: 1000
+            readOnly: true
+          maxItems: 1000
+          readOnly: true
     InstalledBaseItemAddress:
       type: object
+      description: Installed base item address model
       properties:
         propertyDesignation:
           type: string
           description: Property designation
+          examples:
+            - Södermalm 1:27
           readOnly: true
-          example: Södermalm 1:27
         careOf:
           type: string
           description: Care of address
+          examples:
+            - Agatha Malm
           readOnly: true
-          example: Agatha Malm
         street:
           type: string
           description: Street
+          examples:
+            - Storgatan 9
           readOnly: true
-          example: Storgatan 9
         postalCode:
           type: string
           description: Postal code
+          examples:
+            - "85230"
           readOnly: true
-          example: "85230"
         city:
           type: string
           description: City
+          examples:
+            - Sundsvall
           readOnly: true
-          example: Sundsvall
-      description: Installed base item address model
-      readOnly: true
     InstalledBaseItemMetaData:
       type: object
+      description: Installed base item metadata model
       properties:
         key:
           type: string
           description: Key
+          examples:
+            - netarea
           readOnly: true
-          example: netarea
         value:
           type: string
           description: Value
+          examples:
+            - Sundsvall tätort
           readOnly: true
-          example: Sundsvall tätort
         type:
           type: string
           description: Type
+          examples:
+            - location
           readOnly: true
-          example: location
         displayName:
           type: string
           description: Displayname
+          examples:
+            - Nätområde
           readOnly: true
-          example: Nätområde
-      description: Installed base item metadata model
-      readOnly: true
     InstalledBaseResponse:
       type: object
+      description: Installed base response model
       properties:
         installedBaseCustomers:
           type: array
-          readOnly: true
           items:
             $ref: "#/components/schemas/InstalledBaseCustomer"
-      description: Installed base response model
+            readOnly: true
+          readOnly: true
     Delegation:
       type: object
+      description: Delegation response model
       properties:
         id:
           type: string
           description: Unique identifier for the delegation
-          example: 12345678-1234-1234-1234-123456789012
+          examples:
+            - 12345678-1234-1234-1234-123456789012
         facilities:
           type: array
           items:
             $ref: "#/components/schemas/Facility"
+            description: List of facilities to be delegated
         delegatedTo:
           type: string
           description: Party ID of the delegate
-          example: 81471222-5798-11e9-ae24-57fa13b361e2
+          examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e2
         owner:
           type: string
           description: Party ID of the delegation owner
-          example: 81471222-5798-11e9-ae24-57fa13b361e1
+          examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e1
         municipalityId:
           type: string
           description: Municipality ID of the delegation
-          example: "1234"
+          examples:
+            - "1234"
         created:
           type: string
-          description: When the delegation was created
           format: date-time
+          description: When the delegation was created
+          examples:
+            - 2025-01-01T12:00:00
         updated:
           type: string
-          description: When the delegation was last updated
           format: date-time
-      description: Delegation response model
-  securitySchemes: { }
+          description: When the delegation was last updated
+          examples:
+            - 2025-04-01T12:00:00
+  securitySchemes: {}

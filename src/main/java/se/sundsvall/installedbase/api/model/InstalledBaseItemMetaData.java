@@ -8,16 +8,16 @@ import java.util.Objects;
 @Schema(description = "Installed base item metadata model")
 public class InstalledBaseItemMetaData {
 
-	@Schema(description = "Key", example = "netarea", accessMode = READ_ONLY)
+	@Schema(description = "Key", examples = "netarea", accessMode = READ_ONLY)
 	private String key;
 
-	@Schema(description = "Value", example = "Sundsvall tätort", accessMode = READ_ONLY)
+	@Schema(description = "Value", examples = "Sundsvall tätort", accessMode = READ_ONLY)
 	private String value;
 
-	@Schema(description = "Type", example = "location", accessMode = READ_ONLY)
+	@Schema(description = "Type", examples = "location", accessMode = READ_ONLY)
 	private String type;
 
-	@Schema(description = "Displayname", example = "Nätområde", accessMode = READ_ONLY)
+	@Schema(description = "Displayname", examples = "Nätområde", accessMode = READ_ONLY)
 	private String displayName;
 
 	public static InstalledBaseItemMetaData create() {

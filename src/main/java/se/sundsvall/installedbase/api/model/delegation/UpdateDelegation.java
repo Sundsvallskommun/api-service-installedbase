@@ -18,7 +18,7 @@ public class UpdateDelegation {
 	private List<@Valid Facility> facilities;
 
 	@ValidUuid(nullable = true)
-	@Schema(description = "Party ID of the delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2", requiredMode = NOT_REQUIRED)
+	@Schema(description = "Party ID of the delegate", examples = "81471222-5798-11e9-ae24-57fa13b361e2", requiredMode = NOT_REQUIRED)
 	private String delegatedTo;
 
 	public static UpdateDelegation create() {

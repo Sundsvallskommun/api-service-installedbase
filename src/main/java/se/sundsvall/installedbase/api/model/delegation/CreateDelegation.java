@@ -20,11 +20,11 @@ public class CreateDelegation {
 	private List<@Valid Facility> facilities;
 
 	@ValidUuid
-	@Schema(description = "Party ID of the delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2", requiredMode = REQUIRED)
+	@Schema(description = "Party ID of the delegate", examples = "81471222-5798-11e9-ae24-57fa13b361e2", requiredMode = REQUIRED)
 	private String delegatedTo;
 
 	@ValidUuid
-	@Schema(description = "Party ID of the delegation owner", example = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = REQUIRED)
+	@Schema(description = "Party ID of the delegation owner", examples = "81471222-5798-11e9-ae24-57fa13b361e1", requiredMode = REQUIRED)
 	private String owner;
 
 	public static CreateDelegation create() {
