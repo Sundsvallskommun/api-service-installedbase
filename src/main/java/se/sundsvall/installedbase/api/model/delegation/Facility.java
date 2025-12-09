@@ -10,11 +10,11 @@ import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 @Schema(description = "Facility model")
 public class Facility {
 
-	@Schema(description = "Facility id", example = "facility1", requiredMode = REQUIRED)
+	@Schema(description = "Facility id", examples = "facility1", requiredMode = REQUIRED)
 	@NotBlank(message = "Facility id cannot be blank")
 	private String id;
 
-	@Schema(description = "Organization number of the company owning the facility", example = "5591628136", requiredMode = REQUIRED)
+	@Schema(description = "Organization number of the company owning the facility", examples = "5591628136", requiredMode = REQUIRED)
 	@ValidOrganizationNumber
 	private String businessEngagementOrgId;
 

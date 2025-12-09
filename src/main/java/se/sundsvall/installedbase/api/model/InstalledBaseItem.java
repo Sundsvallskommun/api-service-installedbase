@@ -11,22 +11,22 @@ import java.util.Objects;
 @Schema(description = "Installed base item model")
 public class InstalledBaseItem {
 
-	@Schema(description = "Type", example = "Fjärrvärme", accessMode = READ_ONLY)
+	@Schema(description = "Type", examples = "Fjärrvärme", accessMode = READ_ONLY)
 	private String type;
 
-	@Schema(description = "Facility id", example = "735999109270751042", accessMode = READ_ONLY)
+	@Schema(description = "Facility id", examples = "735999109270751042", accessMode = READ_ONLY)
 	private String facilityId;
 
-	@Schema(description = "Placement id", example = "5263", accessMode = READ_ONLY)
+	@Schema(description = "Placement id", examples = "5263", accessMode = READ_ONLY)
 	private int placementId;
 
-	@Schema(description = "Facility commitment start date", example = "2020-04-01", accessMode = READ_ONLY)
+	@Schema(description = "Facility commitment start date", examples = "2020-04-01", accessMode = READ_ONLY)
 	private LocalDate facilityCommitmentStartDate;
 
-	@Schema(description = "Facility commitment end date", example = "2020-09-30", accessMode = READ_ONLY)
+	@Schema(description = "Facility commitment end date", examples = "2020-09-30", accessMode = READ_ONLY)
 	private LocalDate facilityCommitmentEndDate;
 
-	@Schema(description = "Last date for modification of item (or null if no modification has been done)", example = "2020-06-01", accessMode = READ_ONLY)
+	@Schema(description = "Last date for modification of item (or null if no modification has been done)", examples = "2020-06-01", accessMode = READ_ONLY)
 	private LocalDate lastModifiedDate;
 
 	@Schema(implementation = InstalledBaseItemAddress.class, accessMode = READ_ONLY)

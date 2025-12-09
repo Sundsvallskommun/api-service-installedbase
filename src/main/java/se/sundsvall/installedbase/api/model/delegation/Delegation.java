@@ -12,27 +12,27 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Schema(description = "Delegation response model")
 public class Delegation {
 
-	@Schema(description = "Unique identifier for the delegation", example = "12345678-1234-1234-1234-123456789012")
+	@Schema(description = "Unique identifier for the delegation", examples = "12345678-1234-1234-1234-123456789012")
 	private String id;
 
 	@ArraySchema(schema = @Schema(implementation = Facility.class, description = "List of facilities to be delegated"))
 	private List<Facility> facilities;
 
-	@Schema(description = "Party ID of the delegate", example = "81471222-5798-11e9-ae24-57fa13b361e2")
+	@Schema(description = "Party ID of the delegate", examples = "81471222-5798-11e9-ae24-57fa13b361e2")
 	private String delegatedTo;
 
-	@Schema(description = "Party ID of the delegation owner", example = "81471222-5798-11e9-ae24-57fa13b361e1")
+	@Schema(description = "Party ID of the delegation owner", examples = "81471222-5798-11e9-ae24-57fa13b361e1")
 	private String owner;
 
-	@Schema(description = "Municipality ID of the delegation", example = "1234")
+	@Schema(description = "Municipality ID of the delegation", examples = "1234")
 	private String municipalityId;
 
 	@DateTimeFormat(iso = DATE_TIME)
-	@Schema(description = "When the delegation was created", example = "2025-01-01T12:00:00")
+	@Schema(description = "When the delegation was created", examples = "2025-01-01T12:00:00")
 	private OffsetDateTime created;
 
 	@DateTimeFormat(iso = DATE_TIME)
-	@Schema(description = "When the delegation was last updated", example = "2025-04-01T12:00:00")
+	@Schema(description = "When the delegation was last updated", examples = "2025-04-01T12:00:00")
 	private OffsetDateTime updated;
 
 	public static Delegation create() {

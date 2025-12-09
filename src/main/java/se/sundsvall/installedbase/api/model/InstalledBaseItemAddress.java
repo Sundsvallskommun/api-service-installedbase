@@ -8,19 +8,19 @@ import java.util.Objects;
 @Schema(description = "Installed base item address model")
 public class InstalledBaseItemAddress {
 
-	@Schema(description = "Property designation", example = "Södermalm 1:27", accessMode = READ_ONLY)
+	@Schema(description = "Property designation", examples = "Södermalm 1:27", accessMode = READ_ONLY)
 	private String propertyDesignation;
 
-	@Schema(description = "Care of address", example = "Agatha Malm", accessMode = READ_ONLY)
+	@Schema(description = "Care of address", examples = "Agatha Malm", accessMode = READ_ONLY)
 	private String careOf;
 
-	@Schema(description = "Street", example = "Storgatan 9", accessMode = READ_ONLY)
+	@Schema(description = "Street", examples = "Storgatan 9", accessMode = READ_ONLY)
 	private String street;
 
-	@Schema(description = "Postal code", example = "85230", accessMode = READ_ONLY)
+	@Schema(description = "Postal code", examples = "85230", accessMode = READ_ONLY)
 	private String postalCode;
 
-	@Schema(description = "City", example = "Sundsvall", accessMode = READ_ONLY)
+	@Schema(description = "City", examples = "Sundsvall", accessMode = READ_ONLY)
 	private String city;
 
 	public static InstalledBaseItemAddress create() {

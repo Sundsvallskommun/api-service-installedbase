@@ -10,10 +10,10 @@ import java.util.Objects;
 @Schema(description = "Installed base owner model")
 public class InstalledBaseCustomer {
 
-	@Schema(description = "Customer number", example = "10007", accessMode = READ_ONLY)
+	@Schema(description = "Customer number", examples = "10007", accessMode = READ_ONLY)
 	private String customerNumber;
 
-	@Schema(description = "Party-ID", example = "cf9892ad-69d5-420f-ae98-9631dd1664fe", accessMode = READ_ONLY)
+	@Schema(description = "Party-ID", examples = "cf9892ad-69d5-420f-ae98-9631dd1664fe", accessMode = READ_ONLY)
 	private String partyId;
 
 	@ArraySchema(schema = @Schema(implementation = InstalledBaseItem.class, accessMode = READ_ONLY))
