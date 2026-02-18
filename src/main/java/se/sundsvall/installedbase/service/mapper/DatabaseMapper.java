@@ -1,8 +1,5 @@
 package se.sundsvall.installedbase.service.mapper;
 
-import static java.util.Collections.emptySet;
-import static java.util.Optional.ofNullable;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -11,6 +8,9 @@ import se.sundsvall.installedbase.api.model.delegation.Delegation;
 import se.sundsvall.installedbase.api.model.delegation.Facility;
 import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
+
+import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
 
 public final class DatabaseMapper {
 

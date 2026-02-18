@@ -1,13 +1,13 @@
 package se.sundsvall.installedbase.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.installedbase.TestDataFactory.createDelegation;
-import static se.sundsvall.installedbase.TestDataFactory.createDelegationEntity;
-
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static se.sundsvall.installedbase.TestDataFactory.createDelegation;
+import static se.sundsvall.installedbase.TestDataFactory.createDelegationEntity;
 
 @ExtendWith(MockitoExtension.class)
 class DatabaseMapperTest {

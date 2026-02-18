@@ -1,7 +1,5 @@
 package se.sundsvall.installedbase;
 
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +12,8 @@ import se.sundsvall.installedbase.api.model.delegation.Facility;
 import se.sundsvall.installedbase.api.model.delegation.UpdateDelegation;
 import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
+
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public final class TestDataFactory {
 
