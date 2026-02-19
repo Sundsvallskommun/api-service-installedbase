@@ -1,11 +1,11 @@
 package se.sundsvall.installedbase.api.model.delegation;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Schema(description = "Facility model")
 public class Facility {

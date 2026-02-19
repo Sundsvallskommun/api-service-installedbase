@@ -1,7 +1,5 @@
 package se.sundsvall.installedbase.integration.db.model;
 
-import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +19,8 @@ import java.util.Objects;
 import java.util.Set;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.UuidGenerator;
+
+import static org.hibernate.annotations.TimeZoneStorageType.NORMALIZE;
 
 @Entity
 @Table(name = "delegation",

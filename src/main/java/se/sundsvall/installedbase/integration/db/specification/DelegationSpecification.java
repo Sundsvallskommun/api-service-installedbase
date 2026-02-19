@@ -1,12 +1,12 @@
 package se.sundsvall.installedbase.integration.db.specification;
 
+import org.springframework.data.jpa.domain.Specification;
+import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
+
 import static se.sundsvall.installedbase.integration.db.model.DelegationEntity_.DELEGATED_TO;
 import static se.sundsvall.installedbase.integration.db.model.DelegationEntity_.ID;
 import static se.sundsvall.installedbase.integration.db.model.DelegationEntity_.MUNICIPALITY_ID;
 import static se.sundsvall.installedbase.integration.db.model.DelegationEntity_.OWNER;
-
-import org.springframework.data.jpa.domain.Specification;
-import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 
 public interface DelegationSpecification {
 

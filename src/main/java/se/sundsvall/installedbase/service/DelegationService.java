@@ -1,21 +1,5 @@
 package se.sundsvall.installedbase.service;
 
-import static generated.se.sundsvall.eventlog.EventType.CREATE;
-import static generated.se.sundsvall.eventlog.EventType.DELETE;
-import static generated.se.sundsvall.eventlog.EventType.UPDATE;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toCollection;
-import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
-import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withDelegatedTo;
-import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withId;
-import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withMunicipalityId;
-import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withOwner;
-import static se.sundsvall.installedbase.service.mapper.DatabaseMapper.toDelegationEntity;
-import static se.sundsvall.installedbase.service.mapper.DatabaseMapper.toFacilityEntity;
-import static se.sundsvall.installedbase.service.mapper.EventlogMapper.toEvent;
-
 import generated.se.sundsvall.eventlog.EventType;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +21,22 @@ import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
 import se.sundsvall.installedbase.integration.eventlog.EventLogClient;
 import se.sundsvall.installedbase.service.mapper.DatabaseMapper;
+
+import static generated.se.sundsvall.eventlog.EventType.CREATE;
+import static generated.se.sundsvall.eventlog.EventType.DELETE;
+import static generated.se.sundsvall.eventlog.EventType.UPDATE;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toCollection;
+import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
+import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withDelegatedTo;
+import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withId;
+import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withMunicipalityId;
+import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withOwner;
+import static se.sundsvall.installedbase.service.mapper.DatabaseMapper.toDelegationEntity;
+import static se.sundsvall.installedbase.service.mapper.DatabaseMapper.toFacilityEntity;
+import static se.sundsvall.installedbase.service.mapper.EventlogMapper.toEvent;
 
 @Service
 @Transactional

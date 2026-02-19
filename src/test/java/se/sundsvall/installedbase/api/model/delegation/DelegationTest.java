@@ -1,5 +1,13 @@
 package se.sundsvall.installedbase.api.model.delegation;
 
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
@@ -9,14 +17,6 @@ import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
-
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 class DelegationTest {
 

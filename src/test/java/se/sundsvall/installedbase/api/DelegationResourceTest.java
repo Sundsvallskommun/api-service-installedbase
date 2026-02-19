@@ -1,5 +1,19 @@
 package se.sundsvall.installedbase.api;
 
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import se.sundsvall.installedbase.Application;
+import se.sundsvall.installedbase.api.model.delegation.CreateDelegation;
+import se.sundsvall.installedbase.api.model.delegation.Delegation;
+import se.sundsvall.installedbase.service.DelegationService;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,20 +28,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.installedbase.TestDataFactory.createDelegation;
 import static se.sundsvall.installedbase.TestDataFactory.createDelegationResponse;
 import static se.sundsvall.installedbase.TestDataFactory.updateDelegation;
-
-import java.util.List;
-import java.util.UUID;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import se.sundsvall.installedbase.Application;
-import se.sundsvall.installedbase.api.model.delegation.CreateDelegation;
-import se.sundsvall.installedbase.api.model.delegation.Delegation;
-import se.sundsvall.installedbase.service.DelegationService;
 
 @ActiveProfiles("junit")
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)

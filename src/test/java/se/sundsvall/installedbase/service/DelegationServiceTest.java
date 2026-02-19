@@ -1,24 +1,5 @@
 package se.sundsvall.installedbase.service;
 
-import static generated.se.sundsvall.eventlog.EventType.CREATE;
-import static generated.se.sundsvall.eventlog.EventType.DELETE;
-import static generated.se.sundsvall.eventlog.EventType.UPDATE;
-import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyIterable;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.installedbase.TestDataFactory.createDelegation;
-import static se.sundsvall.installedbase.TestDataFactory.createDelegationEntity;
-import static se.sundsvall.installedbase.TestDataFactory.createFacilityEntity;
-import static se.sundsvall.installedbase.TestDataFactory.updateDelegation;
-
 import generated.se.sundsvall.eventlog.Event;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +21,25 @@ import se.sundsvall.installedbase.integration.db.FacilityRepository;
 import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
 import se.sundsvall.installedbase.integration.eventlog.EventLogClient;
+
+import static generated.se.sundsvall.eventlog.EventType.CREATE;
+import static generated.se.sundsvall.eventlog.EventType.DELETE;
+import static generated.se.sundsvall.eventlog.EventType.UPDATE;
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static se.sundsvall.installedbase.TestDataFactory.createDelegation;
+import static se.sundsvall.installedbase.TestDataFactory.createDelegationEntity;
+import static se.sundsvall.installedbase.TestDataFactory.createFacilityEntity;
+import static se.sundsvall.installedbase.TestDataFactory.updateDelegation;
 
 @ExtendWith(MockitoExtension.class)
 class DelegationServiceTest {

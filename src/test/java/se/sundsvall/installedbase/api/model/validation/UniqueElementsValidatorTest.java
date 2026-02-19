@@ -1,9 +1,5 @@
 package se.sundsvall.installedbase.api.model.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.mock;
-
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.stream.Stream;
@@ -12,6 +8,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import se.sundsvall.installedbase.api.model.delegation.Facility;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.mock;
 
 class UniqueElementsValidatorTest {
 

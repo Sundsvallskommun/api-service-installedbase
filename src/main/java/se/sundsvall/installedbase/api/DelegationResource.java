@@ -1,17 +1,5 @@
 package se.sundsvall.installedbase.api;
 
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.HttpHeaders.LOCATION;
-import static org.springframework.http.MediaType.ALL_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.springframework.http.ResponseEntity.accepted;
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.web.util.UriComponentsBuilder.fromPath;
-import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
-import static se.sundsvall.installedbase.api.model.validation.ValidatorUtil.validateDelegationParameters;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -40,6 +28,18 @@ import se.sundsvall.installedbase.api.model.delegation.CreateDelegation;
 import se.sundsvall.installedbase.api.model.delegation.Delegation;
 import se.sundsvall.installedbase.api.model.delegation.UpdateDelegation;
 import se.sundsvall.installedbase.service.DelegationService;
+
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpHeaders.LOCATION;
+import static org.springframework.http.MediaType.ALL_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.accepted;
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.web.util.UriComponentsBuilder.fromPath;
+import static se.sundsvall.installedbase.Constants.DELEGATES_BY_ID_PATH;
+import static se.sundsvall.installedbase.api.model.validation.ValidatorUtil.validateDelegationParameters;
 
 @RestController
 @Validated

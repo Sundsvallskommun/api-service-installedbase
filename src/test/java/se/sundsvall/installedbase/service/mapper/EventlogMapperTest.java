@@ -1,14 +1,5 @@
 package se.sundsvall.installedbase.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.assertj.core.api.Assertions.within;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import generated.se.sundsvall.eventlog.EventType;
 import generated.se.sundsvall.eventlog.Metadata;
 import java.time.OffsetDateTime;
@@ -23,6 +14,15 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.requestid.RequestId;
 import se.sundsvall.dept44.support.Identifier;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.within;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventlogMapperTest {

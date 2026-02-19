@@ -1,15 +1,15 @@
 package se.sundsvall.installedbase.service;
 
-import static org.apache.commons.lang3.ObjectUtils.allNotNull;
-import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
-import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
-import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseResponse;
-
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
+
+import static org.apache.commons.lang3.ObjectUtils.allNotNull;
+import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
+import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
+import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseResponse;
 
 @Service
 public class InstalledBaseService {

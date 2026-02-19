@@ -1,10 +1,5 @@
 package se.sundsvall.installedbase.service.mapper;
 
-import static java.time.LocalDate.now;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.CustomerType;
@@ -20,6 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseItemAddress;
+
+import static java.time.LocalDate.now;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class InstalledBaseMapperTest {
