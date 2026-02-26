@@ -5,11 +5,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.installedbase.Application;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
@@ -20,6 +21,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @ActiveProfiles("junit")
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 class DelegationDeleteResourceFailureTest {
 
@@ -50,7 +52,7 @@ class DelegationDeleteResourceFailureTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("deleteDelegation.municipalityId", "not a valid municipality ID"));
 			});
 	}
@@ -68,7 +70,7 @@ class DelegationDeleteResourceFailureTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("deleteDelegation.id", "not a valid UUID"));
 			});
 	}

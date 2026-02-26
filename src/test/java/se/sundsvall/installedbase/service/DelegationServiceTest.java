@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.installedbase.integration.db.DelegationRepository;
 import se.sundsvall.installedbase.integration.db.FacilityRepository;
 import se.sundsvall.installedbase.integration.db.model.DelegationEntity;

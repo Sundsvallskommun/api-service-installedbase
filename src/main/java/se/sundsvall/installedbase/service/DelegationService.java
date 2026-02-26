@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.installedbase.api.model.delegation.CreateDelegation;
 import se.sundsvall.installedbase.api.model.delegation.Delegation;
 import se.sundsvall.installedbase.api.model.delegation.Facility;
@@ -29,6 +28,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toCollection;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.dept44.util.LogUtils.sanitizeForLogging;
 import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withDelegatedTo;
 import static se.sundsvall.installedbase.integration.db.specification.DelegationSpecification.withId;
@@ -75,7 +76,7 @@ public class DelegationService {
 				.withTitle("Delegation already exists")
 				.withDetail("Owner with partyId: '" + delegation.getOwner() + "' has already delegated to partyId: '"
 					+ delegation.getDelegatedTo() + "' for municipality: '" + municipalityId + "'. Update existing delegation instead.")
-				.withStatus(Status.CONFLICT)
+				.withStatus(CONFLICT)
 				.build();
 		}
 
@@ -116,7 +117,7 @@ public class DelegationService {
 			.and(withId(id)))
 			.orElseThrow(() -> Problem.builder()
 				.withDetail("Delegation with id: '" + id + "' was not found within municipality '" + municipalityId + "'.")
-				.withStatus(Status.NOT_FOUND)
+				.withStatus(NOT_FOUND)
 				.build());
 
 		ofNullable(delegation.getDelegatedTo()).ifPresent(entity::setDelegatedTo);
@@ -143,7 +144,7 @@ public class DelegationService {
 			.map(DatabaseMapper::toDelegation)
 			.orElseThrow(() -> Problem.builder()
 				.withDetail("Delegation with id: '" + id + "' was not found within municipality '" + municipalityId + "'.")
-				.withStatus(Status.NOT_FOUND)
+				.withStatus(NOT_FOUND)
 				.build());
 	}
 

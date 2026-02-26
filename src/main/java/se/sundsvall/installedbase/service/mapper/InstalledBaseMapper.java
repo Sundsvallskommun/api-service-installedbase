@@ -4,7 +4,7 @@ import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import java.util.Collections;
 import java.util.List;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseItem;
 import se.sundsvall.installedbase.api.model.InstalledBaseItemAddress;
@@ -12,7 +12,7 @@ import se.sundsvall.installedbase.api.model.InstalledBaseItemMetaData;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
 
 import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class InstalledBaseMapper {
 

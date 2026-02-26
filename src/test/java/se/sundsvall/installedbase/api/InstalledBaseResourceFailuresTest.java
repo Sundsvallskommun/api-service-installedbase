@@ -5,12 +5,13 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.installedbase.Application;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
@@ -19,9 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
-import static org.zalando.problem.Status.BAD_REQUEST;
 
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class InstalledBaseResourceFailuresTest {
@@ -57,7 +59,7 @@ class InstalledBaseResourceFailuresTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInstalledBase.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(serviceMock);
@@ -83,7 +85,7 @@ class InstalledBaseResourceFailuresTest {
 		// Assert
 		assertThat(response.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo("Required request parameter 'partyId' for method parameter type List is not present");
+		assertThat(response.getDetail()).isEqualTo("Required parameter 'partyId' is not present.");
 
 		verifyNoInteractions(serviceMock);
 	}
@@ -110,7 +112,7 @@ class InstalledBaseResourceFailuresTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInstalledBase.partyIds[0].<list element>", "not a valid UUID"));
 
 		verifyNoInteractions(serviceMock);
@@ -138,7 +140,7 @@ class InstalledBaseResourceFailuresTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInstalledBase.organizationNumber", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 
 		verifyNoInteractions(serviceMock);
@@ -166,11 +168,7 @@ class InstalledBaseResourceFailuresTest {
 		// Assert
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo("""
-			Method parameter 'modifiedFrom': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; \
-			Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.Parameter \
-			@org.springframework.web.bind.annotation.RequestParam \
-			java.time.LocalDate] for value [invalid-date-format]""");
+		assertThat(response.getDetail()).isEqualTo("Failed to convert 'modifiedFrom' with value: 'invalid-date-format'");
 
 		verifyNoInteractions(serviceMock);
 	}
