@@ -4,12 +4,12 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.zalando.problem.Status;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class ValidatorUtilTest {
 
@@ -25,7 +25,7 @@ class ValidatorUtilTest {
 		assertThatExceptionOfType(ThrowableProblem.class)
 			.isThrownBy(() -> ValidatorUtil.validateDelegationParameters(owner, delegatedTo))
 			.withMessage("Invalid search parameters: Either owner or delegatedTo must be provided")
-			.satisfies(problem -> assertThat(problem.getStatus()).isEqualTo(Status.BAD_REQUEST));
+			.satisfies(problem -> assertThat(problem.getStatus()).isEqualTo(BAD_REQUEST));
 	}
 
 	public static Stream<Arguments> validDelegationParameters() {

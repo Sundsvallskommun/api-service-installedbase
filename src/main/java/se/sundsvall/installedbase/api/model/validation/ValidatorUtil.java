@@ -1,8 +1,9 @@
 package se.sundsvall.installedbase.api.model.validation;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import se.sundsvall.dept44.problem.Problem;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 public final class ValidatorUtil {
 
@@ -19,7 +20,7 @@ public final class ValidatorUtil {
 			throw Problem.builder()
 				.withTitle("Invalid search parameters")
 				.withDetail("Either owner or delegatedTo must be provided")
-				.withStatus(Status.BAD_REQUEST)
+				.withStatus(BAD_REQUEST)
 				.build();
 		}
 	}

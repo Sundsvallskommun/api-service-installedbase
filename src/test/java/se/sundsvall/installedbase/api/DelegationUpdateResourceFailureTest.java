@@ -10,11 +10,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.installedbase.Application;
 import se.sundsvall.installedbase.api.model.delegation.Facility;
 import se.sundsvall.installedbase.service.InstalledBaseService;
@@ -28,6 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static se.sundsvall.installedbase.TestDataFactory.updateDelegation;
 
 @ActiveProfiles("junit")
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 class DelegationUpdateResourceFailureTest {
 
@@ -62,7 +64,7 @@ class DelegationUpdateResourceFailureTest {
 			.consumeWith(result -> {
 				assertThat(result.getResponseBody()).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("updateDelegation.municipalityId", "not a valid municipality ID"));
 			});
 	}
@@ -84,7 +86,7 @@ class DelegationUpdateResourceFailureTest {
 			.consumeWith(result -> {
 				assertThat(result.getResponseBody()).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("updateDelegation.id", "not a valid UUID"));
 			});
 	}
@@ -106,7 +108,7 @@ class DelegationUpdateResourceFailureTest {
 			.consumeWith(result -> {
 				assertThat(result).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple(field, expectedMessage));
 			});
 	}
@@ -146,7 +148,7 @@ class DelegationUpdateResourceFailureTest {
 			.consumeWith(result -> {
 				assertThat(result.getResponseBody()).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("delegatedTo", expectedMessage));
 			});
 	}
@@ -168,7 +170,7 @@ class DelegationUpdateResourceFailureTest {
 			.consumeWith(result -> {
 				assertThat(result.getResponseBody()).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("facilities[0].businessEngagementOrgId", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 			});
 	}

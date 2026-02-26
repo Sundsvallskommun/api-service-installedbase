@@ -7,12 +7,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.installedbase.Application;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
@@ -23,6 +24,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @ActiveProfiles("junit")
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 class DelegationReadResourceFailuresTest {
 
@@ -53,7 +55,7 @@ class DelegationReadResourceFailuresTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("getDelegationById.municipalityId", "not a valid municipality ID"));
 			});
 	}
@@ -71,7 +73,7 @@ class DelegationReadResourceFailuresTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("getDelegationById.id", "not a valid UUID"));
 			});
 	}
@@ -89,7 +91,7 @@ class DelegationReadResourceFailuresTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("getDelegations.municipalityId", "not a valid municipality ID"));
 			});
 	}
@@ -108,7 +110,7 @@ class DelegationReadResourceFailuresTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("getDelegations.owner", "not a valid UUID"));
 			});
 	}
@@ -126,7 +128,7 @@ class DelegationReadResourceFailuresTest {
 			.consumeWith(response -> {
 				assertThat(response.getResponseBody()).isNotNull();
 				assertThat(response.getResponseBody().getViolations())
-					.extracting(Violation::getField, Violation::getMessage)
+					.extracting(Violation::field, Violation::message)
 					.containsExactly(tuple("getDelegations.delegatedTo", "not a valid UUID"));
 			});
 	}
