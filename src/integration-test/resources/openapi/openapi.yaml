@@ -1,48 +1,48 @@
 openapi: 3.1.0
 info:
   title: api-installedbase
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "3.1"
 servers:
-- url: http://localhost:57230
-  description: Generated server url
+  - url: http://localhost:53547
+    description: Generated server url
 tags:
-- name: Facility Delegation
-  description: Facility delegation operations
-- name: Installed base
-  description: Installed base operations
+  - name: Facility Delegation
+    description: Facility delegation operations
+  - name: Installed base
+    description: Installed base operations
 paths:
   /{municipalityId}/delegations:
     get:
       tags:
-      - Facility Delegation
+        - Facility Delegation
       summary: Get delegation by owner and/or delegate
       operationId: getDelegations
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: owner
-        in: query
-        description: Owner of the delegation
-        required: false
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
-      - name: delegatedTo
-        in: query
-        description: The delegate
-        required: false
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e2
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: owner
+          in: query
+          description: Owner of the delegation
+          required: false
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: delegatedTo
+          in: query
+          description: The delegate
+          required: false
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e2
       responses:
         "200":
           description: Successful Operation
@@ -64,8 +64,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -74,17 +74,17 @@ paths:
                 $ref: "#/components/schemas/Problem"
     post:
       tags:
-      - Facility Delegation
+        - Facility Delegation
       summary: Create a new facility delegation
       operationId: createDelegation
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
       requestBody:
         content:
           application/json:
@@ -111,8 +111,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -122,24 +122,24 @@ paths:
   /{municipalityId}/delegations/{id}:
     get:
       tags:
-      - Facility Delegation
+        - Facility Delegation
       summary: Get a specific facility delegation
       operationId: getDelegationById
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Id of the delegation
-        required: true
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       responses:
         "200":
           description: Successful Operation
@@ -159,8 +159,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -169,24 +169,24 @@ paths:
                 $ref: "#/components/schemas/Problem"
     delete:
       tags:
-      - Facility Delegation
+        - Facility Delegation
       summary: Delete a facility delegation
       operationId: deleteDelegation
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Id of the delegation
-        required: true
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       responses:
         "202":
           description: Accepted
@@ -196,8 +196,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -206,24 +206,24 @@ paths:
                 $ref: "#/components/schemas/Problem"
     patch:
       tags:
-      - Facility Delegation
+        - Facility Delegation
       summary: Update an existing facility delegation
       operationId: updateDelegation
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: id
-        in: path
-        description: Id of the delegation
-        required: true
-        schema:
-          type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: id
+          in: path
+          description: Id of the delegation
+          required: true
+          schema:
+            type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
       requestBody:
         content:
           application/json:
@@ -245,8 +245,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server Error
           content:
@@ -256,43 +256,43 @@ paths:
   /{municipalityId}/installedbase/{organizationNumber}:
     get:
       tags:
-      - Installed base
+        - Installed base
       summary: Get installed base at company matching organization number for customer
         matching provided party-ID
       operationId: getInstalledBase
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: organizationNumber
-        in: path
-        description: Organization number
-        required: true
-        schema:
-          type: string
-        example: 5565112233
-      - name: partyId
-        in: query
-        description: Party-ID
-        required: true
-        schema:
-          type: array
-          items:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
             type: string
-        example: 81471222-5798-11e9-ae24-57fa13b361e1
-      - name: modifiedFrom
-        in: query
-        description: Optional date for filtering on installed bases modified at provided
-          date or later
-        required: false
-        schema:
-          type: string
-          format: date
-        example: 2023-06-01
+          example: 2281
+        - name: organizationNumber
+          in: path
+          description: Organization number
+          required: true
+          schema:
+            type: string
+          example: 5565112233
+        - name: partyId
+          in: query
+          description: Party-ID
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        - name: modifiedFrom
+          in: query
+          description: Optional date for filtering on installed bases modified at provided
+            date or later
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2023-06-01
       responses:
         "200":
           description: Successful Operation
@@ -306,8 +306,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not Found
           content:
@@ -329,7 +329,7 @@ paths:
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -376,16 +376,16 @@ components:
           type: string
           description: Party ID of the delegate
           examples:
-          - 81471222-5798-11e9-ae24-57fa13b361e2
+            - 81471222-5798-11e9-ae24-57fa13b361e2
         owner:
           type: string
           description: Party ID of the delegation owner
           examples:
-          - 81471222-5798-11e9-ae24-57fa13b361e1
+            - 81471222-5798-11e9-ae24-57fa13b361e1
       required:
-      - delegatedTo
-      - facilities
-      - owner
+        - delegatedTo
+        - facilities
+        - owner
     Facility:
       type: object
       description: Facility model
@@ -394,15 +394,16 @@ components:
           type: string
           description: Facility id
           examples:
-          - facility1
+            - facility1
+          minLength: 1
         businessEngagementOrgId:
           type: string
           description: Organization number of the company owning the facility
           examples:
-          - "5591628136"
+            - "5591628136"
       required:
-      - businessEngagementOrgId
-      - id
+        - businessEngagementOrgId
+        - id
     ConstraintViolationProblem:
       type: object
       properties:
@@ -418,10 +419,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        detail:
-          type: string
         causeAsProblem:
           $ref: "#/components/schemas/ThrowableProblem"
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -441,7 +442,7 @@ components:
         instance:
           type: string
           format: uri
-        causeAsProblem: {}
+        causeAsProblem: { }
     Violation:
       type: object
       properties:
@@ -464,7 +465,7 @@ components:
           type: string
           description: Party ID of the delegate
           examples:
-          - 81471222-5798-11e9-ae24-57fa13b361e2
+            - 81471222-5798-11e9-ae24-57fa13b361e2
     InstalledBaseCustomer:
       type: object
       description: Installed base owner model
@@ -473,13 +474,13 @@ components:
           type: string
           description: Customer number
           examples:
-          - "10007"
+            - "10007"
           readOnly: true
         partyId:
           type: string
           description: Party-ID
           examples:
-          - cf9892ad-69d5-420f-ae98-9631dd1664fe
+            - cf9892ad-69d5-420f-ae98-9631dd1664fe
           readOnly: true
         items:
           type: array
@@ -494,34 +495,34 @@ components:
           type: string
           description: Type
           examples:
-          - Fjärrvärme
+            - Fjärrvärme
           readOnly: true
         facilityId:
           type: string
           description: Facility id
           examples:
-          - "735999109270751042"
+            - "735999109270751042"
           readOnly: true
         placementId:
           type: integer
           format: int32
           description: Placement id
           examples:
-          - "5263"
+            - "5263"
           readOnly: true
         facilityCommitmentStartDate:
           type: string
           format: date
           description: Facility commitment start date
           examples:
-          - 2020-04-01
+            - 2020-04-01
           readOnly: true
         facilityCommitmentEndDate:
           type: string
           format: date
           description: Facility commitment end date
           examples:
-          - 2020-09-30
+            - 2020-09-30
           readOnly: true
         lastModifiedDate:
           type: string
@@ -529,7 +530,7 @@ components:
           description: Last date for modification of item (or null if no modification
             has been done)
           examples:
-          - 2020-06-01
+            - 2020-06-01
           readOnly: true
         address:
           $ref: "#/components/schemas/InstalledBaseItemAddress"
@@ -549,31 +550,31 @@ components:
           type: string
           description: Property designation
           examples:
-          - Södermalm 1:27
+            - Södermalm 1:27
           readOnly: true
         careOf:
           type: string
           description: Care of address
           examples:
-          - Agatha Malm
+            - Agatha Malm
           readOnly: true
         street:
           type: string
           description: Street
           examples:
-          - Storgatan 9
+            - Storgatan 9
           readOnly: true
         postalCode:
           type: string
           description: Postal code
           examples:
-          - "85230"
+            - "85230"
           readOnly: true
         city:
           type: string
           description: City
           examples:
-          - Sundsvall
+            - Sundsvall
           readOnly: true
     InstalledBaseItemMetaData:
       type: object
@@ -583,25 +584,25 @@ components:
           type: string
           description: Key
           examples:
-          - netarea
+            - netarea
           readOnly: true
         value:
           type: string
           description: Value
           examples:
-          - Sundsvall tätort
+            - Sundsvall tätort
           readOnly: true
         type:
           type: string
           description: Type
           examples:
-          - location
+            - location
           readOnly: true
         displayName:
           type: string
           description: Displayname
           examples:
-          - Nätområde
+            - Nätområde
           readOnly: true
     InstalledBaseResponse:
       type: object
@@ -620,7 +621,7 @@ components:
           type: string
           description: Unique identifier for the delegation
           examples:
-          - 12345678-1234-1234-1234-123456789012
+            - 12345678-1234-1234-1234-123456789012
         facilities:
           type: array
           items:
@@ -630,27 +631,27 @@ components:
           type: string
           description: Party ID of the delegate
           examples:
-          - 81471222-5798-11e9-ae24-57fa13b361e2
+            - 81471222-5798-11e9-ae24-57fa13b361e2
         owner:
           type: string
           description: Party ID of the delegation owner
           examples:
-          - 81471222-5798-11e9-ae24-57fa13b361e1
+            - 81471222-5798-11e9-ae24-57fa13b361e1
         municipalityId:
           type: string
           description: Municipality ID of the delegation
           examples:
-          - "1234"
+            - "1234"
         created:
           type: string
           format: date-time
           description: When the delegation was created
           examples:
-          - 2025-01-01T12:00:00
+            - 2025-01-01T12:00:00
         updated:
           type: string
           format: date-time
           description: When the delegation was last updated
           examples:
-          - 2025-04-01T12:00:00
-  securitySchemes: {}
+            - 2025-04-01T12:00:00
+  securitySchemes: { }
