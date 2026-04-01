@@ -3,13 +3,17 @@ package se.sundsvall.installedbase.service;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import se.sundsvall.installedbase.api.model.InstalledBaseParameters;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
+import se.sundsvall.installedbase.api.model.InstalledBases;
 import se.sundsvall.installedbase.integration.datawarehousereader.DataWarehouseReaderClient;
 
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toCustomerEngagements;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseCustomer;
 import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBaseResponse;
+import static se.sundsvall.installedbase.service.mapper.InstalledBaseMapper.toInstalledBases;
 
 @Service
 public class InstalledBaseService {
@@ -22,6 +26,20 @@ public class InstalledBaseService {
 
 	public InstalledBaseService(DataWarehouseReaderClient dataWarehouseReaderClient) {
 		this.dataWarehouseReaderClient = dataWarehouseReaderClient;
+	}
+
+	public InstalledBases getInstalledBaseByPartyId(final String municipalityId, final InstalledBaseParameters parameters) {
+		final var organizationIds = ofNullable(parameters.getOrganizationIds())
+			.map(ids -> String.join(",", ids))
+			.orElse(null);
+
+		return toInstalledBases(dataWarehouseReaderClient.getInstalledBaseByPartyId(municipalityId,
+			parameters.getPartyId(),
+			organizationIds,
+			parameters.getDate(),
+			parameters.getSortBy(),
+			parameters.getPage(),
+			parameters.getLimit()));
 	}
 
 	public InstalledBaseResponse getInstalledBase(String municipalityId, String organizationNumber, List<String> partyIds, LocalDate modifiedFrom) {

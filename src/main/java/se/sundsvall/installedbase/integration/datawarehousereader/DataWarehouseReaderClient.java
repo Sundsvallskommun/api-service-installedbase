@@ -25,7 +25,7 @@ public interface DataWarehouseReaderClient {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	CustomerEngagementResponse getCustomerEngagement(
-		@PathVariable("municipalityId") String municipalityId,
+		@PathVariable String municipalityId,
 		@RequestParam(value = "organizationNumber") String organizationNumber,
 		@RequestParam(value = "partyId") List<String> partyIds);
 
@@ -33,11 +33,23 @@ public interface DataWarehouseReaderClient {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	InstalledBaseResponse getInstalledBase(
-		@PathVariable("municipalityId") String municipalityId,
+		@PathVariable String municipalityId,
 		@RequestParam(value = "customerNumber") String customerNumber,
 		@RequestParam(value = "company") String company,
 		@RequestParam(value = "lastModifiedDateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate modifiedFrom,
 		@RequestParam(value = "page") int page,
 		@RequestParam(value = "limit") int limit,
 		@RequestParam(value = "sortBy") String sortBy);
+
+	@GetMapping(path = "/{municipalityId}/installedbase/{partyId}", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
+	InstalledBaseResponse getInstalledBaseByPartyId(
+		@PathVariable String municipalityId,
+		@PathVariable String partyId,
+		@RequestParam(value = "organizationIds", required = false) String organizationIds,
+		@RequestParam(value = "date", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate date,
+		@RequestParam(value = "sortBy", required = false) String sortBy,
+		@RequestParam(value = "page", required = false) Integer page,
+		@RequestParam(value = "limit", required = false) Integer limit);
 }

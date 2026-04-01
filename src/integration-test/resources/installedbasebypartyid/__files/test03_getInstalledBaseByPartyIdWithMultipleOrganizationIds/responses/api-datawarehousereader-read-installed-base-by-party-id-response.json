@@ -1,0 +1,27 @@
+{
+	"installedBase": [
+		{
+			"company": "Sundsvall Energi AB",
+			"customerNumber": "104327",
+			"type": "Fjärrvärme",
+			"facilityId": "735999109270751042",
+			"placementId": 5263,
+			"careOf": "Agatha Malm",
+			"street": "Storgatan 9",
+			"postCode": "85230",
+			"city": "Sundsvall",
+			"propertyDesignation": "Södermalm 1:27",
+			"dateFrom": "2019-01-01",
+			"dateTo": "2022-12-31",
+			"dateLastModified": "2022-06-15",
+			"metaData": []
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 1,
+		"totalRecords": 1,
+		"totalPages": 1
+	}
+}
