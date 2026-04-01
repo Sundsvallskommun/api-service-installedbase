@@ -9,10 +9,12 @@ import generated.se.sundsvall.datawarehousereader.InstalledBaseResponse;
 import generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.problem.ThrowableProblem;
+import se.sundsvall.installedbase.api.model.InstalledBase;
 import se.sundsvall.installedbase.api.model.InstalledBaseCustomer;
 import se.sundsvall.installedbase.api.model.InstalledBaseItemAddress;
 
@@ -113,6 +115,103 @@ class InstalledBaseMapperTest {
 					.withDisplayName("displayName20").withKey("key20").withType("type20").withValue("value20"),
 					se.sundsvall.installedbase.api.model.InstalledBaseItemMetaData.create()
 						.withDisplayName("displayName21").withKey("key21").withType("type21").withValue("value21")));
+	}
+
+	@Nested
+	class ToInstalledBases {
+
+		@Test
+		void toInstalledBases_withItems_mapsCorrectly() {
+			// given
+			final var response = createDataWarehouseReaderInstalledBaseResponse(2);
+			response.getMeta()
+				.page(1)
+				.limit(10)
+				.count(2)
+				.totalRecords(2L)
+				.totalPages(1);
+
+			// when
+			final var result = InstalledBaseMapper.toInstalledBases(response);
+
+			// then
+			assertThat(result).isNotNull();
+			assertThat(result.getMetaData()).isNotNull();
+			assertThat(result.getMetaData().getPage()).isEqualTo(1);
+			assertThat(result.getMetaData().getLimit()).isEqualTo(10);
+			assertThat(result.getMetaData().getCount()).isEqualTo(2);
+			assertThat(result.getMetaData().getTotalRecords()).isEqualTo(2L);
+			assertThat(result.getMetaData().getTotalPages()).isEqualTo(1);
+
+			assertThat(result.getInstalledBases()).hasSize(2)
+				.extracting(
+					InstalledBase::getCompany,
+					InstalledBase::getCustomerId,
+					InstalledBase::getType,
+					InstalledBase::getFacilityId,
+					InstalledBase::getPlacementId,
+					InstalledBase::getCareOf,
+					InstalledBase::getStreet,
+					InstalledBase::getPostCode,
+					InstalledBase::getCity,
+					InstalledBase::getPropertyDesignation,
+					InstalledBase::getDateFrom,
+					InstalledBase::getDateTo,
+					InstalledBase::getDateLatestModified)
+				.containsExactly(
+					tuple("company0", "1110", "type0", "facilityId0", "0", "careOf0", "street0", "postCode0", "city0", "propertyDesignation0", now(), now(), now()),
+					tuple("company1", "1110", "type1", "facilityId1", "1", "careOf1", "street1", "postCode1", "city1", "propertyDesignation1", now().minusDays(1), now().plusDays(1), now()));
+		}
+
+		@Test
+		void toInstalledBases_withNullInstalledBaseList_returnsEmptyList() {
+			// given
+			final var response = new InstalledBaseResponse()
+				.meta(new PagingAndSortingMetaData().count(0))
+				.installedBase(null);
+
+			// when
+			final var result = InstalledBaseMapper.toInstalledBases(response);
+
+			// then
+			assertThat(result).isNotNull();
+			assertThat(result.getInstalledBases()).isEmpty();
+		}
+
+		@Test
+		void toInstalledBases_withNullMeta_returnsNullMetaData() {
+			// given
+			final var response = new InstalledBaseResponse()
+				.meta(null)
+				.installedBase(List.of());
+
+			// when
+			final var result = InstalledBaseMapper.toInstalledBases(response);
+
+			// then
+			assertThat(result).isNotNull();
+			assertThat(result.getMetaData()).isNull();
+			assertThat(result.getInstalledBases()).isEmpty();
+		}
+
+		@Test
+		void toInstalledBases_withNullPlacementId_mapsPlacementIdToNull() {
+			// given
+			final var item = new InstalledBaseItem()
+				.company("company")
+				.customerNumber("customer")
+				.placementId(null);
+			final var response = new InstalledBaseResponse()
+				.meta(new PagingAndSortingMetaData())
+				.installedBase(List.of(item));
+
+			// when
+			final var result = InstalledBaseMapper.toInstalledBases(response);
+
+			// then
+			assertThat(result.getInstalledBases()).hasSize(1);
+			assertThat(result.getInstalledBases().getFirst().getPlacementId()).isNull();
+		}
 	}
 
 	private CustomerEngagementResponse createDataWarehouseReaderCustomerEngagementResponse(int count) {

@@ -1,0 +1,50 @@
+{
+	"installedBase": [
+		{
+			"company": "Test Energi AB",
+			"customerNumber": "100001",
+			"type": "Electricity",
+			"facilityId": "100000000000000001",
+			"placementId": 1001,
+			"careOf": "Jane Doe",
+			"street": "Testgatan 1",
+			"postCode": "12345",
+			"city": "Teststaden",
+			"propertyDesignation": "BALDER 1:1",
+			"dateFrom": "2019-01-01",
+			"dateTo": "2022-12-31",
+			"dateLastModified": "2022-06-15",
+			"metaData": [
+				{
+					"key": "netarea",
+					"value": "Test area",
+					"type": "location",
+					"displayName": "Network area"
+				}
+			]
+		},
+		{
+			"company": "Test Grid AB",
+			"customerNumber": "100001",
+			"type": "Grid",
+			"facilityId": "100000000000000002",
+			"placementId": 1002,
+			"careOf": null,
+			"street": "Testgatan 1",
+			"postCode": "12345",
+			"city": "Teststaden",
+			"propertyDesignation": "BALDER 1:1",
+			"dateFrom": "2020-03-15",
+			"dateTo": null,
+			"dateLastModified": null,
+			"metaData": []
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 15,
+		"count": 2,
+		"totalRecords": 2,
+		"totalPages": 1
+	}
+}

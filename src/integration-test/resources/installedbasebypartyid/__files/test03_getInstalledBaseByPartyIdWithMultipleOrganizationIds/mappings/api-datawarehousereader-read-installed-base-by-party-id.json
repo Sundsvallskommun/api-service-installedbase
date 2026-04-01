@@ -1,0 +1,24 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/datawarehousereaderMock/2281/installedbase/898b3634-a2f9-483c-8808-37f3f25cf24e",
+		"queryParameters": {
+			"organizationIds": {
+				"equalTo": "123456789,987654321"
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "test03_getInstalledBaseByPartyIdWithMultipleOrganizationIds/responses/api-datawarehousereader-read-installed-base-by-party-id-response.json",
+		"status": 200
+	},
+	"name": "api-datawarehousereader-read-installed-base-by-party-id"
+}
