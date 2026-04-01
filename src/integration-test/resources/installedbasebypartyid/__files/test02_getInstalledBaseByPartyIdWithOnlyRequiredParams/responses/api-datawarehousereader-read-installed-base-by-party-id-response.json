@@ -1,0 +1,27 @@
+{
+	"installedBase": [
+		{
+			"company": "Test Energi AB",
+			"customerNumber": "100001",
+			"type": "Electricity",
+			"facilityId": "100000000000000001",
+			"placementId": 1001,
+			"careOf": "Jane Doe",
+			"street": "Testgatan 1",
+			"postCode": "12345",
+			"city": "Teststaden",
+			"propertyDesignation": "BALDER 1:1",
+			"dateFrom": "2019-01-01",
+			"dateTo": "2022-12-31",
+			"dateLastModified": "2022-06-15",
+			"metaData": []
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 1,
+		"totalRecords": 1,
+		"totalPages": 1
+	}
+}

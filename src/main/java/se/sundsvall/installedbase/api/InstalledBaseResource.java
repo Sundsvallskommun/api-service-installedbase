@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,9 @@ import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.installedbase.api.model.InstalledBaseParameters;
 import se.sundsvall.installedbase.api.model.InstalledBaseResponse;
+import se.sundsvall.installedbase.api.model.InstalledBases;
 import se.sundsvall.installedbase.service.InstalledBaseService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -37,6 +40,23 @@ class InstalledBaseResource {
 
 	InstalledBaseResource(final InstalledBaseService service) {
 		this.service = service;
+	}
+
+	@GetMapping(produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get installed base information by party id",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "Successful Operation", useReturnTypeSchema = true),
+			@ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
+				Problem.class, ConstraintViolationProblem.class
+			}))),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class))),
+			@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		})
+	ResponseEntity<InstalledBases> getInstalledBaseByPartyId(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Valid final InstalledBaseParameters searchParams) {
+
+		return ok(service.getInstalledBaseByPartyId(municipalityId, searchParams));
 	}
 
 	@GetMapping(path = "/{organizationNumber}", produces = APPLICATION_JSON_VALUE)
