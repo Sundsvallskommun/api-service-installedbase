@@ -108,7 +108,7 @@ class InstalledBaseResourceTest {
 		final var date = LocalDate.of(2025, 6, 1);
 
 		final var expectedResponse = new InstalledBases()
-			.withInstalledBases(List.of(InstalledBase.create().withCompany("TestCompany")));
+			.withInstalledBaseList(List.of(InstalledBase.create().withCompany("TestCompany")));
 		when(serviceMock.getInstalledBaseByPartyId(any(), any())).thenReturn(expectedResponse);
 
 		// Act
@@ -129,8 +129,8 @@ class InstalledBaseResourceTest {
 
 		// Assert
 		assertThat(response).isNotNull();
-		assertThat(response.getInstalledBases()).hasSize(1);
-		assertThat(response.getInstalledBases().getFirst().getCompany()).isEqualTo("TestCompany");
+		assertThat(response.getInstalledBaseList()).hasSize(1);
+		assertThat(response.getInstalledBaseList().getFirst().getCompany()).isEqualTo("TestCompany");
 		verify(serviceMock).getInstalledBaseByPartyId(eq(municipalityId), any());
 	}
 
@@ -142,7 +142,7 @@ class InstalledBaseResourceTest {
 		final var partyId = randomUUID().toString();
 
 		final var expectedResponse = new InstalledBases()
-			.withInstalledBases(List.of());
+			.withInstalledBaseList(List.of());
 		when(serviceMock.getInstalledBaseByPartyId(any(), any())).thenReturn(expectedResponse);
 
 		// Act
@@ -158,7 +158,7 @@ class InstalledBaseResourceTest {
 
 		// Assert
 		assertThat(response).isNotNull();
-		assertThat(response.getInstalledBases()).isEmpty();
+		assertThat(response.getInstalledBaseList()).isEmpty();
 		verify(serviceMock).getInstalledBaseByPartyId(eq(municipalityId), any());
 	}
 

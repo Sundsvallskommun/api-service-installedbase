@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "3.2"
 servers:
-  - url: http://localhost:65032
+  - url: http://localhost:64626
     description: Generated server url
 tags:
   - name: Facility Delegation
@@ -635,7 +635,7 @@ components:
       type: object
       description: Installed bases response model
       properties:
-        installedBases:
+        installedBaseList:
           type: array
           items:
             $ref: "#/components/schemas/InstalledBase"

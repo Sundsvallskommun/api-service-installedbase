@@ -25,7 +25,7 @@ public class InstalledBaseMapper {
 
 	public static InstalledBases toInstalledBases(generated.se.sundsvall.datawarehousereader.InstalledBaseResponse response) {
 		return new InstalledBases()
-			.withInstalledBases(toInstalledBaseList(response))
+			.withInstalledBaseList(toInstalledBaseList(response))
 			.withMetaData(toMetaData(response.getMeta()));
 	}
 

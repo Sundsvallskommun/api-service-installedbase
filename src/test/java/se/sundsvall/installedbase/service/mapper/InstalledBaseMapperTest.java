@@ -143,7 +143,7 @@ class InstalledBaseMapperTest {
 			assertThat(result.getMetaData().getTotalRecords()).isEqualTo(2L);
 			assertThat(result.getMetaData().getTotalPages()).isEqualTo(1);
 
-			assertThat(result.getInstalledBases()).hasSize(2)
+			assertThat(result.getInstalledBaseList()).hasSize(2)
 				.extracting(
 					InstalledBase::getCompany,
 					InstalledBase::getCustomerId,
@@ -175,7 +175,7 @@ class InstalledBaseMapperTest {
 
 			// then
 			assertThat(result).isNotNull();
-			assertThat(result.getInstalledBases()).isEmpty();
+			assertThat(result.getInstalledBaseList()).isEmpty();
 		}
 
 		@Test
@@ -191,7 +191,7 @@ class InstalledBaseMapperTest {
 			// then
 			assertThat(result).isNotNull();
 			assertThat(result.getMetaData()).isNull();
-			assertThat(result.getInstalledBases()).isEmpty();
+			assertThat(result.getInstalledBaseList()).isEmpty();
 		}
 
 		@Test
@@ -209,8 +209,8 @@ class InstalledBaseMapperTest {
 			final var result = InstalledBaseMapper.toInstalledBases(response);
 
 			// then
-			assertThat(result.getInstalledBases()).hasSize(1);
-			assertThat(result.getInstalledBases().getFirst().getPlacementId()).isNull();
+			assertThat(result.getInstalledBaseList()).hasSize(1);
+			assertThat(result.getInstalledBaseList().getFirst().getPlacementId()).isNull();
 		}
 	}
 

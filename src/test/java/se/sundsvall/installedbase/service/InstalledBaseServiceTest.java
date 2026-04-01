@@ -84,8 +84,8 @@ class InstalledBaseServiceTest {
 		// then
 		verify(clientMock).getInstalledBaseByPartyId(municipalityId, partyId, "123456789,987654321", date, sortBy, page, limit);
 		assertThat(result).isNotNull();
-		assertThat(result.getInstalledBases()).hasSize(1);
-		assertThat(result.getInstalledBases().getFirst().getCompany()).isEqualTo("TestCompany");
+		assertThat(result.getInstalledBaseList()).hasSize(1);
+		assertThat(result.getInstalledBaseList().getFirst().getCompany()).isEqualTo("TestCompany");
 		assertThat(result.getMetaData()).isNotNull();
 		assertThat(result.getMetaData().getTotalRecords()).isEqualTo(1L);
 	}

@@ -17,7 +17,7 @@ public class InstalledBases {
 	private PagingAndSortingMetaData metaData;
 
 	@ArraySchema(schema = @Schema(implementation = InstalledBase.class, accessMode = READ_ONLY))
-	private List<InstalledBase> installedBases;
+	private List<InstalledBase> installedBaseList;
 
 	public static InstalledBases create() {
 		return new InstalledBases();
@@ -36,24 +36,24 @@ public class InstalledBases {
 		this.metaData = metaData;
 	}
 
-	public InstalledBases withInstalledBases(List<InstalledBase> installedBases) {
-		this.installedBases = installedBases;
+	public InstalledBases withInstalledBaseList(List<InstalledBase> installedBases) {
+		this.installedBaseList = installedBases;
 		return this;
 	}
 
-	public List<InstalledBase> getInstalledBases() {
-		return installedBases;
+	public List<InstalledBase> getInstalledBaseList() {
+		return installedBaseList;
 	}
 
-	public void setInstalledBases(List<InstalledBase> installedBases) {
-		this.installedBases = installedBases;
+	public void setInstalledBaseList(List<InstalledBase> installedBaseList) {
+		this.installedBaseList = installedBaseList;
 	}
 
 	@Override
 	public String toString() {
 		return "InstalledBases{" +
 			"metaData=" + metaData +
-			", installedBases=" + installedBases +
+			", installedBaseList=" + installedBaseList +
 			'}';
 	}
 
@@ -62,11 +62,11 @@ public class InstalledBases {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		InstalledBases that = (InstalledBases) o;
-		return Objects.equals(metaData, that.metaData) && Objects.equals(installedBases, that.installedBases);
+		return Objects.equals(metaData, that.metaData) && Objects.equals(installedBaseList, that.installedBaseList);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(metaData, installedBases);
+		return Objects.hash(metaData, installedBaseList);
 	}
 }

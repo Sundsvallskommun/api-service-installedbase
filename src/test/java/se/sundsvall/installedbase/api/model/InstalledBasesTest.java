@@ -32,11 +32,11 @@ class InstalledBasesTest {
 
 		final var result = new InstalledBases()
 			.withMetaData(metaData)
-			.withInstalledBases(installedBases);
+			.withInstalledBaseList(installedBases);
 
 		assertThat(result).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(result.getMetaData()).isEqualTo(metaData);
-		assertThat(result.getInstalledBases()).isEqualTo(installedBases);
+		assertThat(result.getInstalledBaseList()).isEqualTo(installedBases);
 	}
 
 	@Test

@@ -1,38 +1,38 @@
 {
 	"_meta": {
-		"page": 1,
-		"limit": 15,
 		"count": 2,
-		"totalRecords": 2,
-		"totalPages": 1
+		"limit": 15,
+		"page": 1,
+		"totalPages": 1,
+		"totalRecords": 2
 	},
-	"installedBases": [
+	"installedBaseList": [
 		{
+			"careOf": "Jane Doe",
+			"city": "Teststaden",
 			"company": "Test Energi AB",
 			"customerId": "100001",
-			"type": "Electricity",
+			"dateFrom": "2019-01-01",
+			"dateLatestModified": "2022-06-15",
+			"dateTo": "2022-12-31",
 			"facilityId": "100000000000000001",
 			"placementId": "1001",
-			"careOf": "Jane Doe",
-			"street": "Testgatan 1",
 			"postCode": "12345",
-			"city": "Teststaden",
 			"propertyDesignation": "BALDER 1:1",
-			"dateFrom": "2019-01-01",
-			"dateTo": "2022-12-31",
-			"dateLatestModified": "2022-06-15"
+			"street": "Testgatan 1",
+			"type": "Electricity"
 		},
 		{
+			"city": "Teststaden",
 			"company": "Test Grid AB",
 			"customerId": "100001",
-			"type": "Grid",
+			"dateFrom": "2020-03-15",
 			"facilityId": "100000000000000002",
 			"placementId": "1002",
-			"street": "Testgatan 1",
 			"postCode": "12345",
-			"city": "Teststaden",
 			"propertyDesignation": "BALDER 1:1",
-			"dateFrom": "2020-03-15"
+			"street": "Testgatan 1",
+			"type": "Grid"
 		}
 	]
 }
