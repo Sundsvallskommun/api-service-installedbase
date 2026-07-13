@@ -11,8 +11,7 @@
 
     create table delegation_facility (
         delegation_ref_id varchar(36) not null,
-        facility_ref_id varchar(36) not null,
-        constraint uk_delegation_facility primary key (delegation_ref_id, facility_ref_id)
+        facility_ref_id varchar(36) not null
     ) engine=InnoDB;
 
     create table facility (
@@ -30,6 +29,9 @@
 
     alter table if exists delegation 
        add constraint uk_delegated_to_owner unique (delegated_to, owner, municipality_id);
+
+    alter table if exists delegation_facility 
+       add constraint uk_delegation_facility unique (delegation_ref_id, facility_ref_id);
 
     create index idx_facility_id 
        on facility (facility_id);
