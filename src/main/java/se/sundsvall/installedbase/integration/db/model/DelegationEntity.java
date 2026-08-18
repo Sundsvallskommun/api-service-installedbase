@@ -14,6 +14,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -85,13 +86,13 @@ public class DelegationEntity {
 
 	@PreUpdate
 	void onUpdate() {
-		updated = OffsetDateTime.now();
+		updated = OffsetDateTime.now(ZoneId.systemDefault());
 	}
 
 	@PrePersist
 	void onCreate() {
 		if (Objects.isNull(created)) {
-			created = OffsetDateTime.now();
+			created = OffsetDateTime.now(ZoneId.systemDefault());
 		}
 	}
 

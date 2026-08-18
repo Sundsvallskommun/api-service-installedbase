@@ -4,6 +4,7 @@ import generated.se.sundsvall.eventlog.Event;
 import generated.se.sundsvall.eventlog.EventType;
 import generated.se.sundsvall.eventlog.Metadata;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public final class EventlogMapper {
 		getRequestId().ifPresent(id -> metadata.put(REQUEST_ID, id));
 
 		return new Event()
-			.expires(OffsetDateTime.now().plusMonths(18))
+			.expires(OffsetDateTime.now(ZoneId.systemDefault()).plusMonths(18))
 			.type(eventType)
 			.message(MESSAGE.formatted(capitalize(lowerCase(eventType.toString()))))
 			.owner(EVENT_OWNER)
