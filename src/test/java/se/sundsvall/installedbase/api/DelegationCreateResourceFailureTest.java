@@ -94,7 +94,7 @@ class DelegationCreateResourceFailureTest {
 			Arguments.of(null, "facilities", "facilities must contain at least one member"),
 			Arguments.of(List.of(), "facilities", "facilities must contain at least one member"),
 			Arguments.of(List.of(
-				Facility.create().withId("123")), "facilities[0].businessEngagementOrgId", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"),
+				Facility.create().withId("123")), "facilities[0].businessEngagementOrgId", "must match the regular expression ^([1235-9][\\d][2-9]\\d{7})$"),
 			Arguments.of(List.of(
 				Facility.create().withBusinessEngagementOrgId("5591628135")), "facilities[0].id", "Facility id cannot be blank"),
 			Arguments.of(List.of(
@@ -171,7 +171,7 @@ class DelegationCreateResourceFailureTest {
 				assertThat(result.getResponseBody()).isNotNull();
 				assertThat(result.getResponseBody().getViolations())
 					.extracting(Violation::field, Violation::message)
-					.containsExactly(tuple("facilities[0].businessEngagementOrgId", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+					.containsExactly(tuple("facilities[0].businessEngagementOrgId", "must match the regular expression ^([1235-9][\\d][2-9]\\d{7})$"));
 			});
 	}
 }
