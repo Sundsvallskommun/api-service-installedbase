@@ -18,7 +18,7 @@ import se.sundsvall.installedbase.integration.db.DelegationRepository;
 import se.sundsvall.installedbase.integration.db.FacilityRepository;
 import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
-import se.sundsvall.installedbase.integration.eventlog.EventLogClient;
+import se.sundsvall.installedbase.integration.rabbitmq.DelegationEventPublisher;
 import se.sundsvall.installedbase.service.mapper.DatabaseMapper;
 
 import static generated.se.sundsvall.eventlog.EventType.CREATE;
@@ -48,12 +48,12 @@ public class DelegationService {
 
 	private final DelegationRepository delegationRepository;
 	private final FacilityRepository facilityRepository;
-	private final EventLogClient eventLogClient;
+	private final DelegationEventPublisher delegationEventPublisher;
 
-	public DelegationService(DelegationRepository delegationRepository, FacilityRepository facilityRepository, EventLogClient eventLogClient) {
+	public DelegationService(DelegationRepository delegationRepository, FacilityRepository facilityRepository, DelegationEventPublisher delegationEventPublisher) {
 		this.delegationRepository = delegationRepository;
 		this.facilityRepository = facilityRepository;
-		this.eventLogClient = eventLogClient;
+		this.delegationEventPublisher = delegationEventPublisher;
 	}
 
 	/**
@@ -82,7 +82,11 @@ public class DelegationService {
 
 		final var entity = delegationRepository.save(toDelegationEntity(municipalityId, delegation).withFacilities(toFacilities(delegation.getFacilities())));
 
-		final var facilityInfo = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId())).toList();
+		final var facilityInfo = ofNullable(entity.getFacilities())
+			.orElse(emptySet())
+			.stream()
+			.map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId()))
+			.toList();
 		sendEvent(municipalityId, entity, facilityInfo, CREATE);
 
 		return entity.getId();
@@ -125,7 +129,11 @@ public class DelegationService {
 		delegationRepository.save(entity);
 		facilityRepository.deleteAllInBatch(facilityRepository.findAllByDelegationsIsEmpty()); // Clean up orphan facilities that has no connection to any delegation
 
-		final var facilityInfo = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId())).toList();
+		final var facilityInfo = ofNullable(entity.getFacilities())
+			.orElse(emptySet())
+			.stream()
+			.map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId()))
+			.toList();
 		sendEvent(municipalityId, entity, facilityInfo, UPDATE);
 	}
 
@@ -180,7 +188,11 @@ public class DelegationService {
 				LOGGER.info("Deleting delegation with id: {}", sanitizeForLogging(id));
 
 				// Needs to be fetched before deletion to be visible in the event log
-				final var facilityInfo = ofNullable(entity.getFacilities()).orElse(emptySet()).stream().map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId())).toList();
+				final var facilityInfo = ofNullable(entity.getFacilities())
+					.orElse(emptySet())
+					.stream()
+					.map(fe -> FACILITY_INFORMATION.formatted(fe.getFacilityId(), fe.getBusinessEngagementOrgId()))
+					.toList();
 
 				delegationRepository.delete(entity.withFacilities(null));
 				facilityRepository.deleteAllInBatch(facilityRepository.findAllByDelegationsIsEmpty()); // Clean up orphan facilities that has no connection to any delegation
@@ -199,7 +211,7 @@ public class DelegationService {
 	private void sendEvent(String municipalityId, DelegationEntity entity, List<String> facilityInfo, EventType eventType) {
 		LOGGER.info("Creating event for delegation with id: {}", entity.getId());
 		try {
-			eventLogClient.createEvent(municipalityId, entity.getId(),
+			delegationEventPublisher.publish(municipalityId, entity.getId(),
 				toEvent(entity.getId(),
 					entity.getOwner(),
 					entity.getDelegatedTo(),

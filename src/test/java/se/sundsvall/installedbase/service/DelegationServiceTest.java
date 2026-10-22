@@ -14,13 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.installedbase.integration.db.DelegationRepository;
 import se.sundsvall.installedbase.integration.db.FacilityRepository;
 import se.sundsvall.installedbase.integration.db.model.DelegationEntity;
 import se.sundsvall.installedbase.integration.db.model.FacilityEntity;
-import se.sundsvall.installedbase.integration.eventlog.EventLogClient;
+import se.sundsvall.installedbase.integration.rabbitmq.DelegationEventPublisher;
 
 import static generated.se.sundsvall.eventlog.EventType.CREATE;
 import static generated.se.sundsvall.eventlog.EventType.DELETE;
@@ -32,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -53,7 +53,7 @@ class DelegationServiceTest {
 	private FacilityRepository mockFacilityRepository;
 
 	@Mock
-	private EventLogClient mockEventLogClient;
+	private DelegationEventPublisher mockDelegationEventPublisher;
 
 	@InjectMocks
 	private DelegationService delegationService;
@@ -66,7 +66,7 @@ class DelegationServiceTest {
 
 	@AfterEach
 	void verifyNoMoreMockInteractions() {
-		verifyNoMoreInteractions(mockDelegationRepository, mockFacilityRepository, mockEventLogClient);
+		verifyNoMoreInteractions(mockDelegationRepository, mockFacilityRepository, mockDelegationEventPublisher);
 	}
 
 	@Test
@@ -75,7 +75,6 @@ class DelegationServiceTest {
 		final var id = UUID.randomUUID().toString();
 		final var delegationEntity = createDelegationEntity(id);
 		when(mockDelegationRepository.save(any(DelegationEntity.class))).thenReturn(delegationEntity);
-		when(mockEventLogClient.createEvent(eq(MUNICIPALITY_ID), eq(id), any())).thenReturn(ResponseEntity.ok().build());
 
 		final var response = delegationService.createDelegation(MUNICIPALITY_ID, delegation);
 
@@ -83,7 +82,7 @@ class DelegationServiceTest {
 		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-3", "5591628137");
 		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-4", "5591628137");
 		verify(mockDelegationRepository).save(any(DelegationEntity.class));
-		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
+		verify(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
 		assertThat(response).isNotNull().isEqualTo(id);
 		assertThat(eventCaptor.getValue().getType()).isEqualTo(CREATE);
@@ -99,7 +98,6 @@ class DelegationServiceTest {
 		when(mockFacilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-3", "5591628137")).thenReturn(Optional.empty());
 		when(mockFacilityRepository.findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-4", "5591628137")).thenReturn(Optional.of(facilityEntity));
 		when(mockDelegationRepository.save(any(DelegationEntity.class))).thenReturn(delegationEntity);
-		when(mockEventLogClient.createEvent(eq(MUNICIPALITY_ID), eq(id), any())).thenReturn(ResponseEntity.ok().build());
 
 		final var response = delegationService.createDelegation(MUNICIPALITY_ID, delegation);
 
@@ -109,7 +107,7 @@ class DelegationServiceTest {
 		verify(mockDelegationRepository).save(delegationEntityCaptor.capture());
 		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-3", "5591628137");
 		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-4", "5591628137");
-		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
+		verify(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
 		assertThat(delegationEntityCaptor.getValue().getFacilities()).contains(facilityEntity);
 		assertThat(eventCaptor.getValue().getType()).isEqualTo(CREATE);
@@ -130,7 +128,7 @@ class DelegationServiceTest {
 				+ delegatedToUuid + "' for municipality: '" + MUNICIPALITY_ID + "'. Update existing delegation instead.");
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verifyNoInteractions(mockEventLogClient);
+		verifyNoInteractions(mockDelegationEventPublisher);
 	}
 
 	@Test
@@ -149,7 +147,7 @@ class DelegationServiceTest {
 		verify(mockFacilityRepository).findByFacilityIdAndBusinessEngagementOrgIdIgnoreCase("facility-10", "5591628142");
 		verify(mockFacilityRepository).findAllByDelegationsIsEmpty();
 		verify(mockDelegationRepository).save(delegationEntityCaptor.capture());
-		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
+		verify(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
 		assertThat(eventCaptor.getValue().getType()).isEqualTo(UPDATE);
 		assertThat(delegationEntityCaptor.getValue().getFacilities())
@@ -176,7 +174,7 @@ class DelegationServiceTest {
 		verify(mockDelegationRepository).save(delegationEntityCaptor.capture());
 		verify(mockFacilityRepository).findAllByDelegationsIsEmpty();
 		verify(mockFacilityRepository).deleteAllInBatch(emptyList());
-		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
+		verify(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
 		assertThat(eventCaptor.getValue().getType()).isEqualTo(UPDATE);
 		assertThat(delegationEntityCaptor.getValue().getFacilities()).contains(facilityEntity);
@@ -192,7 +190,7 @@ class DelegationServiceTest {
 			.withMessage("Delegation with id: '" + id + "' was not found within municipality '" + MUNICIPALITY_ID + "'.");
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verifyNoInteractions(mockEventLogClient);
+		verifyNoInteractions(mockDelegationEventPublisher);
 	}
 
 	@Test
@@ -207,7 +205,7 @@ class DelegationServiceTest {
 		assertThat(response.getId()).isEqualTo(id);
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verifyNoInteractions(mockEventLogClient);
+		verifyNoInteractions(mockDelegationEventPublisher);
 	}
 
 	@Test
@@ -220,7 +218,7 @@ class DelegationServiceTest {
 			.withMessage("Delegation with id: '" + id + "' was not found within municipality '2281'.");
 
 		verify(mockDelegationRepository).findOne(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verifyNoInteractions(mockEventLogClient);
+		verifyNoInteractions(mockDelegationEventPublisher);
 	}
 
 	// Tests for getDelegations
@@ -239,7 +237,7 @@ class DelegationServiceTest {
 		assertThat(response.getFirst().getId()).isEqualTo(delegationEntity.getId());
 
 		verify(mockDelegationRepository).findAll(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verifyNoInteractions(mockEventLogClient);
+		verifyNoInteractions(mockDelegationEventPublisher);
 	}
 
 	@Test
@@ -254,7 +252,7 @@ class DelegationServiceTest {
 		assertThat(response).isNotNull().isEmpty();
 
 		verify(mockDelegationRepository).findAll(ArgumentMatchers.<Specification<DelegationEntity>>any());
-		verifyNoInteractions(mockEventLogClient);
+		verifyNoInteractions(mockDelegationEventPublisher);
 	}
 
 	@Test
@@ -263,13 +261,12 @@ class DelegationServiceTest {
 		final var delegationEntity = createDelegationEntity(id);
 		final var orphanFacilities = List.of(FacilityEntity.create(), FacilityEntity.create());
 		when(mockDelegationRepository.findOne(ArgumentMatchers.<Specification<DelegationEntity>>any())).thenReturn(Optional.of(delegationEntity));
-		when(mockEventLogClient.createEvent(eq(MUNICIPALITY_ID), eq(id), any())).thenReturn(ResponseEntity.ok().build());
 		when(mockFacilityRepository.findAllByDelegationsIsEmpty()).thenReturn(orphanFacilities);
 
 		delegationService.deleteDelegation(MUNICIPALITY_ID, id);
 
 		verify(mockDelegationRepository).delete(delegationEntity);
-		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
+		verify(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 		verify(mockFacilityRepository).findAllByDelegationsIsEmpty();
 		verify(mockFacilityRepository).deleteAllInBatch(orphanFacilities);
 		assertThat(eventCaptor.getValue().getType()).isEqualTo(DELETE);
@@ -280,7 +277,7 @@ class DelegationServiceTest {
 		final var id = UUID.randomUUID().toString();
 		final var delegationEntity = createDelegationEntity(id);
 		when(mockDelegationRepository.findOne(ArgumentMatchers.<Specification<DelegationEntity>>any())).thenReturn(Optional.of(delegationEntity));
-		when(mockEventLogClient.createEvent(eq(MUNICIPALITY_ID), eq(id), any())).thenThrow(new RuntimeException("Exception"));
+		doThrow(new RuntimeException("Exception")).when(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), any());
 
 		// Just testing the delete method as they all call the same client method
 		assertThatNoException()
@@ -289,7 +286,7 @@ class DelegationServiceTest {
 		verify(mockDelegationRepository).delete(delegationEntity);
 		verify(mockFacilityRepository).findAllByDelegationsIsEmpty();
 		verify(mockFacilityRepository).deleteAllInBatch(anyIterable());
-		verify(mockEventLogClient).createEvent(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
+		verify(mockDelegationEventPublisher).publish(eq(MUNICIPALITY_ID), eq(id), eventCaptor.capture());
 
 		assertThat(eventCaptor.getValue().getType()).isEqualTo(DELETE);
 	}
